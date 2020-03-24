@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Processors\TranslateProcessors;
+namespace ALI\Translation\Processors\TranslateProcessors;
 
-use ALI\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**
  * SimpleTextProcessor

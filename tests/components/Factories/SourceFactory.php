@@ -1,11 +1,11 @@
 <?php
 
-namespace ALI\Tests\components\Factories;
+namespace ALI\Translation\Tests\components\Factories;
 
-use ALI\Translate\Language\Language;
-use ALI\Translate\Sources\CsvFileSource;
-use ALI\Translate\Sources\Installers\MySqlSourceInstaller;
-use ALI\Translate\Sources\MySqlSource;
+use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Translate\Sources\CsvFileSource;
+use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
+use ALI\Translation\Translate\Sources\MySqlSource;
 use PDO;
 
 /**

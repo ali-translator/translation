@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Processors\TranslateProcessors;
+namespace ALI\Translation\Processors\TranslateProcessors;
 
 /**
  * Class HtmlAttributesProcessor
- * @package ALI\Processors\TranslateProcessors
+ * @package ALI\Translation\Processors\TranslateProcessors
  */
 class HtmlAttributesProcessor extends AbstractHtmlProcessor
 {

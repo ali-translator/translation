@@ -1,21 +1,21 @@
 <?php
 
-namespace ALI\Helpers\QuickStart;
+namespace ALI\Translation\Helpers\QuickStart;
 
-use ALI\ALIAbc;
-use ALI\Processors\PreProcessors\HtmlCommentPreProcessor;
-use ALI\Processors\PreProcessors\IgnoreHtmlTagsPreProcessor;
-use ALI\Processors\PreProcessors\SliIgnoreTagPreProcessor;
-use ALI\Processors\ProcessorsManager;
-use ALI\Processors\TranslateProcessors\HtmlAttributesProcessor;
-use ALI\Processors\TranslateProcessors\HtmlTagProcessor;
-use ALI\Processors\TranslateProcessors\SimpleTextProcessor;
-use ALI\Translate\Language\Language;
-use ALI\Translate\Sources\CsvFileSource;
-use ALI\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
-use ALI\Translate\Sources\Installers\MySqlSourceInstaller;
-use ALI\Translate\Sources\MySqlSource;
-use ALI\Translate\Translators\Translator;
+use ALI\Translation\ALIAbc;
+use ALI\Translation\Processors\PreProcessors\HtmlCommentPreProcessor;
+use ALI\Translation\Processors\PreProcessors\IgnoreHtmlTagsPreProcessor;
+use ALI\Translation\Processors\PreProcessors\SliIgnoreTagPreProcessor;
+use ALI\Translation\Processors\ProcessorsManager;
+use ALI\Translation\Processors\TranslateProcessors\HtmlAttributesProcessor;
+use ALI\Translation\Processors\TranslateProcessors\HtmlTagProcessor;
+use ALI\Translation\Processors\TranslateProcessors\SimpleTextProcessor;
+use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Translate\Sources\CsvFileSource;
+use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
+use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
+use ALI\Translation\Translate\Sources\MySqlSource;
+use ALI\Translation\Translate\Translators\Translator;
 use PDO;
 
 /**

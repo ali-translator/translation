@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Translate\Sources\Exceptions;
+namespace ALI\Translation\Translate\Sources\Exceptions;
 
-use ALI\Exceptions\ALIException;
+use ALI\Translation\Exceptions\ALIException;
 
 /**
  * SourceException

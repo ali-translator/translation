@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Tests\components\Factories;
+namespace ALI\Translation\Tests\components\Factories;
 
-use ALI\Translate\Language\Language;
+use ALI\Translation\Translate\Language\Language;
 
 /**
  * Class

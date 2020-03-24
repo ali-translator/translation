@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Processors\PreProcessors;
+namespace ALI\Translation\Processors\PreProcessors;
 
 /**
  * Class ClearHtmlPreProcessor
- * @package ALI\Processors
+ * @package ALI\Translation\Processors
  */
 class IgnoreHtmlTagsPreProcessor extends PreProcessorAbstract
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Translate\Translators;
+namespace ALI\Translation\Translate\Translators;
 
-use ALI\Translate\Language\LanguageInterface;
-use ALI\Translate\PhrasePackets\TranslatePhrasePacket;
-use ALI\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Language\LanguageInterface;
+use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
+use ALI\Translation\Translate\Sources\SourceInterface;
 
 /**
  * TranslatorInterface

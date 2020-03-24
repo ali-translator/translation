@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Tests\components;
+namespace ALI\Translation\Tests\components;
 
-use ALI\Translate\Language\Language;
-use ALI\Translate\Sources\Exceptions\SourceException;
-use ALI\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\SourceInterface;
 use PHPUnit\Framework\TestCase;
 
 /**

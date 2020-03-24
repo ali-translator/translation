@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Translate\Sources\Exceptions\MySqlSource;
+namespace ALI\Translation\Translate\Sources\Exceptions\MySqlSource;
 
-use ALI\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 
 /**
  * MySqlSourceException

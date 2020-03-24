@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Translate\OriginalProcessors;
+namespace ALI\Translation\Translate\OriginalProcessors;
 
 /**
  * Class ReplaceNumbersOriginalProcessor
- * @package ALI\Processors\PreProcessors
+ * @package ALI\Translation\Processors\PreProcessors
  */
 class ReplaceNumbersOriginalProcessor implements OriginalProcessorInterface
 {

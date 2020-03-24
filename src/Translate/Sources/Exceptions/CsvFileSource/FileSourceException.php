@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Translate\Sources\Exceptions\CsvFileSource;
+namespace ALI\Translation\Translate\Sources\Exceptions\CsvFileSource;
 
-use ALI\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 
 /**
  * FileSourceException

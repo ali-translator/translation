@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Buffer\KeyGenerators;
+namespace ALI\Translation\Buffer\KeyGenerators;
 
 /**
  * BufferKeyGenerator Interface

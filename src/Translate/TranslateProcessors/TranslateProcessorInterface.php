@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Translate\TranslateProcessors;
+namespace ALI\Translation\Translate\TranslateProcessors;
 
 /**
  * Interface TranslateProcessorInterface
- * @package ALI\Translate\TranslateProcessors
+ * @package ALI\Translation\Translate\TranslateProcessors
  */
 interface TranslateProcessorInterface
 {

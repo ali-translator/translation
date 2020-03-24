@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Processors\PreProcessors;
+namespace ALI\Translation\Processors\PreProcessors;
 
 /**
  * Interface ProcessorInterface
- * @package ALI\Processors
+ * @package ALI\Translation\Processors
  */
 abstract class PreProcessorAbstract implements PreProcessorInterface
 {

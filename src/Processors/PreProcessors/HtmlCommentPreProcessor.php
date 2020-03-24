@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Processors\PreProcessors;
+namespace ALI\Translation\Processors\PreProcessors;
 
 /**
  * Class HtmlCommentPreProcessor
- * @package ALI\Processors
+ * @package ALI\Translation\Processors
  */
 class HtmlCommentPreProcessor extends PreProcessorAbstract
 {

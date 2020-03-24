@@ -1,9 +1,9 @@
 <?php
 
-namespace ALI\Translate\Sources;
+namespace ALI\Translation\Translate\Sources;
 
-use ALI\Buffer\Buffer;
-use ALI\Translate\Language\LanguageInterface;
+use ALI\Translation\Buffer\Buffer;
+use ALI\Translation\Translate\Language\LanguageInterface;
 
 /**
  * FakeBufferSource

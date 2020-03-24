@@ -1,19 +1,19 @@
 <?php
 
-namespace ALI;
+namespace ALI\Translation;
 
-use ALI\Buffer\Buffer;
-use ALI\Buffer\BufferCaptcher;
-use ALI\Buffer\BufferContent;
-use ALI\Buffer\BufferTranslate;
-use ALI\Buffer\KeyGenerators\KeyGenerator;
-use ALI\Buffer\KeyGenerators\StaticKeyGenerator;
-use ALI\Exceptions\TranslateNotDefinedException;
-use ALI\Processors\ProcessorsManager;
-use ALI\Translate\Language\LanguageInterface;
-use ALI\Translate\Sources\MySqlSource;
-use ALI\Translate\Sources\SourceInterface;
-use ALI\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Buffer\Buffer;
+use ALI\Translation\Buffer\BufferCaptcher;
+use ALI\Translation\Buffer\BufferContent;
+use ALI\Translation\Buffer\BufferTranslate;
+use ALI\Translation\Buffer\KeyGenerators\KeyGenerator;
+use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
+use ALI\Translation\Exceptions\TranslateNotDefinedException;
+use ALI\Translation\Processors\ProcessorsManager;
+use ALI\Translation\Translate\Language\LanguageInterface;
+use ALI\Translation\Translate\Sources\MySqlSource;
+use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**
  * Class ALI

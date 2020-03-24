@@ -1,12 +1,12 @@
 <?php
 
-namespace ALI\Processors\TranslateProcessors;
+namespace ALI\Translation\Processors\TranslateProcessors;
 
-use ALI\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**
  * Class AbstractHtmlProcessor
- * @package ALI\Processors\TranslateProcessors
+ * @package ALI\Translation\Processors\TranslateProcessors
  */
 abstract class AbstractHtmlProcessor implements TranslateProcessors
 {
@@ -29,7 +29,7 @@ abstract class AbstractHtmlProcessor implements TranslateProcessors
      * @param string $cleanContent
      * @param TranslatorInterface $translator
      * @return string
-     * @throws \ALI\Exceptions\ALIException
+     * @throws \ALI\Translation\Exceptions\ALIException
      */
     public function process($content, $cleanContent, TranslatorInterface $translator)
     {

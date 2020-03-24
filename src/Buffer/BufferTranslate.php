@@ -1,14 +1,14 @@
 <?php
 
-namespace ALI\Buffer;
+namespace ALI\Translation\Buffer;
 
-use ALI\Buffer\KeyGenerators\StaticKeyGenerator;
-use ALI\Processors\ProcessorsManager;
-use ALI\Translate\PhrasePackets\OriginalPhrasePacket;
-use ALI\Translate\PhrasePackets\TranslatePhrasePacket;
-use ALI\Translate\Sources\FakeBufferSource;
-use ALI\Translate\Translators\Translator;
-use ALI\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
+use ALI\Translation\Processors\ProcessorsManager;
+use ALI\Translation\Translate\PhrasePackets\OriginalPhrasePacket;
+use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
+use ALI\Translation\Translate\Sources\FakeBufferSource;
+use ALI\Translation\Translate\Translators\Translator;
+use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**
  * Class BufferTranslate

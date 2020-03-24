@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Tests\unit\Helpers;
+namespace ALI\Translation\Tests\unit\Helpers;
 
-use ALI\ALIAbc;
-use ALI\Helpers\QuickStart\ALIAbFactory;
-use ALI\Tests\components\Factories\LanguageFactory;
+use ALI\Translation\ALIAbc;
+use ALI\Translation\Helpers\QuickStart\ALIAbFactory;
+use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use PHPUnit\Framework\TestCase;
 
 /**

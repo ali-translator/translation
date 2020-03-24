@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Buffer;
+namespace ALI\Translation\Buffer;
 
-use ALI\Buffer\KeyGenerators\StaticKeyGenerator;
+use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 
 /**
  * BufferCaptcher

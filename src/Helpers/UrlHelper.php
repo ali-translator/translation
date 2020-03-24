@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Helpers;
+namespace ALI\Translation\Helpers;
 
 use function in_array;
 use function is_null;
@@ -10,7 +10,7 @@ use function preg_replace;
 
 /**
  * Class UrlHelper
- * @package ALI\Helpers
+ * @package ALI\Translation\Helpers
  */
 class UrlHelper
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace ALI\Processors\TranslateProcessors;
+namespace ALI\Translation\Processors\TranslateProcessors;
 
-use ALI\Exceptions\ALIException;
-use ALI\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Exceptions\ALIException;
+use ALI\Translation\Translate\Translators\TranslatorInterface;
 use function preg_quote;
 use function preg_replace;
 
 /**
  * Class CustomTagProcessor
- * @package ALI\Processors\TranslateProcessors
+ * @package ALI\Translation\Processors\TranslateProcessors
  */
 class CustomTagProcessor extends AbstractHtmlProcessor
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace ALI\Translate\Sources;
+namespace ALI\Translation\Translate\Sources;
 
-use ALI\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use PDO;
-use ALI\Translate\Language\LanguageInterface;
-use ALI\Translate\Sources\Exceptions\MySqlSource\LanguageNotExistsException;
+use ALI\Translation\Translate\Language\LanguageInterface;
+use ALI\Translation\Translate\Sources\Exceptions\MySqlSource\LanguageNotExistsException;
 
 /**
  * Class MySqlSource
- * @package ALI\Sources
+ * @package ALI\Translation\Sources
  */
 class MySqlSource implements SourceInterface
 {

@@ -1,19 +1,19 @@
 <?php
 
-namespace ALI\Tests\unit\Buffer;
+namespace ALI\Translation\Tests\unit\Buffer;
 
-use ALI\Buffer\BufferCaptcher;
-use ALI\Buffer\BufferContent;
-use ALI\Buffer\BufferTranslate;
-use ALI\Processors\ProcessorsManager;
-use ALI\Processors\TranslateProcessors\CustomTagProcessor;
-use ALI\Processors\TranslateProcessors\SimpleTextProcessor;
-use ALI\Tests\components\Factories\LanguageFactory;
-use ALI\Tests\components\Factories\SourceFactory;
-use ALI\Translate\Language\Language;
-use ALI\Translate\Sources\Exceptions\SourceException;
-use ALI\Translate\Sources\SourceInterface;
-use ALI\Translate\Translators\Translator;
+use ALI\Translation\Buffer\BufferCaptcher;
+use ALI\Translation\Buffer\BufferContent;
+use ALI\Translation\Buffer\BufferTranslate;
+use ALI\Translation\Processors\ProcessorsManager;
+use ALI\Translation\Processors\TranslateProcessors\CustomTagProcessor;
+use ALI\Translation\Processors\TranslateProcessors\SimpleTextProcessor;
+use ALI\Translation\Tests\components\Factories\LanguageFactory;
+use ALI\Translation\Tests\components\Factories\SourceFactory;
+use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Translators\Translator;
 use PHPUnit\Framework\TestCase;
 
 /**

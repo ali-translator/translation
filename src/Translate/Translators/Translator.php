@@ -1,13 +1,13 @@
 <?php
 
-namespace ALI\Translate\Translators;
+namespace ALI\Translation\Translate\Translators;
 
-use ALI\Translate\Language\LanguageInterface;
-use ALI\Translate\OriginalProcessors\OriginalProcessorInterface;
-use ALI\Translate\PhrasePackets\TranslatePhrasePacket;
-use ALI\Translate\Sources\Exceptions\SourceException;
-use ALI\Translate\Sources\SourceInterface;
-use ALI\Translate\TranslateProcessors\TranslateProcessorInterface;
+use ALI\Translation\Translate\Language\LanguageInterface;
+use ALI\Translation\Translate\OriginalProcessors\OriginalProcessorInterface;
+use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
+use ALI\Translation\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\TranslateProcessors\TranslateProcessorInterface;
 use function is_callable;
 
 /**

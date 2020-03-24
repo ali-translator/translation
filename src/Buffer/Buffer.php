@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Buffer;
+namespace ALI\Translation\Buffer;
 
-use ALI\Buffer\KeyGenerators\KeyGenerator;
+use ALI\Translation\Buffer\KeyGenerators\KeyGenerator;
 
 /**
  * Class Buffer

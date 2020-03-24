@@ -1,9 +1,9 @@
 <?php
 
-namespace ALI\Translate\Language\Repositories;
+namespace ALI\Translation\Translate\Language\Repositories;
 
-use ALI\Translate\Language\Language;
-use ALI\Translate\Language\LanguageRepositoryInterface;
+use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Translate\Language\LanguageRepositoryInterface;
 
 /**
  * MySqlLanguageRepository

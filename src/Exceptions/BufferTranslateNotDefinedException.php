@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Exceptions;
+namespace ALI\Translation\Exceptions;
 
 /**
  * BufferTranslateNotDefinedException

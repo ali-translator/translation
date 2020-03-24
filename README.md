@@ -24,27 +24,27 @@ Exist two base types for using this packet:
 * with html auto translation. In this cast, you may put to buffer full html text, and ALIAb search and translate all phrases
     * With MySql source 
     ```php
-    $aliAbc = (new \ALI\Helpers\QuickStart\ALIAbFactory())->createALIByHtmlBufferMysqlSource((new PDO('mysql:dbname=test;host=mysql', 'root', 'root')),'en','ua');
+    $aliAbc = (new \ALI\Translation\Helpers\QuickStart\ALIAbFactory())->createALIByHtmlBufferMysqlSource((new PDO('mysql:dbname=test;host=mysql', 'root', 'root')),'en','ua');
     ```
     * With CSV source 
     ```php
-    $aliAbc = (new \ALI\Helpers\QuickStart\ALIAbFactory())->createALIByHtmlBufferCsvSource('/path/to/writable/directory/for/translation','en','ua'));
+    $aliAbc = (new \ALI\Translation\Helpers\QuickStart\ALIAbFactory())->createALIByHtmlBufferCsvSource('/path/to/writable/directory/for/translation','en','ua'));
     ```
 * manually adding text for translation in html
     * With MySql source 
     ```php
-    $aliAbc = (new \ALI\Helpers\QuickStart\ALIAbFactory())->createALIByMysqlSource((new PDO('mysql:dbname=test;host=mysql', 'root', 'root')),'en','ua');
+    $aliAbc = (new \ALI\Translation\Helpers\QuickStart\ALIAbFactory())->createALIByMysqlSource((new PDO('mysql:dbname=test;host=mysql', 'root', 'root')),'en','ua');
     ```
     * With CSV source 
     ```php
-    $aliAbc = (new \ALI\Helpers\QuickStart\ALIAbFactory())->createALIByCsvSource('/path/to/writable/directory/for/translation','en','ua'))
+    $aliAbc = (new \ALI\Translation\Helpers\QuickStart\ALIAbFactory())->createALIByCsvSource('/path/to/writable/directory/for/translation','en','ua'))
     ```
 
 
 ## Basic Usage
 
 ```php
-/** @var Ali\ALIAbc $aliAbc */
+/** @var \ALI\Translation\ALIAbc $aliAbc */
 $aliAbc->saveTranslate('Hello', 'Привіт');
 
 // Dirrect translation
@@ -67,7 +67,7 @@ Also you may discover object `$aliAbc->getBufferCaptcher()` for additional metho
 Also you may translate templates with parameters:
 
 ```php
-/** @var Ali\ALIAbc $aliAbc */
+/** @var ALI\Translation\ALIAbc $aliAbc */
 echo $aliAbc->translate('Hello {objectName}!', [
     'objectName' => 'sun',
 ]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translate\PhrasePackets;
+namespace ALI\Translation\Translate\PhrasePackets;
 
 /**
  * TranslatePhrasePacket

@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Buffer;
+namespace ALI\Translation\Buffer;
 
 /**
  * BufferContent

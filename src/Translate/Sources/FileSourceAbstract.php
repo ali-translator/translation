@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Translate\Sources;
+namespace ALI\Translation\Translate\Sources;
 
-use ALI\Translate\Language\LanguageInterface;
+use ALI\Translation\Translate\Language\LanguageInterface;
 
 /**
  * FileSourceAbstract
