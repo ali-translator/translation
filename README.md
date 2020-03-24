@@ -8,7 +8,7 @@ First, instead translate you get their id, which you put to you response code. A
 ## Installation
 
 ```bash
-$ composer require ganjar/aliabc-php
+$ composer require ali-translator/translation
 ```
 
 ## Quick start
