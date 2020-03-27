@@ -89,9 +89,7 @@ class ALIAbFactory
      */
     private function generateMysqlTranslator(PDO $connection, $originalLanguageAlias, $currentLanguageAlias)
     {
-        $originalLanguage = new Language($originalLanguageAlias);
-
-        $source = new MySqlSource($connection, $originalLanguage);
+        $source = new MySqlSource($connection, $originalLanguageAlias);
         $sourceInstaller = new MySqlSourceInstaller($connection);
         if ($sourceInstaller->isInstalled()) {
             $sourceInstaller->install();
@@ -130,10 +128,9 @@ class ALIAbFactory
     private function generateCsvTranslator($translationDirectoryPath, $originalLanguageAlias, $currentLanguageAlias)
     {
         $currentLanguage = new Language($currentLanguageAlias);
-        $originalLanguage = new Language($originalLanguageAlias);
 
-        $source = new CsvFileSource($translationDirectoryPath, $originalLanguage);
-        $fileCsvPath = $source->getLanguageFilePath($currentLanguage->getAlias());
+        $source = new CsvFileSource($translationDirectoryPath, $originalLanguageAlias);
+        $fileCsvPath = $source->getLanguageFilePath($currentLanguageAlias);
         if (!file_exists($fileCsvPath)) {
             touch($fileCsvPath);
         }
