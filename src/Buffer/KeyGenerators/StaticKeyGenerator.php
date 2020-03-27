@@ -35,4 +35,20 @@ class StaticKeyGenerator implements KeyGenerator
     {
         return $this->keyPrefix . $contentId . $this->keyPostfix;
     }
+
+    /**
+     * @return string
+     */
+    public function getKeyPrefix()
+    {
+        return $this->keyPrefix;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeyPostfix()
+    {
+        return $this->keyPostfix;
+    }
 }
