@@ -59,7 +59,7 @@ class Translator implements TranslatorInterface
      */
     public function isCurrentLanguageOriginal()
     {
-        return $this->language->getAlias() === $this->source->getOriginalLanguage()->getAlias();
+        return $this->language->getAlias() === $this->source->getOriginalLanguageAlias();
     }
 
     /**
@@ -177,7 +177,7 @@ class Translator implements TranslatorInterface
 
         $translatesFromSource = $this->getSource()->getTranslates(
             $searchPhrases,
-            $this->getLanguage()
+            $this->getLanguage()->getAlias()
         );
 
         foreach ($searchPhrases as $originalPhrase => $searchPhrase) {
@@ -218,7 +218,7 @@ class Translator implements TranslatorInterface
     public function saveTranslate(LanguageInterface $language, $original, $translate)
     {
         $this->getSource()->saveTranslate(
-            $language,
+            $language->getAlias(),
             $this->originalProcess($original),
             $translate
         );

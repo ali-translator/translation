@@ -24,8 +24,7 @@
         "source": "https://github.com/ali-translator/translation"
     },
     "require": {
-        "php": ">=5.6.0",
-        "phpunit/phpunit": "^9.0"
+        "php": ">=5.6.0"
     },
     "autoload": {
         "psr-4": {
@@ -40,6 +39,10 @@
     "require-dev": {
         "symfony/var-dumper": "^5.0",
         "ext-pdo": "*",
-        "php": ">=7.3.0"
+        "php": ">=7.3.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "suggest": {
+        "ali-translator/translation-js-integrate": "integrate this packet to frontend js"
     }
 }

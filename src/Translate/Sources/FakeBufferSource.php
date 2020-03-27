@@ -3,7 +3,6 @@
 namespace ALI\Translation\Translate\Sources;
 
 use ALI\Translation\Buffer\Buffer;
-use ALI\Translation\Translate\Language\LanguageInterface;
 
 /**
  * FakeBufferSource
@@ -11,9 +10,9 @@ use ALI\Translation\Translate\Language\LanguageInterface;
 class FakeBufferSource implements SourceInterface
 {
     /**
-     * @var LanguageInterface
+     * @var string
      */
-    protected $originalLanguage;
+    protected $originalLanguageAlias;
 
     /**
      * @var Buffer
@@ -21,35 +20,35 @@ class FakeBufferSource implements SourceInterface
     protected $buffer;
 
     /**
-     * @param LanguageInterface $originalLanguage
+     * @param string $originalLanguageAlias
      * @param Buffer $buffer
      */
-    public function __construct(LanguageInterface $originalLanguage, Buffer $buffer)
+    public function __construct($originalLanguageAlias, Buffer $buffer)
     {
-        $this->originalLanguage = $originalLanguage;
+        $this->originalLanguageAlias = $originalLanguageAlias;
         $this->buffer = $buffer;
     }
 
     /**
      * @inheritDoc
      */
-    public function getOriginalLanguage()
+    public function getOriginalLanguageAlias()
     {
-        return $this->originalLanguage;
+        return $this->originalLanguageAlias;
     }
 
     /**
      * @param string $phrase
-     * @param LanguageInterface $language
+     * @param string $languageAlias
      * @return string
      */
-    public function getTranslate($phrase, LanguageInterface $language)
+    public function getTranslate($phrase, $languageAlias)
     {
-        if ($this->originalLanguage->getAlias() === $language->getAlias()) {
+        if ($this->originalLanguageAlias === $languageAlias) {
             $translate = $phrase;
         } else {
-            if (isset($this->temporaryTranslation[$phrase][$language->getAlias()])) {
-                $translate = $this->temporaryTranslation[$phrase][$language->getAlias()];
+            if (isset($this->temporaryTranslation[$phrase][$languageAlias])) {
+                $translate = $this->temporaryTranslation[$phrase][$languageAlias];
             } else {
                 $translate = $this->buffer->addContent($phrase);
             }
@@ -60,14 +59,14 @@ class FakeBufferSource implements SourceInterface
 
     /**
      * @param array $phrases
-     * @param LanguageInterface $language
+     * @param string $languageAlias
      * @return array
      */
-    public function getTranslates(array $phrases, LanguageInterface $language)
+    public function getTranslates(array $phrases, $languageAlias)
     {
         $translatedArray = [];
         foreach ($phrases as $phrase) {
-            $translatedArray[$phrase] = $this->getTranslate($phrase, $language);
+            $translatedArray[$phrase] = $this->getTranslate($phrase, $languageAlias);
         }
 
         return $translatedArray;
@@ -79,11 +78,13 @@ class FakeBufferSource implements SourceInterface
     protected $temporaryTranslation;
 
     /**
-     * @inheritDoc
+     * @param string $languageAlias
+     * @param string $original
+     * @param string $translate
      */
-    public function saveTranslate(LanguageInterface $language, $original, $translate)
+    public function saveTranslate($languageAlias, $original, $translate)
     {
-        $this->temporaryTranslation[$original][$language->getAlias()] = $translate;
+        $this->temporaryTranslation[$original][$languageAlias] = $translate;
     }
 
     /**
@@ -94,5 +95,33 @@ class FakeBufferSource implements SourceInterface
         if (isset($this->temporaryTranslation[$original])) {
             unset($this->temporaryTranslation[$original]);
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function saveOriginals(array $phrases)
+    {
+        foreach ($phrases as $phrase) {
+            if (isset($this->temporaryTranslation[$phrase])) {
+                continue;
+            }
+            $this->temporaryTranslation[$phrase] = [];
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExistOriginals(array $phrases)
+    {
+        $existPhrases = [];
+        foreach ($phrases as $phrase) {
+            if (isset($this->temporaryTranslation[$phrase])) {
+                $existPhrases[] = $phrase;
+            }
+        }
+
+        return $existPhrases;
     }
 }

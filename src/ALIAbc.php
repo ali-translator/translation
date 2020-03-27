@@ -93,7 +93,7 @@ class ALIAbc
     public function saveTranslate($original, $translate)
     {
         $currentLanguage = $this->translator->getLanguage();
-        $this->translator->getSource()->saveTranslate($currentLanguage, $original, $translate);
+        $this->translator->getSource()->saveTranslate($currentLanguage->getAlias(), $original, $translate);
     }
 
     /**

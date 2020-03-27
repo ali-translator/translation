@@ -66,7 +66,7 @@ class BufferTranslateTest extends TestCase
      */
     private function checkTranslateBuffer(SourceInterface $source, Language $languageForTranslate, Translator $translator)
     {
-        $source->saveTranslate($languageForTranslate, 'Hello', 'Привіт');
+        $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 
         $bufferCaptcher = new BufferCaptcher();
         $html = '<div class="test">' . $bufferCaptcher->add('Hello') . '</div>';
@@ -89,7 +89,7 @@ class BufferTranslateTest extends TestCase
      */
     private function checkTranslateBuffersWithProcessors(SourceInterface $source, Language $languageForTranslate, Translator $translator)
     {
-        $source->saveTranslate($languageForTranslate, 'Hello', 'Привіт');
+        $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 
         $processorsManager = new ProcessorsManager();
         $processorsManager->addTranslateProcessor(new CustomTagProcessor('<translate>', '</translate>', true));
@@ -126,7 +126,7 @@ class BufferTranslateTest extends TestCase
      */
     private function checkTranslateBuffersWithProcessorsByOneRequest(SourceInterface $source, Language $languageForTranslate, Translator $translator)
     {
-        $source->saveTranslate($languageForTranslate, 'Hello', 'Привіт');
+        $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 
         $processorsManager = new ProcessorsManager();
         $processorsManager->addTranslateProcessor(new CustomTagProcessor('<translate>', '</translate>', true));

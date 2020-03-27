@@ -24,9 +24,9 @@ class CsvFileSource extends FileSourceAbstract
     protected $directoryPath;
 
     /**
-     * @var LanguageInterface
+     * @var string
      */
-    private $originalLanguage;
+    private $originalLanguageAlias;
 
     /**
      * CSV delimiter - only one symbol
@@ -46,24 +46,24 @@ class CsvFileSource extends FileSourceAbstract
     /**
      * FileSource constructor.
      * @param string $directoryPath - Directory with source files
-     * @param LanguageInterface $originalLanguage
+     * @param string $originalLanguageAlias
      * @param string $delimiter - CSV delimiter may be only one symbol
      * @param string $filesExtension
      */
-    public function __construct($directoryPath, $originalLanguage, $delimiter = ',', $filesExtension = 'csv')
+    public function __construct($directoryPath, $originalLanguageAlias, $delimiter = ',', $filesExtension = 'csv')
     {
         $this->directoryPath = rtrim($directoryPath, '/\\');
-        $this->originalLanguage = $originalLanguage;
+        $this->originalLanguageAlias = $originalLanguageAlias;
         $this->delimiter = $delimiter;
         $this->filesExtension = $filesExtension;
     }
 
     /**
-     * @return LanguageInterface
+     * @return string
      */
-    public function getOriginalLanguage()
+    public function getOriginalLanguageAlias()
     {
-        return $this->originalLanguage;
+        return $this->originalLanguageAlias;
     }
 
     /**
@@ -90,20 +90,20 @@ class CsvFileSource extends FileSourceAbstract
 
     /**
      * @param string $phrase
-     * @param LanguageInterface $language
+     * @param string $languageAliasAlias
      * @return string
      * @throws FileReadPermissionsException
      * @throws DirectoryNotFoundException
      * @throws UnsupportedLanguageAliasException
      */
-    public function getTranslate($phrase, LanguageInterface $language)
+    public function getTranslate($phrase, $languageAliasAlias)
     {
-        if (!isset($this->allTranslates[$language->getAlias()]) || is_null($this->allTranslates[$language->getAlias()])) {
-            $this->allTranslates[$language->getAlias()] = $this->parseLanguageFile($language->getAlias());
+        if (!isset($this->allTranslates[$languageAliasAlias]) || is_null($this->allTranslates[$languageAliasAlias])) {
+            $this->allTranslates[$languageAliasAlias] = $this->parseLanguageFile($languageAliasAlias);
         }
 
-        if (isset($this->allTranslates[$language->getAlias()][$phrase])) {
-            return $this->allTranslates[$language->getAlias()][$phrase];
+        if (isset($this->allTranslates[$languageAliasAlias][$phrase])) {
+            return $this->allTranslates[$languageAliasAlias][$phrase];
         }
 
         return '';
@@ -164,20 +164,20 @@ class CsvFileSource extends FileSourceAbstract
     }
 
     /**
-     * @param LanguageInterface $language
-     * @param string            $original
-     * @param string            $translate
+     * @param string $languageAlias
+     * @param string $original
+     * @param string $translate
      * @throws DirectoryNotFoundException
      * @throws FileReadPermissionsException
      * @throws UnsupportedLanguageAliasException
      * @throws FileNotWritableException
      */
-    public function saveTranslate(LanguageInterface $language, $original, $translate)
+    public function saveTranslate($languageAlias, $original, $translate)
     {
-        $translates = $this->parseLanguageFile($language->getAlias());
+        $translates = $this->parseLanguageFile($languageAlias);
         $translates[$original] = $translate;
-        $this->saveLanguageFile($language->getAlias(), $translates);
-        $this->allTranslates[$language->getAlias()] = $this->parseLanguageFile($language->getAlias());
+        $this->saveLanguageFile($languageAlias, $translates);
+        $this->allTranslates[$languageAlias] = $this->parseLanguageFile($languageAlias);
     }
 
     /**
@@ -205,5 +205,41 @@ class CsvFileSource extends FileSourceAbstract
                 unset($this->allTranslates[$languageAlias][$original]);
             }
         }
+    }
+
+    /**
+     * @param array $phrases
+     * @throws DirectoryNotFoundException
+     * @throws FileNotWritableException
+     * @throws FileReadPermissionsException
+     * @throws UnsupportedLanguageAliasException
+     */
+    public function saveOriginals(array $phrases)
+    {
+        $phrases = array_diff($phrases, $this->getExistOriginals($phrases));
+        foreach ($phrases as $phrase) {
+            foreach ($this->allTranslates as $languageAlias => $translates) {
+                if (isset($translates[$phrase])) {
+                    continue;
+                }
+                $this->saveTranslate($languageAlias,$phrase,'');
+            }
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExistOriginals(array $phrases)
+    {
+        $existPhrases = [];
+        $firstLanguageTranslation = reset($this->allTranslates);
+        foreach ($phrases as $phrase) {
+            if (isset($firstLanguageTranslation[$phrase])) {
+                $existPhrases[] = $phrase;
+            }
+        }
+
+        return $existPhrases;
     }
 }

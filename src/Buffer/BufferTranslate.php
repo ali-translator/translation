@@ -106,7 +106,7 @@ class BufferTranslate
         // Init additional objects
         $bufferLayer = new Buffer(new StaticKeyGenerator('#ali-buffer-layer-content_', '#'));
 
-        $fakeBufferSource = new FakeBufferSource($translator->getSource()->getOriginalLanguage(), $bufferLayer);
+        $fakeBufferSource = new FakeBufferSource($translator->getSource()->getOriginalLanguageAlias(), $bufferLayer);
         $bufferLayerTranslator = new Translator($translator->getLanguage(),$fakeBufferSource);
 
         // Create additional buffering layer

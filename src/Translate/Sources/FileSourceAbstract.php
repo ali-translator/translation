@@ -2,8 +2,6 @@
 
 namespace ALI\Translation\Translate\Sources;
 
-use ALI\Translation\Translate\Language\LanguageInterface;
-
 /**
  * FileSourceAbstract
  */
@@ -11,15 +9,15 @@ abstract class FileSourceAbstract implements SourceInterface
 {
     /**
      * @param array $phrases
-     * @param LanguageInterface $language
+     * @param string $languageAlias
      * @return array
      * @throws Exceptions\SourceException
      */
-    public function getTranslates(array $phrases, LanguageInterface $language)
+    public function getTranslates(array $phrases, $languageAlias)
     {
         $translatePhrases = [];
         foreach ($phrases as $phrase) {
-            $translatePhrases[$phrase] = $this->getTranslate($phrase, $language);
+            $translatePhrases[$phrase] = $this->getTranslate($phrase, $languageAlias);
         }
 
         return $translatePhrases;

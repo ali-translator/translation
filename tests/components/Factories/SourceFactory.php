@@ -37,7 +37,7 @@ class SourceFactory
             $mySqlSourceInstaller->install();
         }
 
-        $mySqlSource = new MySqlSource($connection, $originalLanguage);
+        $mySqlSource = new MySqlSource($connection, $originalLanguage->getAlias());
 
         return [$mySqlSource, $mySqlSourceInstaller];
     }
@@ -48,7 +48,7 @@ class SourceFactory
      */
     public function createCsvSource(Language $originalLanguage)
     {
-        $csvFileSource = new CsvFileSource(SOURCE_CSV_PATH, $originalLanguage);
+        $csvFileSource = new CsvFileSource(SOURCE_CSV_PATH, $originalLanguage->getAlias());
 
         return $csvFileSource;
     }

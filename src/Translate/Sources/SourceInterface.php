@@ -2,7 +2,6 @@
 
 namespace ALI\Translation\Translate\Sources;
 
-use ALI\Translation\Translate\Language\LanguageInterface;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 
 /**
@@ -11,34 +10,45 @@ use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 interface SourceInterface
 {
     /**
-     * @return LanguageInterface
+     * @return string
      */
-    public function getOriginalLanguage();
+    public function getOriginalLanguageAlias();
 
     /**
-     * @param string            $phrase
-     * @param LanguageInterface $language
+     * @param string $phrase
+     * @param string $languageAliasAlias
      * @return string
      * @throws SourceException
      */
-    public function getTranslate($phrase, LanguageInterface $language);
+    public function getTranslate($phrase, $languageAliasAlias);
 
     /**
      * Get an array with original phrases as a key
      * and translated into a value
-     * @param array             $phrases
-     * @param LanguageInterface $language
+     * @param array $phrases
+     * @param string $languageAlias
      * @return array
      */
-    public function getTranslates(array $phrases, LanguageInterface $language);
+    public function getTranslates(array $phrases, $languageAlias);
 
     /**
-     * @param LanguageInterface $language
-     * @param string            $original
-     * @param string            $translate
+     * @param string $languageAlias
+     * @param string $original
+     * @param string $translate
      * @throws SourceException
      */
-    public function saveTranslate(LanguageInterface $language, $original, $translate);
+    public function saveTranslate($languageAlias, $original, $translate);
+
+    /**
+     * @param string[] $phrases
+     */
+    public function saveOriginals(array $phrases);
+
+    /**
+     * @param string[] $phrases
+     * @return string[]
+     */
+    public function getExistOriginals(array $phrases);
 
     /**
      * Delete original and all translated phrases

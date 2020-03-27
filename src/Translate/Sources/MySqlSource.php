@@ -19,9 +19,9 @@ class MySqlSource implements SourceInterface
     protected $pdo;
 
     /**
-     * @var LanguageInterface
+     * @var string
      */
-    private $originalLanguage;
+    private $originalLanguageAlias;
 
     /**
      * @var string
@@ -35,40 +35,40 @@ class MySqlSource implements SourceInterface
 
     /**
      * @param PDO $pdo
-     * @param LanguageInterface $originalLanguage
+     * @param string $originalLanguageAlias
      * @param string $originalTableName
      * @param string $translateTableName
      */
     public function __construct(
         PDO $pdo,
-        LanguageInterface $originalLanguage,
+        $originalLanguageAlias,
         $originalTableName = 'ali_original',
         $translateTableName = 'ali_translate'
     )
     {
         $this->pdo = $pdo;
-        $this->originalLanguage = $originalLanguage;
+        $this->originalLanguageAlias = $originalLanguageAlias;
         $this->originalTableName = $originalTableName;
         $this->translateTableName = $translateTableName;
     }
 
     /**
-     * @return LanguageInterface
+     * @return string
      */
-    public function getOriginalLanguage()
+    public function getOriginalLanguageAlias()
     {
-        return $this->originalLanguage;
+        return $this->originalLanguageAlias;
     }
 
     /**
      * @param string $phrase
-     * @param LanguageInterface $language
+     * @param string $languageAliasAlias
      * @return string
      * @throws SourceException
      */
-    public function getTranslate($phrase, LanguageInterface $language)
+    public function getTranslate($phrase, $languageAliasAlias)
     {
-        $translates = $this->getTranslates([$phrase], $language);
+        $translates = $this->getTranslates([$phrase], $languageAliasAlias);
         if ($translates) {
             return current($translates);
         }
@@ -77,17 +77,17 @@ class MySqlSource implements SourceInterface
     }
 
     /**
-     * @param array $phrases
+     * @param string $languageAlias
      * @param LanguageInterface $language
      * @return array
      */
-    public function getTranslates(array $phrases, LanguageInterface $language)
+    public function getTranslates(array $phrases, $languageAlias)
     {
-        if ($language->getAlias() === $this->originalLanguage->getAlias()) {
+        if ($languageAlias === $this->originalLanguageAlias) {
             // TODO check if it's correct response
             return array_combine($phrases, $phrases);
         }
-        if(!$phrases){
+        if (!$phrases) {
             return [];
         }
 
@@ -115,7 +115,7 @@ class MySqlSource implements SourceInterface
             WHERE ' . implode(' OR ', $whereQuery) . '
             LIMIT ' . count($phrases)
         );
-        $dataQuery->bindValue('languageAlias', $language->getAlias(), PDO::PARAM_STR);
+        $dataQuery->bindValue('languageAlias', $languageAlias, PDO::PARAM_STR);
 
         foreach ($valuesForWhereBinding as $dataForBinding) {
             $originalQueryParams = $this->createOriginalQueryParams($dataForBinding['phrase']);
@@ -162,35 +162,19 @@ class MySqlSource implements SourceInterface
     }
 
     /**
-     * @param LanguageInterface $language
+     * @param string $languageAlias
      * @param string $original
      * @param string $translate
      * @throws LanguageNotExistsException
      */
-    public function saveTranslate(LanguageInterface $language, $original, $translate)
+    public function saveTranslate($languageAlias, $original, $translate)
     {
         $originalId = $this->getOriginalId($original);
         if (!$originalId) {
             $originalId = $this->insertOriginal($original);
         }
 
-        $this->saveTranslateByOriginalId($language, $originalId, $translate);
-    }
-
-    /**
-     * @param LanguageInterface $language
-     * @return int
-     */
-    public function getLanguageId(LanguageInterface $language)
-    {
-        $statement = $this->pdo->prepare("
-                SELECT id FROM ali_language WHERE alias=:alias
-            ");
-        $statement->bindValue('alias', $language->getAlias());
-        $statement->execute();
-        $language = $statement->fetch(PDO::FETCH_COLUMN);
-
-        return $language;
+        $this->saveTranslateByOriginalId($languageAlias, $originalId, $translate);
     }
 
     /**
@@ -233,6 +217,25 @@ class MySqlSource implements SourceInterface
     }
 
     /**
+     * @param string $languageAlias
+     * @param int $originalId
+     * @param string $translate
+     * @throws LanguageNotExistsException
+     */
+    protected function saveTranslateByOriginalId($languageAlias, $originalId, $translate)
+    {
+        $updatePdo = $this->pdo->prepare('
+                INSERT INTO `' . $this->translateTableName . '` (`original_id`, `language_alias`, `content`)
+                VALUES (:id, :languageAlias, :content)
+                ON DUPLICATE KEY UPDATE `content`=:content
+            ');
+        $updatePdo->bindParam(':content', $translate, PDO::PARAM_STR);
+        $updatePdo->bindParam(':id', $originalId, PDO::PARAM_INT);
+        $updatePdo->bindParam(':languageAlias', $languageAlias, PDO::PARAM_STR);
+        $updatePdo->execute();
+    }
+
+    /**
      * Delete original and all translated phrases
      * @param string $original
      */
@@ -249,22 +252,63 @@ class MySqlSource implements SourceInterface
     }
 
     /**
-     * @param LanguageInterface $language
-     * @param int $originalId
-     * @param string $translate
-     * @throws LanguageNotExistsException
+     * @param string[] $phrases
      */
-    public function saveTranslateByOriginalId(LanguageInterface $language, $originalId, $translate)
+    public function saveOriginals(array $phrases)
     {
-        $updatePdo = $this->pdo->prepare('
-                INSERT INTO `' . $this->translateTableName . '` (`original_id`, `language_alias`, `content`)
-                VALUES (:id, :languageAlias, :content)
-                ON DUPLICATE KEY UPDATE `content`=:content
-            ');
-        $updatePdo->bindParam(':content', $translate, PDO::PARAM_STR);
-        $updatePdo->bindParam(':id', $originalId, PDO::PARAM_INT);
-        $languageAlias = $language->getAlias();
-        $updatePdo->bindParam(':languageAlias', $languageAlias, PDO::PARAM_STR);
-        $updatePdo->execute();
+        $valuesQuery = [];
+        $valuesForWhereBinding = [];
+        $queryIndexIncrement = 1;
+        foreach ($phrases as $keyForBinding => $phrase) {
+            $queryIndexIncrement++;
+            $contentIndexKey = 'content_index_' . $queryIndexIncrement;
+            $queryIndexIncrement++;
+            $contentKey = 'content_' . $queryIndexIncrement;
+            $valuesForWhereBinding[$keyForBinding] = [
+                'phrase' => $phrase,
+                'contentIndexKey' => $contentIndexKey,
+                'contentKey' => $contentKey,
+            ];
+            $valuesQuery[$keyForBinding] = '(:' . $contentIndexKey . ', :' . $contentKey . ')';
+        }
+
+        $statement = $this->pdo->prepare(
+            'INSERT INTO `' . $this->originalTableName . '`
+                        (`content_index`, `content`)
+                            VALUES ' . implode(',', $valuesQuery) . '
+                            ON DUPLICATE KEY UPDATE `content_index`=`content_index`
+                            '
+        );
+
+        foreach ($valuesForWhereBinding as $dataForBinding) {
+            $originalQueryParams = $this->createOriginalQueryParams($dataForBinding['phrase']);
+
+            $contentIndexKey = $dataForBinding['contentIndexKey'];
+            $contentIndex = $originalQueryParams['contentIndex'];
+            $contentKey = $dataForBinding['contentKey'];
+            $content = $originalQueryParams['content'];
+
+            $statement->bindValue($contentIndexKey, $contentIndex, PDO::PARAM_STR);
+            $statement->bindValue($contentKey, $content, PDO::PARAM_STR);
+        }
+
+        $statement->execute();
+    }
+
+    /**
+     * @param array $phrases
+     * @return array|mixed|string[]
+     */
+    public function getExistOriginals(array $phrases)
+    {
+        // TODO make more performance friendly (now this method uses only in tests)
+        $existPhrases = [];
+        foreach ($phrases as $phrase) {
+            if ($this->getOriginalId($phrase)) {
+                $existPhrases[] = $phrase;
+            }
+        }
+
+        return $existPhrases;
     }
 }
