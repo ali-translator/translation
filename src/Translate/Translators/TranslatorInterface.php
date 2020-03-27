@@ -37,4 +37,9 @@ interface TranslatorInterface
      * @return SourceInterface
      */
     public function getSource();
+
+    /**
+     * @param callable $missingTranslationCallback
+     */
+    public function addMissingTranslationCallback(callable $missingTranslationCallback);
 }

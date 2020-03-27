@@ -27,9 +27,9 @@ class Translator implements TranslatorInterface
     protected $source;
 
     /**
-     * @var \Closure
+     * @var callable[]
      */
-    protected $missingTranslationCallback;
+    protected $missingTranslationCallbacks = [];
 
     /**
      * @var OriginalProcessorInterface[]
@@ -45,13 +45,12 @@ class Translator implements TranslatorInterface
      * Translate constructor.
      * @param LanguageInterface $language
      * @param SourceInterface   $source
-     * @param \Closure|null     $missingTranslationCallback
+     * @param callable|null     $missingTranslationCallback
      */
-    public function __construct(LanguageInterface $language, SourceInterface $source, \Closure $missingTranslationCallback = null)
+    public function __construct(LanguageInterface $language, SourceInterface $source)
     {
         $this->language = $language;
         $this->source = $source;
-        $this->missingTranslationCallback = $missingTranslationCallback;
     }
 
     /**
@@ -79,22 +78,19 @@ class Translator implements TranslatorInterface
     }
 
     /**
-     * @return \Closure
+     * @return callable[]
      */
-    public function getMissingTranslationCallback()
+    public function getMissingTranslationCallbacks()
     {
-        return $this->missingTranslationCallback;
+        return $this->missingTranslationCallbacks;
     }
 
     /**
-     * @param \Closure $missingTranslationCallback
-     * @return $this
+     * @param callable $missingTranslationCallback
      */
-    public function setMissingTranslationCallback($missingTranslationCallback)
+    public function addMissingTranslationCallback(callable $missingTranslationCallback)
     {
-        $this->missingTranslationCallback = $missingTranslationCallback;
-
-        return $this;
+        $this->missingTranslationCallbacks[] = $missingTranslationCallback;
     }
 
     /**
@@ -181,10 +177,15 @@ class Translator implements TranslatorInterface
         );
 
         foreach ($searchPhrases as $originalPhrase => $searchPhrase) {
-            $translate = isset($translatesFromSource[$searchPhrase]) ? $translatesFromSource[$searchPhrase] : null;
-            if ($translate === null) {
-                if (is_callable($this->getMissingTranslationCallback())) {
-                    $translate = $this->getMissingTranslationCallback()($searchPhrase, $this) ?: '';
+            $translate = isset($translatesFromSource[$searchPhrase]) ? $translatesFromSource[$searchPhrase] : '';
+            if (!$translate) {
+                foreach ($this->getMissingTranslationCallbacks() as $missingTranslationCallbacks) {
+                    if (is_callable($missingTranslationCallbacks)) {
+                        $translate = call_user_func($missingTranslationCallbacks, $searchPhrase, $this) ?: '';
+                        if ($translate) {
+                            break;
+                        }
+                    }
                 }
             }
 

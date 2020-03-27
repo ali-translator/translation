@@ -20,7 +20,7 @@ class SourceTest extends TestCase
      */
     public function test()
     {
-        $originalLanguage = (new LanguageFactory())->getOriginalLanguage();
+        $originalLanguage = (new LanguageFactory())->createOriginalLanguage();
 
         $this->checkMysqlSource($originalLanguage);
         $this->checkCsvSource($originalLanguage);

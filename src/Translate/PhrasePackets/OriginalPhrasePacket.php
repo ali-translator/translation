@@ -48,10 +48,18 @@ class OriginalPhrasePacket
     }
 
     /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->originals);
+    }
+
+    /**
      * @return string[]
      */
     public function getAll()
     {
-        return $this->originals;
+        return array_values($this->originals);
     }
 }

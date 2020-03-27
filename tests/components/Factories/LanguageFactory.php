@@ -20,8 +20,8 @@ class LanguageFactory
      */
     public function createOriginalAndCurrentLanguage()
     {
-        $originalLanguage = $this->getOriginalLanguage();
-        $currentLanguage = $this->getCurrentLanguage();
+        $originalLanguage = $this->createOriginalLanguage();
+        $currentLanguage = $this->createCurrentLanguage();
 
         return [$originalLanguage, $currentLanguage];
     }
@@ -29,7 +29,7 @@ class LanguageFactory
     /**
      * @return Language
      */
-    public function getOriginalLanguage()
+    public function createOriginalLanguage()
     {
         return new Language(self::ORIGINAL_LANGUAGE_ALIAS, self::ORIGINAL_LANGUAGE_TITLE);
     }
@@ -37,7 +37,7 @@ class LanguageFactory
     /**
      * @return Language
      */
-    public function getCurrentLanguage()
+    public function createCurrentLanguage()
     {
         return new Language(self::CURRENT_LANGUAGE_ALIAS, self::CURRENT_LANGUAGE_TITLE);
     }

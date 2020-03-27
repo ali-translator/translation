@@ -59,6 +59,9 @@ echo $aliAbc->translateBuffer($html); // '<div>Привіт</div>'
 // If you choose type with auto html translation, you may put full html code for tanslate
 $html =  $aliAbc->addToBuffer('<div>Hello</div>');
 echo $aliAbc->translateBuffer($html); // '<div>Привіт</div>'
+
+// To save originals for which not translation was found, call the following method:
+$aliAbc->saveOriginalsWithoutTranslates();
 ```
 Also you may discover object `$aliAbc->getBufferCaptcher()` for additional methods
 

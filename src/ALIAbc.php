@@ -11,6 +11,7 @@ use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use ALI\Translation\Exceptions\TranslateNotDefinedException;
 use ALI\Translation\Processors\ProcessorsManager;
 use ALI\Translation\Translate\Language\LanguageInterface;
+use ALI\Translation\Translate\MissingTranslateCallbacks\CollectorMissingTranslatesCallback;
 use ALI\Translation\Translate\Sources\MySqlSource;
 use ALI\Translation\Translate\Sources\SourceInterface;
 use ALI\Translation\Translate\Translators\TranslatorInterface;
@@ -47,12 +48,20 @@ class ALIAbc
     protected $bufferTranslate;
 
     /**
+     * @var CollectorMissingTranslatesCallback
+     */
+    protected $collectorTranslateCallback;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ProcessorsManager|null $processorsManager
      */
     public function __construct(TranslatorInterface $translator, ProcessorsManager $processorsManager = null)
     {
         $this->translator = $translator;
+        $this->collectorTranslateCallback = new CollectorMissingTranslatesCallback();
+        $this->translator->addMissingTranslationCallback($this->collectorTranslateCallback);
+
         $this->processorsManager = $processorsManager;
         $this->bufferCaptcher = new BufferCaptcher();
         $this->templatesKeyGenerator = new StaticKeyGenerator('{', '}');
@@ -156,6 +165,18 @@ class ALIAbc
     }
 
     /**
+     * Save originals without translate to source
+     */
+    public function saveOriginalsWithoutTranslates()
+    {
+        $originalsPacketWithoutTranslates = $this->collectorTranslateCallback->getOriginalPhrasePacket();
+        if (!$originalsPacketWithoutTranslates->count()) {
+            return;
+        }
+        $this->translator->getSource()->saveOriginals($originalsPacketWithoutTranslates->getAll());
+    }
+
+    /**
      * @return bool
      */
     public function isCurrentLanguageOriginal()
@@ -178,6 +199,46 @@ class ALIAbc
     public function getBufferCaptcher()
     {
         return $this->bufferCaptcher;
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    public function getTranslator()
+    {
+        return $this->translator;
+    }
+
+    /**
+     * @return ProcessorsManager|null
+     */
+    public function getProcessorsManager()
+    {
+        return $this->processorsManager;
+    }
+
+    /**
+     * @return KeyGenerator
+     */
+    public function getTemplatesKeyGenerator()
+    {
+        return $this->templatesKeyGenerator;
+    }
+
+    /**
+     * @return BufferTranslate
+     */
+    public function getBufferTranslate()
+    {
+        return $this->bufferTranslate;
+    }
+
+    /**
+     * @return CollectorMissingTranslatesCallback
+     */
+    public function getCollectorTranslateCallback()
+    {
+        return $this->collectorTranslateCallback;
     }
 
     /**
