@@ -10,7 +10,6 @@ use ALI\Translation\Buffer\KeyGenerators\KeyGenerator;
 use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use ALI\Translation\Exceptions\TranslateNotDefinedException;
 use ALI\Translation\Processors\ProcessorsManager;
-use ALI\Translation\Translate\Language\LanguageInterface;
 use ALI\Translation\Translate\MissingTranslateCallbacks\CollectorMissingTranslatesCallback;
 use ALI\Translation\Translate\Sources\MySqlSource;
 use ALI\Translation\Translate\Sources\SourceInterface;

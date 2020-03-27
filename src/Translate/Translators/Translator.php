@@ -210,13 +210,14 @@ class Translator implements TranslatorInterface
     }
 
     /**
-     * @param string $languageAlias
      * @param $original
      * @param $translate
+     * @param string $languageAlias
      * @throws SourceException
      */
-    public function saveTranslate($languageAlias, $original, $translate)
+    public function saveTranslate($original, $translate, $languageAlias = null)
     {
+        $languageAlias = $languageAlias ?: $this->languageAlias;
         $this->getSource()->saveTranslate(
             $languageAlias,
             $this->originalProcess($original),
