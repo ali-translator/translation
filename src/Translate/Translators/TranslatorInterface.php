@@ -29,9 +29,9 @@ interface TranslatorInterface
     public function isCurrentLanguageOriginal();
 
     /**
-     * @return LanguageInterface
+     * @return string
      */
-    public function getLanguage();
+    public function getLanguageAlias();
 
     /**
      * @return SourceInterface

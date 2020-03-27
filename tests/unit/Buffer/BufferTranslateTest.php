@@ -26,20 +26,20 @@ class BufferTranslateTest extends TestCase
      */
     public function test()
     {
-        list($originalLanguage, $languageForTranslate) = (new LanguageFactory())->createOriginalAndCurrentLanguage();
+        list($originalLanguage, $currentLanguage) = (new LanguageFactory())->createOriginalAndCurrentLanguage();
 
         $sourceFactory = new SourceFactory();
         $source = $sourceFactory->createCsvSource($originalLanguage);
 
-        $translator = new Translator($languageForTranslate, $source);
+        $translator = new Translator($currentLanguage->getAlias(), $source);
 
         $this->checkTranslateBufferWithoutTranslatedPhrase($translator);
 
-        $this->checkTranslateBuffer($source, $languageForTranslate, $translator);
+        $this->checkTranslateBuffer($source, $currentLanguage, $translator);
 
-        $this->checkTranslateBuffersWithProcessors($source, $languageForTranslate, $translator);
+        $this->checkTranslateBuffersWithProcessors($source, $currentLanguage, $translator);
 
-        $this->checkTranslateBuffersWithProcessorsByOneRequest($source, $languageForTranslate, $translator);
+        $this->checkTranslateBuffersWithProcessorsByOneRequest($source, $currentLanguage, $translator);
     }
 
     /**

@@ -107,7 +107,7 @@ class BufferTranslate
         $bufferLayer = new Buffer(new StaticKeyGenerator('#ali-buffer-layer-content_', '#'));
 
         $fakeBufferSource = new FakeBufferSource($translator->getSource()->getOriginalLanguageAlias(), $bufferLayer);
-        $bufferLayerTranslator = new Translator($translator->getLanguage(),$fakeBufferSource);
+        $bufferLayerTranslator = new Translator($translator->getLanguageAlias(),$fakeBufferSource);
 
         // Create additional buffering layer
         $layerContent = $this->translateBuffersWithProcessors($bufferContent, $bufferLayerTranslator, $processorsManager);

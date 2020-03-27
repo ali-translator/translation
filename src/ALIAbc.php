@@ -101,8 +101,8 @@ class ALIAbc
      */
     public function saveTranslate($original, $translate)
     {
-        $currentLanguage = $this->translator->getLanguage();
-        $this->translator->getSource()->saveTranslate($currentLanguage->getAlias(), $original, $translate);
+        $currentLanguageAlias = $this->translator->getLanguageAlias();
+        $this->translator->getSource()->saveTranslate($currentLanguageAlias, $original, $translate);
     }
 
     /**
@@ -185,12 +185,12 @@ class ALIAbc
     }
 
     /**
-     * @return LanguageInterface
+     * @return string
      * @throws TranslateNotDefinedException
      */
-    public function getLanguage()
+    public function getCurrentLanguageAlias()
     {
-        return $this->translator->getLanguage();
+        return $this->translator->getLanguageAlias();
     }
 
     /**

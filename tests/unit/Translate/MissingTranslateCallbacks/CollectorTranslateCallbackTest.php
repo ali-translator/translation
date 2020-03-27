@@ -22,7 +22,7 @@ class CollectorTranslateCallbackTest extends TestCase
         $source = (new SourceFactory())->createCsvSource($originalLanguage);
 
         $currentLanguage = (new LanguageFactory())->createCurrentLanguage();
-        $translator = new Translator($currentLanguage, $source);
+        $translator = new Translator($currentLanguage->getAlias(), $source);
 
         $callBack = new CollectorMissingTranslatesCallback();
 

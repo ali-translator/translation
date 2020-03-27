@@ -17,9 +17,9 @@ use function is_callable;
 class Translator implements TranslatorInterface
 {
     /**
-     * @var LanguageInterface
+     * @var string
      */
-    protected $language;
+    protected $languageAlias;
 
     /**
      * @var SourceInterface
@@ -43,13 +43,12 @@ class Translator implements TranslatorInterface
 
     /**
      * Translate constructor.
-     * @param LanguageInterface $language
+     * @param string $languageAlias
      * @param SourceInterface   $source
-     * @param callable|null     $missingTranslationCallback
      */
-    public function __construct(LanguageInterface $language, SourceInterface $source)
+    public function __construct($languageAlias, SourceInterface $source)
     {
-        $this->language = $language;
+        $this->languageAlias = $languageAlias;
         $this->source = $source;
     }
 
@@ -58,15 +57,15 @@ class Translator implements TranslatorInterface
      */
     public function isCurrentLanguageOriginal()
     {
-        return $this->language->getAlias() === $this->source->getOriginalLanguageAlias();
+        return $this->languageAlias === $this->source->getOriginalLanguageAlias();
     }
 
     /**
-     * @return LanguageInterface
+     * @return string
      */
-    public function getLanguage()
+    public function getLanguageAlias()
     {
-        return $this->language;
+        return $this->languageAlias;
     }
 
     /**
@@ -173,7 +172,7 @@ class Translator implements TranslatorInterface
 
         $translatesFromSource = $this->getSource()->getTranslates(
             $searchPhrases,
-            $this->getLanguage()->getAlias()
+            $this->getLanguageAlias()
         );
 
         foreach ($searchPhrases as $originalPhrase => $searchPhrase) {

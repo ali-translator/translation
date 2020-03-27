@@ -95,9 +95,7 @@ class ALIAbFactory
             $sourceInstaller->install();
         }
 
-        $currentLanguage = new Language($currentLanguageAlias);
-
-        return new Translator($currentLanguage, $source);
+        return new Translator($currentLanguageAlias, $source);
     }
 
     /**
@@ -127,14 +125,12 @@ class ALIAbFactory
      */
     private function generateCsvTranslator($translationDirectoryPath, $originalLanguageAlias, $currentLanguageAlias)
     {
-        $currentLanguage = new Language($currentLanguageAlias);
-
         $source = new CsvFileSource($translationDirectoryPath, $originalLanguageAlias);
         $fileCsvPath = $source->getLanguageFilePath($currentLanguageAlias);
         if (!file_exists($fileCsvPath)) {
             touch($fileCsvPath);
         }
 
-        return new Translator($currentLanguage, $source);
+        return new Translator($currentLanguageAlias, $source);
     }
 }
