@@ -10,7 +10,6 @@ use ALI\Translation\Processors\ProcessorsManager;
 use ALI\Translation\Processors\TranslateProcessors\HtmlAttributesProcessor;
 use ALI\Translation\Processors\TranslateProcessors\HtmlTagProcessor;
 use ALI\Translation\Processors\TranslateProcessors\SimpleTextProcessor;
-use ALI\Translation\Translate\Language\Language;
 use ALI\Translation\Translate\Sources\CsvFileSource;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
 use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
@@ -21,7 +20,7 @@ use PDO;
 /**
  * Class
  */
-class ALIAbFactory
+class ALIAbcFactory
 {
     /**
      * @param PDO $connection

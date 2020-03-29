@@ -16,8 +16,7 @@ use ALI\Translation\Translate\Sources\SourceInterface;
 use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**
- * Class ALI
- * @package ALI
+ * Class
  */
 class ALIAbc
 {

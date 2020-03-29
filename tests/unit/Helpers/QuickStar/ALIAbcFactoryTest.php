@@ -3,14 +3,14 @@
 namespace ALI\Translation\Tests\unit\Helpers;
 
 use ALI\Translation\ALIAbc;
-use ALI\Translation\Helpers\QuickStart\ALIAbFactory;
+use ALI\Translation\Helpers\QuickStart\ALIAbcFactory;
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
- * ALIAbFactoryTest
+ * Class
  */
-class ALIAbFactoryTest extends TestCase
+class ALIAbcFactoryTest extends TestCase
 {
     /**
      * Test
@@ -22,7 +22,7 @@ class ALIAbFactoryTest extends TestCase
 
         $connection = new \PDO(SOURCE_MYSQL_DNS, SOURCE_MYSQL_USER, SOURCE_MYSQL_PASSWORD);
 
-        $quickStart = new ALIAbFactory();
+        $quickStart = new ALIAbcFactory();
 
         $csvSourceALIAb = $quickStart->createALIByCsvSource(SOURCE_CSV_PATH, $originalLanguageAlias, $currentLanguageAlias);
         $this->assertInstanceOf(ALIAbc::class, $csvSourceALIAb);

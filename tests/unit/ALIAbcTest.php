@@ -3,7 +3,7 @@
 namespace ALI\Translation\Tests\unit;
 
 use ALI\Translation\ALIAbc;
-use ALI\Translation\Helpers\QuickStart\ALIAbFactory;
+use ALI\Translation\Helpers\QuickStart\ALIAbcFactory;
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
@@ -20,7 +20,7 @@ class ALIAbcTest extends TestCase
      */
     public function testTemplateWithParams()
     {
-        $aliAbc = (new ALIAbFactory())->createALIByCsvSource(SOURCE_CSV_PATH, LanguageFactory::ORIGINAL_LANGUAGE_ALIAS, LanguageFactory::CURRENT_LANGUAGE_ALIAS);
+        $aliAbc = (new ALIAbcFactory())->createALIByCsvSource(SOURCE_CSV_PATH, LanguageFactory::ORIGINAL_LANGUAGE_ALIAS, LanguageFactory::CURRENT_LANGUAGE_ALIAS);
         $aliAbc->saveTranslate('Hello {objectName}!', 'Привіт {objectName}!');
         $aliAbc->saveTranslate('sun', 'сонце');
 
