@@ -249,7 +249,7 @@ class ALIAbc
         $buffer = new Buffer($this->templatesKeyGenerator);
 
         foreach ($contentParams as $bufferId => $bufferValue) {
-            $buffer->add(new BufferContent($bufferValue), $bufferId);
+            $buffer->add(new BufferContent($bufferValue, null, false), $bufferId);
         }
 
         return new BufferContent($phrase, $buffer);

@@ -28,8 +28,8 @@ class ALIAbcTest extends TestCase
         $this->checkBufferTranslate($aliAbc);
         $this->checkSaveMissingOriginals($aliAbc);
 
-        $aliAbc->deleteOriginal('Hello {objectName}!');;
-        $aliAbc->deleteOriginal('sun');;
+        $aliAbc->deleteOriginal('Hello {objectName}!');
+        $aliAbc->deleteOriginal('sun');
     }
 
     /**
@@ -40,7 +40,7 @@ class ALIAbcTest extends TestCase
         $translated = $aliAbc->translate('Hello {objectName}!', [
             'objectName' => 'sun',
         ]);
-        $this->assertEquals('Привіт сонце!', $translated);
+        $this->assertEquals('Привіт sun!', $translated);
     }
 
     /**
@@ -52,7 +52,7 @@ class ALIAbcTest extends TestCase
                 'objectName' => 'sun',
             ]) . '</div>';
         $translated = $aliAbc->translateBuffer($content);
-        $this->assertEquals('<div>Привіт сонце!</div>', $translated);
+        $this->assertEquals('<div>Привіт sun!</div>', $translated);
     }
 
     /**
