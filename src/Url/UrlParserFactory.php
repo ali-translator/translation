@@ -25,7 +25,7 @@ class UrlParserFactory
      * @param ALIAbc $aliAbc
      * @param LanguageRepositoryInterface $languageRepository
      */
-    public function __construct(SourceInterface $aliAbc, LanguageRepositoryInterface $languageRepository)
+    public function __construct(ALIAbc $aliAbc, LanguageRepositoryInterface $languageRepository)
     {
         $this->aliAbc = $aliAbc;
         $this->languageRepository = $languageRepository;
