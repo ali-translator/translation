@@ -2,6 +2,7 @@
 
 namespace ALI\Translation\Url;
 
+use ALI\Translation\ALIAbc;
 use ALI\Translation\Languages\LanguageRepositoryInterface;
 use ALI\Translation\Translate\Sources\SourceInterface;
 
@@ -11,9 +12,9 @@ use ALI\Translation\Translate\Sources\SourceInterface;
 class UrlParserFactory
 {
     /**
-     * @var SourceInterface
+     * @var ALIAbc
      */
-    protected $source;
+    protected $aliAbc;
 
     /**
      * @var LanguageRepositoryInterface
@@ -21,12 +22,12 @@ class UrlParserFactory
     protected $languageRepository;
 
     /**
-     * @param SourceInterface $source
+     * @param ALIAbc $aliAbc
      * @param LanguageRepositoryInterface $languageRepository
      */
-    public function __construct(SourceInterface $source, LanguageRepositoryInterface $languageRepository)
+    public function __construct(SourceInterface $aliAbc, LanguageRepositoryInterface $languageRepository)
     {
-        $this->source = $source;
+        $this->aliAbc = $aliAbc;
         $this->languageRepository = $languageRepository;
     }
 
@@ -39,7 +40,7 @@ class UrlParserFactory
 
         $allowedLanguagesAlis = [];
         foreach ($languages as $language) {
-            if ($language->getAlias() === $this->source->getOriginalLanguageAlias()) {
+            if ($language->getAlias() === $this->aliAbc->getOriginalLanguageAlias()) {
                 continue;
             }
             $allowedLanguagesAlis[] = $language->getAlias();
