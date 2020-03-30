@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Tests\components\Factories;
 
-use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Languages\Language;
 
 /**
  * Class

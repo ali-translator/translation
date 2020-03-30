@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Translate\Translators;
 
-use ALI\Translation\Translate\Language\LanguageInterface;
+use ALI\Translation\Languages\LanguageInterface;
 use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
 use ALI\Translation\Translate\Sources\SourceInterface;
 

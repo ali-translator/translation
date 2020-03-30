@@ -4,7 +4,7 @@ namespace ALI\Translation\Translate\Sources;
 
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use PDO;
-use ALI\Translation\Translate\Language\LanguageInterface;
+use ALI\Translation\Languages\LanguageInterface;
 use ALI\Translation\Translate\Sources\Exceptions\MySqlSource\LanguageNotExistsException;
 
 /**

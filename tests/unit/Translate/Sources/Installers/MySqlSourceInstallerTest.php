@@ -27,6 +27,10 @@ class MySqlSourceInstallerTest extends TestCase
         $mySqlSourceInstaller = new MySqlSourceInstaller($connection);
         $this->mySqlSourceInstaller = $mySqlSourceInstaller;
 
+        if ($this->mySqlSourceInstaller->isInstalled()) {
+            $this->mySqlSourceInstaller->destroy();
+        }
+
         $this->install($mySqlSourceInstaller);
         $this->destroy($mySqlSourceInstaller);
     }

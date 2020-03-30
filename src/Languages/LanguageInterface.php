@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Translate\Language;
+namespace ALI\Translation\Languages;
 
 /**
  * LanguageInterface Interface

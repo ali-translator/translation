@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Tests\components\Factories;
 
-use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Languages\Language;
 use ALI\Translation\Translate\Sources\CsvFileSource;
 use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
 use ALI\Translation\Translate\Sources\MySqlSource;

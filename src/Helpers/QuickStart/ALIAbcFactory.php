@@ -90,7 +90,7 @@ class ALIAbcFactory
     {
         $source = new MySqlSource($connection, $originalLanguageAlias);
         $sourceInstaller = new MySqlSourceInstaller($connection);
-        if ($sourceInstaller->isInstalled()) {
+        if (!$sourceInstaller->isInstalled()) {
             $sourceInstaller->install();
         }
 

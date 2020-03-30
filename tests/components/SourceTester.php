@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Tests\components;
 
-use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Languages\Language;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use ALI\Translation\Translate\Sources\SourceInterface;
 use PHPUnit\Framework\TestCase;

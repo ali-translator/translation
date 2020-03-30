@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Translate\Sources;
 
-use ALI\Translation\Translate\Language\LanguageInterface;
+use ALI\Translation\Languages\LanguageInterface;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\DirectoryNotFoundException;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileNotWritableException;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileReadPermissionsException;

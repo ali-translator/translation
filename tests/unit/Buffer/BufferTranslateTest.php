@@ -10,7 +10,7 @@ use ALI\Translation\Processors\TranslateProcessors\CustomTagProcessor;
 use ALI\Translation\Processors\TranslateProcessors\SimpleTextProcessor;
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
-use ALI\Translation\Translate\Language\Language;
+use ALI\Translation\Languages\Language;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use ALI\Translation\Translate\Sources\SourceInterface;
 use ALI\Translation\Translate\Translators\Translator;
