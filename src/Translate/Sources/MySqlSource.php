@@ -91,21 +91,7 @@ class MySqlSource implements SourceInterface
             return [];
         }
 
-        $whereQuery = [];
-        $valuesForWhereBinding = [];
-        $queryIndexIncrement = 1;
-        foreach ($phrases as $keyForBinding => $phrase) {
-            $queryIndexIncrement++;
-            $contentIndexKey = 'content_index_' . $queryIndexIncrement;
-            $queryIndexIncrement++;
-            $contentKey = 'content_' . $queryIndexIncrement;
-            $valuesForWhereBinding[$keyForBinding] = [
-                'phrase' => $phrase,
-                'contentIndexKey' => $contentIndexKey,
-                'contentKey' => $contentKey,
-            ];
-            $whereQuery[$keyForBinding] = '(o.`content_index`=:' . $contentIndexKey . ' AND BINARY o.`content`=:' . $contentKey . ')';
-        }
+        list($whereQuery, $valuesForWhereBinding) = $this->prepareParamsForQuery($phrases, 'select');
 
         $dataQuery = $this->pdo->prepare(
             'SELECT o.`id`, o.`content_index`, o.`content` as `original`, t.`content` as `translate`
@@ -117,17 +103,7 @@ class MySqlSource implements SourceInterface
         );
         $dataQuery->bindValue('languageAlias', $languageAlias, PDO::PARAM_STR);
 
-        foreach ($valuesForWhereBinding as $dataForBinding) {
-            $originalQueryParams = $this->createOriginalQueryParams($dataForBinding['phrase']);
-
-            $contentIndexKey = $dataForBinding['contentIndexKey'];
-            $contentIndex = $originalQueryParams['contentIndex'];
-            $contentKey = $dataForBinding['contentKey'];
-            $content = $originalQueryParams['content'];
-
-            $dataQuery->bindValue($contentIndexKey, $contentIndex, PDO::PARAM_STR);
-            $dataQuery->bindValue($contentKey, $content, PDO::PARAM_STR);
-        }
+        $this->bindParams($valuesForWhereBinding, $dataQuery);
 
         $dataQuery->execute();
 
@@ -256,7 +232,67 @@ class MySqlSource implements SourceInterface
      */
     public function saveOriginals(array $phrases)
     {
-        $valuesQuery = [];
+        if (!$phrases) {
+            return;
+        }
+        $phrasesForInsert = array_diff($phrases, $this->getExistOriginals($phrases));
+        if (!$phrasesForInsert) {
+            return;
+        }
+
+        list($valuesQuery, $valuesForWhereBinding) = $this->prepareParamsForQuery($phrases, 'insert');
+
+        $statement = $this->pdo->prepare(
+            'INSERT INTO `' . $this->originalTableName . '`
+                        (`content_index`, `content`)
+                            VALUES ' . implode(',', $valuesQuery) . '
+                            '
+        );
+
+        $this->bindParams($valuesForWhereBinding,$statement);
+
+        $statement->execute();
+    }
+
+    /**
+     * @param array $phrases
+     * @return array|mixed|string[]
+     */
+    public function getExistOriginals(array $phrases)
+    {
+        if (!$phrases) {
+            return [];
+        }
+
+        list($whereQuery, $valuesForWhereBinding) = $this->prepareParamsForQuery($phrases, 'select');
+
+        $dataQuery = $this->pdo->prepare(
+            'SELECT o.`id`, o.`content_index`, o.`content` as `original`
+                FROM `' . $this->originalTableName . '` AS `o`
+                FORCE INDEX(indexContentIndex)
+            WHERE ' . implode(' OR ', $whereQuery) . '
+            LIMIT ' . count($phrases)
+        );
+        $this->bindParams($valuesForWhereBinding, $dataQuery);
+
+        $dataQuery->execute();
+
+        $existPhrases = [];
+        while ($existPhrase = $dataQuery->fetch(PDO::FETCH_ASSOC)) {
+            $existPhrases[] = $existPhrase['original'];
+        }
+
+        return $existPhrases;
+    }
+
+    /**
+     * @param array $phrases
+     * @param string $type
+     * @return array
+     */
+    private function prepareParamsForQuery(array $phrases, $type)
+    {
+        $queryParts = [];
         $valuesForWhereBinding = [];
         $queryIndexIncrement = 1;
         foreach ($phrases as $keyForBinding => $phrase) {
@@ -269,17 +305,28 @@ class MySqlSource implements SourceInterface
                 'contentIndexKey' => $contentIndexKey,
                 'contentKey' => $contentKey,
             ];
-            $valuesQuery[$keyForBinding] = '(:' . $contentIndexKey . ', :' . $contentKey . ')';
+            switch ($type){
+                case 'select':
+                    $queryParts[$keyForBinding] = '(o.`content_index`=:' . $contentIndexKey . ' AND BINARY o.`content`=:' . $contentKey . ')';
+                    break;
+                case 'insert':
+                    $queryParts[$keyForBinding] = '(:' . $contentIndexKey . ', :' . $contentKey . ')';
+                    break;
+                default:
+                    throw new \Exception('Invalid type');
+                    break;
+            }
         }
 
-        $statement = $this->pdo->prepare(
-            'INSERT INTO `' . $this->originalTableName . '`
-                        (`content_index`, `content`)
-                            VALUES ' . implode(',', $valuesQuery) . '
-                            ON DUPLICATE KEY UPDATE `content_index`=`content_index`
-                            '
-        );
+        return [$queryParts, $valuesForWhereBinding];
+    }
 
+    /**
+     * @param $valuesForWhereBinding
+     * @param \PDOStatement $dataQuery
+     */
+    private function bindParams($valuesForWhereBinding, \PDOStatement $dataQuery)
+    {
         foreach ($valuesForWhereBinding as $dataForBinding) {
             $originalQueryParams = $this->createOriginalQueryParams($dataForBinding['phrase']);
 
@@ -288,27 +335,8 @@ class MySqlSource implements SourceInterface
             $contentKey = $dataForBinding['contentKey'];
             $content = $originalQueryParams['content'];
 
-            $statement->bindValue($contentIndexKey, $contentIndex, PDO::PARAM_STR);
-            $statement->bindValue($contentKey, $content, PDO::PARAM_STR);
+            $dataQuery->bindValue($contentIndexKey, $contentIndex, PDO::PARAM_STR);
+            $dataQuery->bindValue($contentKey, $content, PDO::PARAM_STR);
         }
-
-        $statement->execute();
-    }
-
-    /**
-     * @param array $phrases
-     * @return array|mixed|string[]
-     */
-    public function getExistOriginals(array $phrases)
-    {
-        // TODO make more performance friendly (now this method uses only in tests)
-        $existPhrases = [];
-        foreach ($phrases as $phrase) {
-            if ($this->getOriginalId($phrase)) {
-                $existPhrases[] = $phrase;
-            }
-        }
-
-        return $existPhrases;
     }
 }
