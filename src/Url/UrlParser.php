@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Url;
 
-use ALI\Translation\Languages\LanguageRepositoryInterface;
+use Exception;
 
 /**
  * Class
@@ -12,22 +12,15 @@ class UrlParser
     /**
      * @var string[]
      */
-    protected $allLanguagesAliases = [];
+    protected $allowedLanguagesAlis = [];
 
     /**
      * UrlHelper constructor.
-     * @param string[] $allLanguagesAliases
+     * @param string[] $allowedLanguagesAlis
      */
-    public function __construct($allLanguagesAliases)
+    public function __construct($allowedLanguagesAlis)
     {
-        if ($allLanguagesAliases instanceof LanguageRepositoryInterface) {
-            $languages = $allLanguagesAliases->getAll(true);
-            foreach ($languages as $language) {
-                $this->allLanguagesAliases[] = $language->getAlias();
-            }
-        } else {
-            $this->allLanguagesAliases = $allLanguagesAliases;
-        }
+        $this->allowedLanguagesAlis = $allowedLanguagesAlis;
     }
 
     /**
@@ -40,7 +33,7 @@ class UrlParser
         $requestURI = $this->resolveRequestUrl($requestURI);
 
         if (preg_match('#^/(?<language>\w{2})(?:/|\Z|\?)#', $requestURI, $parseUriMatches)) {
-            if (in_array($parseUriMatches['language'], $this->allLanguagesAliases, true)) {
+            if (in_array($parseUriMatches['language'], $this->allowedLanguagesAlis, true)) {
                 $languageAlias = $parseUriMatches['language'];
             }
         }
@@ -70,7 +63,7 @@ class UrlParser
     /**
      * @param null $requestURI
      * @return mixed|null
-     * @throws \Exception
+     * @throws Exception
      */
     protected function resolveRequestUrl($requestURI = null)
     {
@@ -78,7 +71,7 @@ class UrlParser
             $requestURI = $_SERVER['REQUEST_URI'];
         }
         if ($requestURI === null) {
-            throw new \Exception('RequestURI must be specified');
+            throw new Exception('RequestURI must be specified');
         }
 
         return $requestURI;
