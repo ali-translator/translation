@@ -2,8 +2,6 @@
 
 namespace ALI\Translation\Url;
 
-use Exception;
-
 /**
  * Class
  */
@@ -24,15 +22,13 @@ class UrlParser
     }
 
     /**
-     * @param string|null $requestURI
      * @return null|string
      */
-    public function getLangAliasFromURI($requestURI = null)
+    public function getLangAliasFromURI($requestURI)
     {
         $languageAlias = null;
-        $requestURI = $this->resolveRequestUrl($requestURI);
 
-        if (preg_match('#^/(?<language>\w{2})(?:/|\Z|\?)#', $requestURI, $parseUriMatches)) {
+        if (preg_match('#^((https?:)?//[^/]+)?/(?<language>\w{2})(?:/|\Z|\?)#', $requestURI, $parseUriMatches)) {
             if (in_array($parseUriMatches['language'], $this->allowedLanguagesAlis, true)) {
                 $languageAlias = $parseUriMatches['language'];
             }
@@ -42,12 +38,10 @@ class UrlParser
     }
 
     /**
-     * @param null $requestURI
      * @return mixed|string|string[]|null
      */
-    public function getRequestUriWithoutLangAlias($requestURI = null)
+    public function getRequestUriWithoutLangAlias($requestURI)
     {
-        $requestURI = $this->resolveRequestUrl($requestURI);
         $langFromUrl = $this->getLangAliasFromURI($requestURI);
 
         if (!$langFromUrl) {
@@ -55,25 +49,47 @@ class UrlParser
         }
 
         return preg_replace(
-            '#^/' . preg_quote($langFromUrl, '#') . '(?:/|\Z|(\?))#Us', '/$1',
+            '#^((https?:)?//[^/]+)?/' . preg_quote($langFromUrl, '#') . '(?:/|\Z|(\?))#Us', '$1/$3',
             $requestURI
         );
     }
 
     /**
-     * @param null $requestURI
-     * @return mixed|null
-     * @throws Exception
+     * Generate url:
+     *  - change language alias for url with language alias
+     *  - add language alias for url without language alias
+     *  - remove language alias, if his included and input parameter is null
+     *
+     * @param string $requestURI
+     * @param null|string $languageAlias
+     * @return string|string[]|null
      */
-    protected function resolveRequestUrl($requestURI = null)
+    public function generateUrlWithLanguageAlias($requestURI, $languageAlias)
     {
-        if (is_null($requestURI) && isset($_SERVER['REQUEST_URI'])) {
-            $requestURI = $_SERVER['REQUEST_URI'];
-        }
-        if ($requestURI === null) {
-            throw new Exception('RequestURI must be specified');
+        $langFromUrl = $this->getLangAliasFromURI($requestURI);
+
+        // Without modify
+        if ($requestURI === $langFromUrl) {
+            return $requestURI;
         }
 
-        return $requestURI;
+        // Need url without language alias
+        if ($languageAlias === null) {
+            return $this->getRequestUriWithoutLangAlias($requestURI);
+        }
+
+        // Current url without language alis, need add
+        if ($langFromUrl === null && $languageAlias !== null) {
+            return preg_replace(
+                '#^((https?:)?//[^/]+)?(?:/|\Z|(\?))#Us', '$1/' . $languageAlias . '/$3',
+                $requestURI
+            );
+        }
+
+        // Current url include language alias, change his to new language
+        return preg_replace(
+            '#^((https?:)?//[^/]+)?/' . preg_quote($langFromUrl, '#') . '(?:/|\Z|(\?))#Us', '$1/' . $languageAlias . '/$3',
+            $requestURI
+        );
     }
 }
