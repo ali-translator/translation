@@ -89,7 +89,7 @@ class UrlParserTest extends TestCase
     public function testGenerateUrlWithLanguageAlias()
     {
         foreach ($this->hosts as $host) {
-            // Remove
+            // Remove/Stay
             $urlWithoutLanguage = $this->urlParser->generateUrlWithLanguageAlias($host . '/test/', null);
             $this->assertEquals($host . '/test/', $urlWithoutLanguage);
 

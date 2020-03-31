@@ -10,9 +10,11 @@ use ALI\Translation\Languages\LanguageRepositoryInterface;
 class UrlParserFactory
 {
     /**
+     * Default site language alias (on this language, site url has not language alias)
+     *
      * @var string
      */
-    protected $originalLanguageAlias;
+    protected $defaultLanguageAlias;
 
     /**
      * @var LanguageRepositoryInterface
@@ -20,12 +22,12 @@ class UrlParserFactory
     protected $languageRepository;
 
     /**
-     * @param string $originalLanguageAlias
+     * @param string $defaultLanguageAlias
      * @param LanguageRepositoryInterface $languageRepository
      */
-    public function __construct($originalLanguageAlias, LanguageRepositoryInterface $languageRepository)
+    public function __construct($defaultLanguageAlias, LanguageRepositoryInterface $languageRepository)
     {
-        $this->originalLanguageAlias = $originalLanguageAlias;
+        $this->defaultLanguageAlias = $defaultLanguageAlias;
         $this->languageRepository = $languageRepository;
     }
 
@@ -38,13 +40,13 @@ class UrlParserFactory
 
         $allowedLanguagesAlis = [];
         foreach ($languages as $language) {
-            if ($language->getAlias() === $this->originalLanguageAlias) {
+            if ($language->getAlias() === $this->defaultLanguageAlias) {
                 continue;
             }
             $allowedLanguagesAlis[] = $language->getAlias();
         }
 
-        return new UrlParser($allowedLanguagesAlis);
+        return new UrlParser($allowedLanguagesAlis, $this->defaultLanguageAlias);
     }
 
     /**

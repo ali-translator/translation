@@ -14,6 +14,7 @@ class UrlLanguageResolver
 
     /**
      * @param UrlParser $urlParser
+     * @param string $defaultLanguageAlias
      */
     public function __construct(UrlParser $urlParser)
     {
@@ -23,18 +24,23 @@ class UrlLanguageResolver
     /**
      * @var bool|null|string
      */
-    protected $currentLanguageAlias = false;
+    protected $_currentLanguageAlias = false;
 
     /**
      * @return string|null
      */
     public function resolveUrlCurrentLanguage()
     {
-        if ($this->currentLanguageAlias === false) {
-            $this->currentLanguageAlias = $this->urlParser->getLangAliasFromURI($_SERVER['REQUEST_URI']);
+        if ($this->_currentLanguageAlias === false) {
+            $currentLanguageAlias = $this->urlParser->getLangAliasFromURI($_SERVER['REQUEST_URI']);
+            if ($currentLanguageAlias === null) {
+                $this->_currentLanguageAlias = $this->urlParser->getDefaultLanguageAlias();
+            } else {
+                $this->_currentLanguageAlias = $currentLanguageAlias;
+            }
             $_SERVER['REQUEST_URI'] = $this->urlParser->getRequestUriWithoutLangAlias($_SERVER['REQUEST_URI']);
         }
 
-        return $this->currentLanguageAlias;
+        return (string)$this->_currentLanguageAlias;
     }
 }
