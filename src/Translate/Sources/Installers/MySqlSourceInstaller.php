@@ -48,7 +48,7 @@ class MySqlSourceInstaller
         $query->bindValue('tableTranslate', $this->translateTableName);
         $query->execute();
 
-        return $query->fetchColumn() == 2;
+        return (int)$query->fetchColumn() === 2;
     }
 
     /**
