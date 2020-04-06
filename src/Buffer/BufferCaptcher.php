@@ -15,14 +15,14 @@ class BufferCaptcher
     protected $buffer;
 
     /**
-     * @param Buffer $buffer
+     * @param null|Buffer $buffer
      */
     public function __construct(Buffer $buffer = null)
     {
         if ($buffer) {
             $this->buffer = $buffer;
         } else {
-            $keyGenerator = new StaticKeyGenerator('<!--ALI:buffer:', '-->');
+            $keyGenerator = new StaticKeyGenerator('#--ALI:buffer:', '--#');
             $this->buffer = new Buffer($keyGenerator);
         }
     }

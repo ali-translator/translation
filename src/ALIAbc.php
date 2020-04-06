@@ -53,17 +53,28 @@ class ALIAbc
     /**
      * @param TranslatorInterface $translator
      * @param ProcessorsManager|null $processorsManager
+     * @param CollectorMissingTranslatesCallback|null $collectorTranslateCallback
+     * @param BufferCaptcher|null $bufferCaptcher
+     * @param KeyGenerator|null $templatesKeyGenerator
+     * @param BufferTranslate|null $bufferTranslate
      */
-    public function __construct(TranslatorInterface $translator, ProcessorsManager $processorsManager = null)
+    public function __construct(
+        TranslatorInterface $translator,
+        ProcessorsManager $processorsManager = null,
+        CollectorMissingTranslatesCallback $collectorTranslateCallback = null,
+        BufferCaptcher $bufferCaptcher = null,
+        KeyGenerator $templatesKeyGenerator = null,
+        BufferTranslate $bufferTranslate = null
+    )
     {
         $this->translator = $translator;
-        $this->collectorTranslateCallback = new CollectorMissingTranslatesCallback();
+        $this->collectorTranslateCallback = $collectorTranslateCallback ?: new CollectorMissingTranslatesCallback();
         $this->translator->addMissingTranslationCallback($this->collectorTranslateCallback);
 
         $this->processorsManager = $processorsManager;
-        $this->bufferCaptcher = new BufferCaptcher();
-        $this->templatesKeyGenerator = new StaticKeyGenerator('{', '}');
-        $this->bufferTranslate = new BufferTranslate();
+        $this->bufferCaptcher = $bufferCaptcher ?: new BufferCaptcher();
+        $this->templatesKeyGenerator = $templatesKeyGenerator ?: new StaticKeyGenerator('{', '}');
+        $this->bufferTranslate = $bufferTranslate ?: new BufferTranslate();
     }
 
     /**
