@@ -240,7 +240,7 @@ class MySqlSource implements SourceInterface
             return;
         }
 
-        list($valuesQuery, $valuesForWhereBinding) = $this->prepareParamsForQuery($phrases, 'insert');
+        list($valuesQuery, $valuesForWhereBinding) = $this->prepareParamsForQuery($phrasesForInsert, 'insert');
 
         $statement = $this->pdo->prepare(
             'INSERT INTO `' . $this->originalTableName . '`
@@ -270,8 +270,7 @@ class MySqlSource implements SourceInterface
             'SELECT o.`id`, o.`content_index`, o.`content` as `original`
                 FROM `' . $this->originalTableName . '` AS `o`
                 FORCE INDEX(indexContentIndex)
-            WHERE ' . implode(' OR ', $whereQuery) . '
-            LIMIT ' . count($phrases)
+            WHERE ' . implode(' OR ', $whereQuery)
         );
         $this->bindParams($valuesForWhereBinding, $dataQuery);
 
