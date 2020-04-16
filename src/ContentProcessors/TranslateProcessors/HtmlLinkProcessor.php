@@ -1,8 +1,7 @@
 <?php
 
-namespace ALI\Translation\Processors\TranslateProcessors;
+namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
-use ALI\Translation\Translate\Translators\Translator;
 use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**

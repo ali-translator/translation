@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Processors\TranslateProcessors;
+namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
 use ALI\Translation\Exceptions\ALIException;
 use ALI\Translation\Translate\Translators\TranslatorInterface;

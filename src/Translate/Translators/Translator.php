@@ -2,17 +2,13 @@
 
 namespace ALI\Translation\Translate\Translators;
 
-use ALI\Translation\Languages\LanguageInterface;
-use ALI\Translation\Translate\OriginalProcessors\OriginalProcessorInterface;
 use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use ALI\Translation\Translate\Sources\SourceInterface;
-use ALI\Translation\Translate\TranslateProcessors\TranslateProcessorInterface;
 use function is_callable;
 
 /**
- * Class Translate
- * @package ALI
+ * Base `Translator` class.
  */
 class Translator implements TranslatorInterface
 {
@@ -27,29 +23,30 @@ class Translator implements TranslatorInterface
     protected $source;
 
     /**
+     * @var bool
+     */
+    protected $translationFallback;
+
+    /**
      * @var callable[]
      */
     protected $missingTranslationCallbacks = [];
 
     /**
-     * @var OriginalProcessorInterface[]
+     * Translate constructor
+     *
+     * @param $languageAlias
+     * @param SourceInterface $source
      */
-    protected $originalProcessors = [];
-
-    /**
-     * @var TranslateProcessorInterface[]
-     */
-    protected $translateProcessors = [];
-
-    /**
-     * Translate constructor.
-     * @param string $languageAlias
-     * @param SourceInterface   $source
-     */
-    public function __construct($languageAlias, SourceInterface $source)
+    public function __construct(
+        $languageAlias,
+        SourceInterface $source,
+        $translationFallback = false
+    )
     {
         $this->languageAlias = $languageAlias;
         $this->source = $source;
+        $this->translationFallback = $translationFallback;
     }
 
     /**
@@ -93,60 +90,6 @@ class Translator implements TranslatorInterface
     }
 
     /**
-     * @return OriginalProcessorInterface[]
-     */
-    public function getOriginalProcessors()
-    {
-        return $this->originalProcessors;
-    }
-
-    /**
-     * @param OriginalProcessorInterface[] $originalProcessors
-     * @return $this
-     */
-    public function setOriginalProcessors($originalProcessors)
-    {
-        $this->originalProcessors = $originalProcessors;
-
-        return $this;
-    }
-
-    /**
-     * @param OriginalProcessorInterface $originalProcessor
-     */
-    public function addOriginalProcessor(OriginalProcessorInterface $originalProcessor)
-    {
-        $this->originalProcessors[] = $originalProcessor;
-    }
-
-    /**
-     * @return TranslateProcessorInterface[]
-     */
-    public function getTranslateProcessors()
-    {
-        return $this->translateProcessors;
-    }
-
-    /**
-     * @param TranslateProcessorInterface[] $translateProcessors
-     * @return $this
-     */
-    public function setTranslateProcessors($translateProcessors)
-    {
-        $this->translateProcessors = $translateProcessors;
-
-        return $this;
-    }
-
-    /**
-     * @param TranslateProcessorInterface $translateProcessor
-     */
-    public function addTranslateProcessor(TranslateProcessorInterface $translateProcessor)
-    {
-        $this->translateProcessors[] = $translateProcessor;
-    }
-
-    /**
      * @param array $phrases
      * @return TranslatePhrasePacket
      */
@@ -162,13 +105,7 @@ class Translator implements TranslatorInterface
             return $translatePhrasePacket;
         }
 
-        $searchPhrases = [];
-        foreach ($phrases as $phrase) {
-            if (!$phrase) {
-                continue;
-            }
-            $searchPhrases[$phrase] = $this->originalProcess($phrase);
-        }
+        $searchPhrases = array_combine($phrases, $phrases);
 
         $translatesFromSource = $this->getSource()->getTranslates(
             $searchPhrases,
@@ -188,11 +125,10 @@ class Translator implements TranslatorInterface
                 }
             }
 
-            if ($translate !== null) {
-                $translate = $this->translateProcess($originalPhrase, $translate);
+            if (!$translate && $this->translationFallback) {
+                $translate = $originalPhrase;
             }
-
-            $translatePhrasePacket->addTranslate($originalPhrase,$translate);
+            $translatePhrasePacket->addTranslate($originalPhrase, $translate);
         }
 
         return $translatePhrasePacket;
@@ -220,7 +156,7 @@ class Translator implements TranslatorInterface
         $languageAlias = $languageAlias ?: $this->languageAlias;
         $this->getSource()->saveTranslate(
             $languageAlias,
-            $this->originalProcess($original),
+            $original,
             $translate
         );
     }
@@ -231,35 +167,6 @@ class Translator implements TranslatorInterface
      */
     public function delete($original)
     {
-        $this->getSource()->delete(
-            $this->originalProcess($original)
-        );
-    }
-
-    /**
-     * @param $original
-     * @return string
-     */
-    protected function originalProcess($original)
-    {
-        foreach ($this->getOriginalProcessors() as $originalProcessor) {
-            $original = $originalProcessor->process($original);
-        }
-
-        return $original;
-    }
-
-    /**
-     * @param string $original
-     * @param string $translate
-     * @return string
-     */
-    protected function translateProcess($original, $translate)
-    {
-        foreach ($this->getTranslateProcessors() as $translateProcessor) {
-            $translate = $translateProcessor->process($original, $translate);
-        }
-
-        return $translate;
+        $this->getSource()->delete($original);
     }
 }

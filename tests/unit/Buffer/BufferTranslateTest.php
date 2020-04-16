@@ -5,15 +5,16 @@ namespace ALI\Translation\Tests\unit\Buffer;
 use ALI\Translation\Buffer\BufferCaptcher;
 use ALI\Translation\Buffer\BufferContent;
 use ALI\Translation\Buffer\BufferTranslate;
-use ALI\Translation\Processors\ProcessorsManager;
-use ALI\Translation\Processors\TranslateProcessors\CustomTagProcessor;
-use ALI\Translation\Processors\TranslateProcessors\SimpleTextProcessor;
+use ALI\Translation\ContentProcessors\ContentProcessorsManager;
+use ALI\Translation\ContentProcessors\TranslateProcessors\CustomTagProcessor;
+use ALI\Translation\ContentProcessors\TranslateProcessors\SimpleTextProcessor;
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Languages\Language;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use ALI\Translation\Translate\Sources\SourceInterface;
 use ALI\Translation\Translate\Translators\Translator;
+use ALI\Translation\Translate\Translators\TranslatorInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,7 +30,7 @@ class BufferTranslateTest extends TestCase
         list($originalLanguage, $currentLanguage) = (new LanguageFactory())->createOriginalAndCurrentLanguage();
 
         $sourceFactory = new SourceFactory();
-        $source = $sourceFactory->createCsvSource($originalLanguage);
+        $source = $sourceFactory->createCsvSource($originalLanguage->getAlias());
 
         $translator = new Translator($currentLanguage->getAlias(), $source);
 
@@ -43,9 +44,9 @@ class BufferTranslateTest extends TestCase
     }
 
     /**
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      */
-    private function checkTranslateBufferWithoutTranslatedPhrase(Translator $translator)
+    private function checkTranslateBufferWithoutTranslatedPhrase(TranslatorInterface $translator)
     {
         $bufferCaptcher = new BufferCaptcher();
         $html = '<div class="test">' . $bufferCaptcher->add('Hello') . '</div>';
@@ -87,13 +88,13 @@ class BufferTranslateTest extends TestCase
      * @param Translator $translator
      * @throws SourceException
      */
-    private function checkTranslateBuffersWithProcessors(SourceInterface $source, Language $languageForTranslate, Translator $translator)
+    private function checkTranslateBuffersWithProcessors(SourceInterface $source, Language $languageForTranslate, TranslatorInterface $translator)
     {
         $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 
-        $processorsManager = new ProcessorsManager();
-        $processorsManager->addTranslateProcessor(new CustomTagProcessor('<translate>', '</translate>', true));
-        $processorsManager->addTranslateProcessor(new SimpleTextProcessor(['<']));
+        $contentProcessorsManager = new ContentProcessorsManager();
+        $contentProcessorsManager->addTranslateProcessor(new CustomTagProcessor('<translate>', '</translate>', true));
+        $contentProcessorsManager->addTranslateProcessor(new SimpleTextProcessor(['<']));
 
         $bufferCaptcher = new BufferCaptcher();
         $html = '<div class="test">';
@@ -112,7 +113,7 @@ class BufferTranslateTest extends TestCase
         $bufferTranslate = new BufferTranslate();
 
         // Default buffer translate with processes
-        $translatedHtml = $bufferTranslate->translateBuffersWithProcessors($bufferContent, $translator, $processorsManager);
+        $translatedHtml = $bufferTranslate->translateBuffersWithProcessors($bufferContent, $translator, $contentProcessorsManager);
         $this->assertEquals($translatedHtml, $correctTranslateHtml);
 
         $source->delete('Hello');
@@ -128,9 +129,9 @@ class BufferTranslateTest extends TestCase
     {
         $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 
-        $processorsManager = new ProcessorsManager();
-        $processorsManager->addTranslateProcessor(new CustomTagProcessor('<translate>', '</translate>', true));
-        $processorsManager->addTranslateProcessor(new SimpleTextProcessor(['<']));
+        $contentProcessorsManager = new ContentProcessorsManager();
+        $contentProcessorsManager->addTranslateProcessor(new CustomTagProcessor('<translate>', '</translate>', true));
+        $contentProcessorsManager->addTranslateProcessor(new SimpleTextProcessor(['<']));
 
         $bufferCaptcher = new BufferCaptcher();
         $html = '<div class="test">';
@@ -149,7 +150,7 @@ class BufferTranslateTest extends TestCase
         $bufferTranslate = new BufferTranslate();
 
         // Buffer translate with one source request
-        $translatedHtml = $bufferTranslate->translateBuffersWithProcessorsByOneRequest($bufferContent, $translator, $processorsManager);
+        $translatedHtml = $bufferTranslate->translateBuffersWithProcessorsByOneRequest($bufferContent, $translator, $contentProcessorsManager);
         $this->assertEquals($translatedHtml, $correctTranslateHtml);
 
         $source->delete('Hello');

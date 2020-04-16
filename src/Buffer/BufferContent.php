@@ -20,18 +20,18 @@ class BufferContent
     /**
      * @var bool
      */
-    protected $withContentTranslate;
+    protected $withContentTranslation;
 
     /**
      * @param string $content
      * @param Buffer $buffer
-     * @param bool $withContentTranslate
+     * @param bool $withContentTranslation
      */
-    public function __construct($content, Buffer $buffer = null, $withContentTranslate = true)
+    public function __construct($content, Buffer $buffer = null, $withContentTranslation = true)
     {
         $this->content = $content;
         $this->buffer = $buffer;
-        $this->withContentTranslate = $withContentTranslate;
+        $this->withContentTranslation = $withContentTranslation;
     }
 
     /**
@@ -53,8 +53,8 @@ class BufferContent
     /**
      * @return bool
      */
-    public function isWithContentTranslate()
+    public function withContentTranslation()
     {
-        return $this->withContentTranslate;
+        return $this->withContentTranslation;
     }
 }

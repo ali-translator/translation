@@ -3,7 +3,7 @@
 namespace ALI\Translation\Buffer;
 
 use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
-use ALI\Translation\Processors\ProcessorsManager;
+use ALI\Translation\ContentProcessors\ContentProcessorsManager;
 use ALI\Translation\Translate\PhrasePackets\OriginalPhrasePacket;
 use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
 use ALI\Translation\Translate\Sources\FakeBufferSource;
@@ -44,7 +44,7 @@ class BufferTranslate
     {
         $originalsPacket = $originalsPacket ?: new OriginalPhrasePacket();
         foreach ($bufferContent->getBuffer()->getBuffersContent() as $childBufferContent) {
-            if ($childBufferContent->isWithContentTranslate()) {
+            if ($childBufferContent->withContentTranslation()) {
                 $originalsPacket->add($childBufferContent->getContentString());
             }
             if ($childBufferContent->getBuffer()) {
@@ -64,7 +64,7 @@ class BufferTranslate
      * @param TranslatorInterface $translator
      * @return string
      */
-    public function translateBuffersWithProcessors(BufferContent $bufferContent, TranslatorInterface $translator, ProcessorsManager $processorsManager)
+    public function translateBuffersWithProcessors(BufferContent $bufferContent, TranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
     {
         $buffer = $bufferContent->getBuffer();
         if (!$buffer) {
@@ -76,13 +76,13 @@ class BufferTranslate
             $bufferKey = $buffer->generateBufferKey($bufferId);
 
             // resolve child buffers
-            if ($childBufferContent->isWithContentTranslate()) {
-                $translatedSting = $processorsManager->executeProcesses($childBufferContent->getContentString(), $translator);
+            if ($childBufferContent->withContentTranslation()) {
+                $translatedSting = $contentProcessorsManager->executeProcesses($childBufferContent->getContentString(), $translator);
             } else {
                 $translatedSting = $childBufferContent->getContentString();
             }
             if ($childBufferContent->getBuffer()) {
-                $translatedSting = $this->translateBuffersWithProcessors(new BufferContent($translatedSting, $childBufferContent->getBuffer()), $translator, $processorsManager);
+                $translatedSting = $this->translateBuffersWithProcessors(new BufferContent($translatedSting, $childBufferContent->getBuffer()), $translator, $contentProcessorsManager);
             }
             $content = str_replace(
                 $bufferKey,
@@ -107,7 +107,7 @@ class BufferTranslate
      * @param TranslatorInterface $translator
      * @return string
      */
-    public function translateBuffersWithProcessorsByOneRequest(BufferContent $bufferContent, TranslatorInterface $translator, ProcessorsManager $processorsManager)
+    public function translateBuffersWithProcessorsByOneRequest(BufferContent $bufferContent, TranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
     {
         // Init additional objects
         $bufferLayer = new Buffer(new StaticKeyGenerator('#ali-buffer-layer-content_', '#'));
@@ -116,7 +116,7 @@ class BufferTranslate
         $bufferLayerTranslator = new Translator($translator->getLanguageAlias(),$fakeBufferSource);
 
         // Create additional buffering layer
-        $layerContent = $this->translateBuffersWithProcessors($bufferContent, $bufferLayerTranslator, $processorsManager);
+        $layerContent = $this->translateBuffersWithProcessors($bufferContent, $bufferLayerTranslator, $contentProcessorsManager);
 
         return $this->translateBuffer(new BufferContent($layerContent, $bufferLayer), $translator);
     }
@@ -133,7 +133,7 @@ class BufferTranslate
         foreach ($buffer->getBuffersContent() as $bufferId => $bufferContent) {
             $bufferKey = $buffer->generateBufferKey($bufferId);
 
-            if ($bufferContent->isWithContentTranslate()) {
+            if ($bufferContent->withContentTranslation()) {
                 $translatedSting = $translatePhrasePacket->getTranslate($bufferContent->getContentString()) ?: $bufferContent->getContentString();
             } else {
                 $translatedSting = $bufferContent->getContentString();

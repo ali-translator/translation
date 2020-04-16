@@ -3,6 +3,7 @@
 namespace ALI\Translation\Buffer;
 
 use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
+use Closure;
 
 /**
  * BufferCaptcher
@@ -29,9 +30,9 @@ class BufferCaptcher
 
     /**
      * Buffering content in callback function
-     * @param \Closure $callback
+     * @param Closure $callback
      */
-    public function buffering(\Closure $callback)
+    public function buffering(Closure $callback)
     {
         $this->start();
         $callback();
@@ -59,7 +60,7 @@ class BufferCaptcher
     /**
      * @return Buffer
      */
-    public function getBuffer(): Buffer
+    public function getBuffer()
     {
         return $this->buffer;
     }

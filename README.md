@@ -2,7 +2,7 @@
 **Application Language Integration ABC** - php library
 
 Packet helps create site translations with high performance.<br>
-When you use DataBase as translation source (example Mysql), for translate all phrases packet make only one request.
+When you use DataBase as translation source (example Mysql), for translate all phrases, packet make only one request.
 In html instead translate you get translate id, which you put to you response code. On the page rendering end, ALIAbc replace all their translation ids for the real translations. 
 
 ## Installation

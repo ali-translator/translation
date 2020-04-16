@@ -9,10 +9,13 @@ use ALI\Translation\Buffer\BufferTranslate;
 use ALI\Translation\Buffer\KeyGenerators\KeyGenerator;
 use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use ALI\Translation\Exceptions\TranslateNotDefinedException;
-use ALI\Translation\Processors\ProcessorsManager;
+use ALI\Translation\ContentProcessors\ContentProcessorsManager;
 use ALI\Translation\Translate\MissingTranslateCallbacks\CollectorMissingTranslatesCallback;
+use ALI\Translation\Translate\PhraseDecorators\TranslateDecorators\HtmlEncodeTranslateDecorator;
+use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
 use ALI\Translation\Translate\Sources\MySqlSource;
 use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Translators\DecoratedTranslator;
 use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**
@@ -26,9 +29,9 @@ class ALIAbc
     protected $translator;
 
     /**
-     * @var null|ProcessorsManager
+     * @var null|ContentProcessorsManager
      */
-    protected $processorsManager;
+    protected $contentProcessorsManager;
 
     /**
      * @var BufferCaptcher
@@ -52,7 +55,7 @@ class ALIAbc
 
     /**
      * @param TranslatorInterface $translator
-     * @param ProcessorsManager|null $processorsManager
+     * @param ContentProcessorsManager|null $contentProcessorsManager
      * @param CollectorMissingTranslatesCallback|null $collectorTranslateCallback
      * @param BufferCaptcher|null $bufferCaptcher
      * @param KeyGenerator|null $templatesKeyGenerator
@@ -60,18 +63,32 @@ class ALIAbc
      */
     public function __construct(
         TranslatorInterface $translator,
-        ProcessorsManager $processorsManager = null,
+        ContentProcessorsManager $contentProcessorsManager = null,
         CollectorMissingTranslatesCallback $collectorTranslateCallback = null,
         BufferCaptcher $bufferCaptcher = null,
         KeyGenerator $templatesKeyGenerator = null,
-        BufferTranslate $bufferTranslate = null
+        BufferTranslate $bufferTranslate = null,
+        $htmlEncodeBufferTranslate = true
     )
     {
         $this->translator = $translator;
         $this->collectorTranslateCallback = $collectorTranslateCallback ?: new CollectorMissingTranslatesCallback();
         $this->translator->addMissingTranslationCallback($this->collectorTranslateCallback);
 
-        $this->processorsManager = $processorsManager;
+        // Make additional translator with encoding for buffer translation
+        if ($htmlEncodeBufferTranslate) {
+            $this->bufferTranslator = new DecoratedTranslator(
+                $this->translator,
+                null,
+                new TranslatePhraseDecoratorManager([
+                    new HtmlEncodeTranslateDecorator(),
+                ])
+            );
+        } else {
+            $this->bufferTranslator = $this->translator;
+        }
+
+        $this->contentProcessorsManager = $contentProcessorsManager;
         $this->bufferCaptcher = $bufferCaptcher ?: new BufferCaptcher();
         $this->templatesKeyGenerator = $templatesKeyGenerator ?: new StaticKeyGenerator('{', '}');
         $this->bufferTranslate = $bufferTranslate ?: new BufferTranslate();
@@ -147,14 +164,14 @@ class ALIAbc
         $buffer = $this->bufferCaptcher->getBuffer();
         $bufferContent = new BufferContent($contentContext, $buffer);
 
-        if (!$this->processorsManager) {
-            return $this->bufferTranslate->translateBuffer($bufferContent, $this->translator);
+        if (!$this->contentProcessorsManager) {
+            return $this->bufferTranslate->translateBuffer($bufferContent, $this->bufferTranslator);
         }
 
-        if ($this->isSourceSensitiveForRequestsCount($this->translator->getSource())) {
-            return $this->bufferTranslate->translateBuffersWithProcessorsByOneRequest($bufferContent, $this->translator, $this->processorsManager);
+        if ($this->isSourceSensitiveForRequestsCount($this->bufferTranslator->getSource())) {
+            return $this->bufferTranslate->translateBuffersWithProcessorsByOneRequest($bufferContent, $this->bufferTranslator, $this->contentProcessorsManager);
         } else {
-            return $this->bufferTranslate->translateBuffersWithProcessors($bufferContent, $this->translator, $this->processorsManager);
+            return $this->bufferTranslate->translateBuffersWithProcessors($bufferContent, $this->bufferTranslator, $this->contentProcessorsManager);
         }
     }
 
@@ -216,14 +233,6 @@ class ALIAbc
     public function getTranslator()
     {
         return $this->translator;
-    }
-
-    /**
-     * @return ProcessorsManager|null
-     */
-    public function getProcessorsManager()
-    {
-        return $this->processorsManager;
     }
 
     /**

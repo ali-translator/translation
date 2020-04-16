@@ -33,6 +33,28 @@ class ALIAbcTest extends TestCase
     }
 
     /**
+     * @throws SourceException
+     * @throws UnsupportedLanguageAliasException
+     */
+    public function testBufferTranslateHtmlEncoding()
+    {
+        $aliAbc = (new ALIAbcFactory())->createALIByCsvSource(SOURCE_CSV_PATH, LanguageFactory::ORIGINAL_LANGUAGE_ALIAS, LanguageFactory::CURRENT_LANGUAGE_ALIAS);
+        $originalPhrase = 'Hi <br> bro!';
+
+        // Original without fallback, without encoding
+        $this->assertEquals($aliAbc->translate($originalPhrase), '');
+        // Original, with fallback, with encoding
+        $content = '<div>' . $aliAbc->addToBuffer($originalPhrase) . '</div>';
+        $this->assertEquals($aliAbc->translateBuffer($content), '<div>Hi <br> bro!</div>');
+
+        // With translate
+        $aliAbc->saveTranslate($originalPhrase,'Привіт <br> бро!');
+        $content = '<div>' . $aliAbc->addToBuffer($originalPhrase) . '</div>';
+        $this->assertEquals($aliAbc->translateBuffer($content), '<div>Привіт &lt;br&gt; бро!</div>');
+        $aliAbc->deleteOriginal($originalPhrase);
+    }
+
+    /**
      * @param ALIAbc $aliAbc
      */
     private function checkTranslate(ALIAbc $aliAbc)

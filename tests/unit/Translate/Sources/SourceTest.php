@@ -53,7 +53,7 @@ class SourceTest extends TestCase
     {
         $sourceFactory = new SourceFactory();
 
-        $csvSource = $sourceFactory->createCsvSource($originalLanguage);
+        $csvSource = $sourceFactory->createCsvSource($originalLanguage->getAlias());
 
         $sourceTester = new SourceTester();
         $sourceTester->testSource($csvSource, $this);
@@ -68,7 +68,7 @@ class SourceTest extends TestCase
         $sourceFactory = new SourceFactory();
 
         // Save
-        list($mysqlSource, $mysqlSourceInstaller) = $sourceFactory->createMysqlSource($originalLanguage);
+        list($mysqlSource) = $sourceFactory->createMysqlSource($originalLanguage);
         /** @var SourceInterface $mysqlSource */
         $mysqlSource->saveTranslate(LanguageFactory::CURRENT_LANGUAGE_ALIAS, 'What\'s happening?', 'Що відбувається?');
         $mysqlSource->saveOriginals(['Happy New Year!']);
@@ -92,13 +92,13 @@ class SourceTest extends TestCase
         $sourceFactory = new SourceFactory();
 
         // Save
-        $csvSource = $sourceFactory->createCsvSource($originalLanguage);
+        $csvSource = $sourceFactory->createCsvSource($originalLanguage->getAlias());
         /** @var SourceInterface $csvSource */
         $csvSource->saveTranslate(LanguageFactory::CURRENT_LANGUAGE_ALIAS, 'What\'s happening?', 'Що відбувається?');
         $csvSource->saveOriginals(['Happy New Year!']);
 
         // Get new instance from saved state
-        $csvSource = $sourceFactory->createCsvSource($originalLanguage);
+        $csvSource = $sourceFactory->createCsvSource($originalLanguage->getAlias());
         $translate = $csvSource->getTranslate('What\'s happening?', LanguageFactory::CURRENT_LANGUAGE_ALIAS);
         $this->assertEquals('Що відбувається?', $translate);
         $this->assertEquals(['Happy New Year!'], $csvSource->getExistOriginals(['Happy New Year!']));

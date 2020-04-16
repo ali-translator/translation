@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Processors\PreProcessors;
+namespace ALI\Translation\ContentProcessors\PreTranslateProcessors;
 
 /**
  * Class SliIgnoreTagPreProcessor

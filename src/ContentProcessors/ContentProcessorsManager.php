@@ -1,15 +1,15 @@
 <?php
 
-namespace ALI\Translation\Processors;
+namespace ALI\Translation\ContentProcessors;
 
-use ALI\Translation\Processors\PreProcessors\PreProcessorInterface;
-use ALI\Translation\Processors\TranslateProcessors\TranslateProcessors;
+use ALI\Translation\ContentProcessors\PreTranslateProcessors\PreProcessorInterface;
+use ALI\Translation\ContentProcessors\TranslateProcessors\TranslateProcessors;
 use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**
- * ProcessorsManager
+ * Class
  */
-class ProcessorsManager
+class ContentProcessorsManager
 {
     /**
      * @var PreProcessorInterface[]

@@ -3,18 +3,24 @@
 namespace ALI\Translation\Helpers\QuickStart;
 
 use ALI\Translation\ALIAbc;
-use ALI\Translation\Processors\PreProcessors\HtmlCommentPreProcessor;
-use ALI\Translation\Processors\PreProcessors\IgnoreHtmlTagsPreProcessor;
-use ALI\Translation\Processors\PreProcessors\SliIgnoreTagPreProcessor;
-use ALI\Translation\Processors\ProcessorsManager;
-use ALI\Translation\Processors\TranslateProcessors\HtmlAttributesProcessor;
-use ALI\Translation\Processors\TranslateProcessors\HtmlTagProcessor;
-use ALI\Translation\Processors\TranslateProcessors\SimpleTextProcessor;
+use ALI\Translation\ContentProcessors\PreTranslateProcessors\HtmlCommentPreProcessor;
+use ALI\Translation\ContentProcessors\PreTranslateProcessors\IgnoreHtmlTagsPreProcessor;
+use ALI\Translation\ContentProcessors\PreTranslateProcessors\SliIgnoreTagPreProcessor;
+use ALI\Translation\ContentProcessors\ContentProcessorsManager;
+use ALI\Translation\ContentProcessors\TranslateProcessors\HtmlAttributesProcessor;
+use ALI\Translation\ContentProcessors\TranslateProcessors\HtmlTagProcessor;
+use ALI\Translation\ContentProcessors\TranslateProcessors\SimpleTextProcessor;
+use ALI\Translation\Translate\PhraseDecorators\OriginalDecorators\ReplaceNumbersOriginalDecorator;
+use ALI\Translation\Translate\PhraseDecorators\OriginalPhraseDecoratorManager;
+use ALI\Translation\Translate\PhraseDecorators\TranslateDecorators\ReplaceNumbersTranslateDecorator;
+use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
 use ALI\Translation\Translate\Sources\CsvFileSource;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
 use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
 use ALI\Translation\Translate\Sources\MySqlSource;
+use ALI\Translation\Translate\Translators\DecoratedTranslator;
 use ALI\Translation\Translate\Translators\Translator;
+use ALI\Translation\Translate\Translators\TranslatorInterface;
 use PDO;
 
 /**
@@ -84,7 +90,7 @@ class ALIAbcFactory
      * @param PDO $connection
      * @param $originalLanguageAlias
      * @param $currentLanguageAlias
-     * @return Translator
+     * @return TranslatorInterface
      */
     private function generateMysqlTranslator(PDO $connection, $originalLanguageAlias, $currentLanguageAlias)
     {
@@ -94,32 +100,34 @@ class ALIAbcFactory
             $sourceInstaller->install();
         }
 
-        return new Translator($currentLanguageAlias, $source);
+        $baseTranslator = new Translator($currentLanguageAlias, $source);
+
+        return $decoratedTranslator = $this->generateBaseDecoratedTranslator($baseTranslator);
     }
 
     /**
-     * @return ProcessorsManager
+     * @return ContentProcessorsManager
      */
     private function generateBaseHtmlProcessorManager()
     {
-        $processorsManager = new ProcessorsManager();
+        $contentProcessorsManager = new ContentProcessorsManager();
 
-        $processorsManager->addPreProcessor(new HtmlCommentPreProcessor());
-        $processorsManager->addPreProcessor(new IgnoreHtmlTagsPreProcessor());
-        $processorsManager->addPreProcessor(new SliIgnoreTagPreProcessor());
+        $contentProcessorsManager->addPreProcessor(new HtmlCommentPreProcessor());
+        $contentProcessorsManager->addPreProcessor(new IgnoreHtmlTagsPreProcessor());
+        $contentProcessorsManager->addPreProcessor(new SliIgnoreTagPreProcessor());
 
-        $processorsManager->addTranslateProcessor(new HtmlTagProcessor());
-        $processorsManager->addTranslateProcessor(new HtmlAttributesProcessor());
-        $processorsManager->addTranslateProcessor(new SimpleTextProcessor());
+        $contentProcessorsManager->addTranslateProcessor(new HtmlTagProcessor());
+        $contentProcessorsManager->addTranslateProcessor(new HtmlAttributesProcessor());
+        $contentProcessorsManager->addTranslateProcessor(new SimpleTextProcessor());
 
-        return $processorsManager;
+        return $contentProcessorsManager;
     }
 
     /**
      * @param $translationDirectoryPath
      * @param $originalLanguageAlias
      * @param $currentLanguageAlias
-     * @return Translator
+     * @return TranslatorInterface
      * @throws UnsupportedLanguageAliasException
      */
     private function generateCsvTranslator($translationDirectoryPath, $originalLanguageAlias, $currentLanguageAlias)
@@ -130,6 +138,24 @@ class ALIAbcFactory
             touch($fileCsvPath);
         }
 
-        return new Translator($currentLanguageAlias, $source);
+        $baseTranslator = new Translator($currentLanguageAlias, $source);
+
+        return $decoratedTranslator = $this->generateBaseDecoratedTranslator($baseTranslator);
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     * @return TranslatorInterface
+     */
+    private function generateBaseDecoratedTranslator(TranslatorInterface $translator)
+    {
+        $originalDecoratorManger = new OriginalPhraseDecoratorManager([
+            new ReplaceNumbersOriginalDecorator(),
+        ]);
+        $translateDecoratorManager = new TranslatePhraseDecoratorManager([
+            new ReplaceNumbersTranslateDecorator(),
+        ]);
+
+        return new DecoratedTranslator($translator, $originalDecoratorManger, $translateDecoratorManager);
     }
 }

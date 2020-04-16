@@ -43,12 +43,12 @@ class SourceFactory
     }
 
     /**
-     * @param Language $originalLanguage
+     * @param string $originalLanguageAlias
      * @return CsvFileSource
      */
-    public function createCsvSource(Language $originalLanguage)
+    public function createCsvSource($originalLanguageAlias)
     {
-        $csvFileSource = new CsvFileSource(SOURCE_CSV_PATH, $originalLanguage->getAlias());
+        $csvFileSource = new CsvFileSource(SOURCE_CSV_PATH, $originalLanguageAlias);
 
         return $csvFileSource;
     }

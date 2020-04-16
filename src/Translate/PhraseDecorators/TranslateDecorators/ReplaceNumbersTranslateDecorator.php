@@ -1,19 +1,19 @@
 <?php
 
-namespace ALI\Translation\Translate\TranslateProcessors;
+namespace ALI\Translation\Translate\PhraseDecorators\TranslateDecorators;
 
 /**
  * Class ReplaceNumbersTranslateProcessor
  * @package ALI\Translation\Translate\TranslateProcessors
  */
-class ReplaceNumbersTranslateProcessor implements TranslateProcessorInterface
+class ReplaceNumbersTranslateDecorator implements TranslatePhraseDecorator
 {
     /**
      * @param string $original
      * @param string $translate
      * @return string
      */
-    public function process($original, $translate)
+    public function decorate($original, $translate)
     {
         preg_match_all('#(?:[\d])+#u', $original, $symbols);
         preg_match_all('#(?:[\d])+#u', $translate, $tSymbols);

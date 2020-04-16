@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Processors\TranslateProcessors;
+namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
 /**
  * Class HtmlAttributesProcessor
