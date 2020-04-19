@@ -6,9 +6,9 @@ use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use Closure;
 
 /**
- * BufferCaptcher
+ * BufferCatcher
  */
-class BufferCaptcher
+class BufferCatcher
 {
     /**
      * @var Buffer

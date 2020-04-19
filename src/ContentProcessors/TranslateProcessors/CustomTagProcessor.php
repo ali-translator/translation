@@ -55,7 +55,6 @@ class CustomTagProcessor extends AbstractHtmlProcessor
      * @param string $cleanContent
      * @param TranslatorInterface $translator
      * @return string
-     * @throws ALIException
      */
     public function process($content, $cleanContent,TranslatorInterface $translator)
     {

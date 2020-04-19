@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Tests\unit\Buffer;
 
-use ALI\Translation\Buffer\BufferCaptcher;
+use ALI\Translation\Buffer\BufferCatcher;
 use ALI\Translation\Buffer\BufferContent;
 use ALI\Translation\Buffer\BufferTranslate;
 use ALI\Translation\ContentProcessors\ContentProcessorsManager;
@@ -48,9 +48,9 @@ class BufferTranslateTest extends TestCase
      */
     private function checkTranslateBufferWithoutTranslatedPhrase(TranslatorInterface $translator)
     {
-        $bufferCaptcher = new BufferCaptcher();
-        $html = '<div class="test">' . $bufferCaptcher->add('Hello') . '</div>';
-        $buffer = $bufferCaptcher->getBuffer();
+        $bufferCatcher = new BufferCatcher();
+        $html = '<div class="test">' . $bufferCatcher->add('Hello') . '</div>';
+        $buffer = $bufferCatcher->getBuffer();
         $bufferContent = new BufferContent($html, $buffer);
 
         $bufferTranslate = new BufferTranslate();
@@ -69,9 +69,9 @@ class BufferTranslateTest extends TestCase
     {
         $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 
-        $bufferCaptcher = new BufferCaptcher();
-        $html = '<div class="test">' . $bufferCaptcher->add('Hello') . '</div>';
-        $buffer = $bufferCaptcher->getBuffer();
+        $bufferCatcher = new BufferCatcher();
+        $html = '<div class="test">' . $bufferCatcher->add('Hello') . '</div>';
+        $buffer = $bufferCatcher->getBuffer();
         $bufferContent = new BufferContent($html, $buffer);
 
         $bufferTranslate = new BufferTranslate();
@@ -96,16 +96,16 @@ class BufferTranslateTest extends TestCase
         $contentProcessorsManager->addTranslateProcessor(new CustomTagProcessor('<translate>', '</translate>', true));
         $contentProcessorsManager->addTranslateProcessor(new SimpleTextProcessor(['<']));
 
-        $bufferCaptcher = new BufferCaptcher();
+        $bufferCatcher = new BufferCatcher();
         $html = '<div class="test">';
         // SimpleTextProcessor
-        $html .= $bufferCaptcher->add('Hello');
+        $html .= $bufferCatcher->add('Hello');
         // CustomTagProcessor
-        $html .= ' - '.$bufferCaptcher->add('<translate>Hello</translate>');
+        $html .= ' - '.$bufferCatcher->add('<translate>Hello</translate>');
         // It should not be translated
         $html .= '<div>Hello</div>';
         $html .= '</div>';
-        $buffer = $bufferCaptcher->getBuffer();
+        $buffer = $bufferCatcher->getBuffer();
         $bufferContent = new BufferContent($html, $buffer);
 
         $correctTranslateHtml = '<div class="test">Привіт - Привіт<div>Hello</div></div>';
@@ -133,16 +133,16 @@ class BufferTranslateTest extends TestCase
         $contentProcessorsManager->addTranslateProcessor(new CustomTagProcessor('<translate>', '</translate>', true));
         $contentProcessorsManager->addTranslateProcessor(new SimpleTextProcessor(['<']));
 
-        $bufferCaptcher = new BufferCaptcher();
+        $bufferCatcher = new BufferCatcher();
         $html = '<div class="test">';
         // SimpleTextProcessor
-        $html .= $bufferCaptcher->add('Hello');
+        $html .= $bufferCatcher->add('Hello');
         // CustomTagProcessor
-        $html .= ' - '.$bufferCaptcher->add('<translate>Hello</translate>');
+        $html .= ' - '.$bufferCatcher->add('<translate>Hello</translate>');
         // It should not be translated
         $html .= '<div>Hello</div>';
         $html .= '</div>';
-        $buffer = $bufferCaptcher->getBuffer();
+        $buffer = $bufferCatcher->getBuffer();
         $bufferContent = new BufferContent($html, $buffer);
 
         $correctTranslateHtml = '<div class="test">Привіт - Привіт<div>Hello</div></div>';

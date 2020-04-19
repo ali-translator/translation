@@ -15,7 +15,6 @@ abstract class AbstractHtmlProcessor implements TranslateProcessors
      * @param string $cleanContent
      * @param TranslatorInterface $translate
      * @return string
-     * @throws \ALI\Translation\Exceptions\ALIException
      */
     public function process($content, $cleanContent, TranslatorInterface $translate)
     {

@@ -3,7 +3,7 @@
 namespace ALI\Translation;
 
 use ALI\Translation\Buffer\Buffer;
-use ALI\Translation\Buffer\BufferCaptcher;
+use ALI\Translation\Buffer\BufferCatcher;
 use ALI\Translation\Buffer\BufferContent;
 use ALI\Translation\Buffer\BufferTranslate;
 use ALI\Translation\Buffer\KeyGenerators\KeyGenerator;
@@ -34,9 +34,9 @@ class ALIAbc
     protected $contentProcessorsManager;
 
     /**
-     * @var BufferCaptcher
+     * @var BufferCatcher
      */
-    protected $bufferCaptcher;
+    protected $bufferCatcher;
 
     /**
      * @var KeyGenerator
@@ -54,18 +54,18 @@ class ALIAbc
     protected $collectorTranslateCallback;
 
     /**
-     * @param TranslatorInterface $translator
-     * @param ContentProcessorsManager|null $contentProcessorsManager
+     * @param TranslatorInterface                     $translator
+     * @param ContentProcessorsManager|null           $contentProcessorsManager
      * @param CollectorMissingTranslatesCallback|null $collectorTranslateCallback
-     * @param BufferCaptcher|null $bufferCaptcher
-     * @param KeyGenerator|null $templatesKeyGenerator
-     * @param BufferTranslate|null $bufferTranslate
+     * @param BufferCatcher|null                      $bufferCatcher
+     * @param KeyGenerator|null                       $templatesKeyGenerator
+     * @param BufferTranslate|null                    $bufferTranslate
      */
     public function __construct(
         TranslatorInterface $translator,
         ContentProcessorsManager $contentProcessorsManager = null,
         CollectorMissingTranslatesCallback $collectorTranslateCallback = null,
-        BufferCaptcher $bufferCaptcher = null,
+        BufferCatcher $bufferCatcher = null,
         KeyGenerator $templatesKeyGenerator = null,
         BufferTranslate $bufferTranslate = null,
         $htmlEncodeBufferTranslate = true
@@ -89,7 +89,7 @@ class ALIAbc
         }
 
         $this->contentProcessorsManager = $contentProcessorsManager;
-        $this->bufferCaptcher = $bufferCaptcher ?: new BufferCaptcher();
+        $this->bufferCatcher = $bufferCatcher ?: new BufferCatcher();
         $this->templatesKeyGenerator = $templatesKeyGenerator ?: new StaticKeyGenerator('{', '}');
         $this->bufferTranslate = $bufferTranslate ?: new BufferTranslate();
     }
@@ -147,12 +147,12 @@ class ALIAbc
     public function addToBuffer($content, array $params = [])
     {
         if (!$params) {
-            return $this->bufferCaptcher->add($content);
+            return $this->bufferCatcher->add($content);
         }
 
         $bufferContent = $this->generateBufferContentByTemplate($content, $params);
 
-        return $this->bufferCaptcher->getBuffer()->add($bufferContent);
+        return $this->bufferCatcher->getBuffer()->add($bufferContent);
     }
 
     /**
@@ -161,7 +161,7 @@ class ALIAbc
      */
     public function translateBuffer($contentContext)
     {
-        $buffer = $this->bufferCaptcher->getBuffer();
+        $buffer = $this->bufferCatcher->getBuffer();
         $bufferContent = new BufferContent($contentContext, $buffer);
 
         if (!$this->contentProcessorsManager) {
@@ -220,11 +220,11 @@ class ALIAbc
     }
 
     /**
-     * @return BufferCaptcher
+     * @return BufferCatcher
      */
-    public function getBufferCaptcher()
+    public function getBufferCatcher()
     {
-        return $this->bufferCaptcher;
+        return $this->bufferCatcher;
     }
 
     /**

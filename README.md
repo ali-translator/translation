@@ -63,7 +63,7 @@ echo $aliAbc->translateBuffer($html); // '<div>Привіт</div>'
 // To save originals for which not translation was found, call the following method:
 $aliAbc->saveOriginalsWithoutTranslates();
 ```
-Also you may discover object `$aliAbc->getBufferCaptcher()` for additional methods
+Also you may discover object `$aliAbc->getBufferCatcher()` for additional methods
 
 #### Templates
 
