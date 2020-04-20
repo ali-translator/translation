@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Translate\Sources;
 
-use ALI\Translation\Buffer\BufferCollection;
+use ALI\Translation\Buffer\BufferContentCollection;
 
 /**
  * FakeBufferSource
@@ -15,15 +15,15 @@ class FakeBufferSource implements SourceInterface
     protected $originalLanguageAlias;
 
     /**
-     * @var BufferCollection
+     * @var BufferContentCollection
      */
     protected $buffer;
 
     /**
-     * @param string           $originalLanguageAlias
-     * @param BufferCollection $buffer
+     * @param string                  $originalLanguageAlias
+     * @param BufferContentCollection $buffer
      */
-    public function __construct($originalLanguageAlias, BufferCollection $buffer)
+    public function __construct($originalLanguageAlias, BufferContentCollection $buffer)
     {
         $this->originalLanguageAlias = $originalLanguageAlias;
         $this->buffer = $buffer;

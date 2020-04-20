@@ -11,20 +11,20 @@ use Closure;
 class BufferCatcher
 {
     /**
-     * @var BufferCollection
+     * @var BufferContentCollection
      */
     protected $buffer;
 
     /**
-     * @param null|BufferCollection $buffer
+     * @param null|BufferContentCollection $buffer
      */
-    public function __construct(BufferCollection $buffer = null)
+    public function __construct(BufferContentCollection $buffer = null)
     {
         if ($buffer) {
             $this->buffer = $buffer;
         } else {
             $keyGenerator = new StaticKeyGenerator('#--ALI:buffer:', '--#');
-            $this->buffer = new BufferCollection($keyGenerator);
+            $this->buffer = new BufferContentCollection($keyGenerator);
         }
     }
 
@@ -58,7 +58,7 @@ class BufferCatcher
     }
 
     /**
-     * @return BufferCollection
+     * @return BufferContentCollection
      */
     public function getBuffer()
     {
@@ -66,11 +66,11 @@ class BufferCatcher
     }
 
     /**
-     * @param string                $content
-     * @param BufferCollection|null $buffer
+     * @param string                       $content
+     * @param BufferContentCollection|null $buffer
      * @return string
      */
-    public function add($content, BufferCollection $buffer = null)
+    public function add($content, BufferContentCollection $buffer = null)
     {
         $bufferContent = new BufferContent($content, $buffer);
 

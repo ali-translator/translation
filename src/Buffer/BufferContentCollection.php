@@ -8,11 +8,7 @@ use IteratorAggregate;
 use IteratorIterator;
 use Traversable;
 
-/**
- * Class Buffer
- * @package ALI
- */
-class BufferCollection implements IteratorAggregate
+class BufferContentCollection implements IteratorAggregate
 {
     /**
      * @var KeyGenerator

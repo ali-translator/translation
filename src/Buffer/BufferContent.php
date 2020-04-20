@@ -13,9 +13,9 @@ class BufferContent
     protected $content;
 
     /**
-     * @var null|BufferCollection
+     * @var null|BufferContentCollection
      */
-    protected $bufferCollection;
+    protected $bufferContentCollection;
 
     /**
      * @var bool
@@ -23,14 +23,14 @@ class BufferContent
     protected $withContentTranslation;
 
     /**
-     * @param string           $content
-     * @param BufferCollection $bufferCollection
-     * @param bool             $withContentTranslation
+     * @param string                  $content
+     * @param BufferContentCollection $bufferContentCollection
+     * @param bool                    $withContentTranslation
      */
-    public function __construct($content, BufferCollection $bufferCollection = null, $withContentTranslation = true)
+    public function __construct($content, BufferContentCollection $bufferContentCollection = null, $withContentTranslation = true)
     {
         $this->content = $content;
-        $this->bufferCollection = $bufferCollection;
+        $this->bufferContentCollection = $bufferContentCollection;
         $this->withContentTranslation = $withContentTranslation;
     }
 
@@ -43,11 +43,11 @@ class BufferContent
     }
 
     /**
-     * @return null|BufferCollection
+     * @return null|BufferContentCollection
      */
-    public function getBufferCollection()
+    public function getBufferContentCollection()
     {
-        return $this->bufferCollection;
+        return $this->bufferContentCollection;
     }
 
     /**

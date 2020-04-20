@@ -2,8 +2,8 @@
 **Application Language Integration ABC** - php library
 
 Packet helps create site translations with high performance.<br>
-When you use DataBase as translation source (example Mysql), for translate all phrases, packet make only one request.
-In html instead translate you get translate id, which you put to you response code. On the page rendering end, ALIAbc replace all their translation ids for the real translations. 
+When you use DataBase as translation source (example Mysql), for translate all phrases, packet makes only one request.
+In html instead of translate you get translate id, which you put to your response code. On the page rendering end, ALIAbc replace all their translation ids for the real translations. 
 
 ## Installation
 
@@ -28,7 +28,7 @@ Exist two base types for using this packet:
     ```
     * With CSV source 
     ```php
-    $aliAbc = (new \ALI\Translation\Helpers\QuickStart\ALIAbcFactory())->createALIByHtmlBufferCsvSource('/path/to/writable/directory/for/translation','en','ua'));
+    $aliAbc = (new \ALI\Translation\Helpers\QuickStart\ALIAbcFactory())->createALIByHtmlBufferCsvSource('/path/to/writable/directory/for/translation','en','ua');
     ```
 * manually adding text for translation in html
     * With MySql source 
