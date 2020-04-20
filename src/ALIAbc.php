@@ -153,7 +153,7 @@ class ALIAbc
 
         $bufferContent = $this->generateBufferContentByTemplate($content, $params);
 
-        return $this->bufferCatcher->getBuffer()->add($bufferContent);
+        return $this->bufferCatcher->getBufferContentCollection()->add($bufferContent);
     }
 
     /**
@@ -162,7 +162,7 @@ class ALIAbc
      */
     public function translateBuffer($contentContext)
     {
-        $buffer = $this->bufferCatcher->getBuffer();
+        $buffer = $this->bufferCatcher->getBufferContentCollection();
         $bufferContent = new BufferContent($contentContext, $buffer);
 
         if (!$this->contentProcessorsManager) {

@@ -50,7 +50,7 @@ class BufferTranslateTest extends TestCase
     {
         $bufferCatcher = new BufferCatcher();
         $html = '<div class="test">' . $bufferCatcher->add('Hello') . '</div>';
-        $buffer = $bufferCatcher->getBuffer();
+        $buffer = $bufferCatcher->getBufferContentCollection();
         $bufferContent = new BufferContent($html, $buffer);
 
         $bufferTranslate = new BufferTranslate();
@@ -71,7 +71,7 @@ class BufferTranslateTest extends TestCase
 
         $bufferCatcher = new BufferCatcher();
         $html = '<div class="test">' . $bufferCatcher->add('Hello') . '</div>';
-        $buffer = $bufferCatcher->getBuffer();
+        $buffer = $bufferCatcher->getBufferContentCollection();
         $bufferContent = new BufferContent($html, $buffer);
 
         $bufferTranslate = new BufferTranslate();
@@ -105,7 +105,7 @@ class BufferTranslateTest extends TestCase
         // It should not be translated
         $html .= '<div>Hello</div>';
         $html .= '</div>';
-        $buffer = $bufferCatcher->getBuffer();
+        $buffer = $bufferCatcher->getBufferContentCollection();
         $bufferContent = new BufferContent($html, $buffer);
 
         $correctTranslateHtml = '<div class="test">Привіт - Привіт<div>Hello</div></div>';
@@ -142,7 +142,7 @@ class BufferTranslateTest extends TestCase
         // It should not be translated
         $html .= '<div>Hello</div>';
         $html .= '</div>';
-        $buffer = $bufferCatcher->getBuffer();
+        $buffer = $bufferCatcher->getBufferContentCollection();
         $bufferContent = new BufferContent($html, $buffer);
 
         $correctTranslateHtml = '<div class="test">Привіт - Привіт<div>Hello</div></div>';

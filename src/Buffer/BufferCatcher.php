@@ -13,7 +13,7 @@ class BufferCatcher
     /**
      * @var BufferContentCollection
      */
-    protected $buffer;
+    protected $bufferContentCollection;
 
     /**
      * @param null|BufferContentCollection $buffer
@@ -21,10 +21,10 @@ class BufferCatcher
     public function __construct(BufferContentCollection $buffer = null)
     {
         if ($buffer) {
-            $this->buffer = $buffer;
+            $this->bufferContentCollection = $buffer;
         } else {
             $keyGenerator = new StaticKeyGenerator('#--ALI:buffer:', '--#');
-            $this->buffer = new BufferContentCollection($keyGenerator);
+            $this->bufferContentCollection = new BufferContentCollection($keyGenerator);
         }
     }
 
@@ -45,7 +45,7 @@ class BufferCatcher
     public function start()
     {
         ob_start(function ($bufferContent) {
-            return $this->buffer->add(new BufferContent($bufferContent));
+            return $this->bufferContentCollection->add(new BufferContent($bufferContent));
         });
     }
 
@@ -60,9 +60,9 @@ class BufferCatcher
     /**
      * @return BufferContentCollection
      */
-    public function getBuffer()
+    public function getBufferContentCollection()
     {
-        return $this->buffer;
+        return $this->bufferContentCollection;
     }
 
     /**
@@ -74,6 +74,6 @@ class BufferCatcher
     {
         $bufferContent = new BufferContent($content, $buffer);
 
-        return $this->buffer->add($bufferContent);
+        return $this->bufferContentCollection->add($bufferContent);
     }
 }

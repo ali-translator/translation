@@ -25,7 +25,7 @@ class BufferTranslate
      */
     public function translateBuffer(BufferContent $bufferContent, TranslatorInterface $translator)
     {
-        if (!$bufferContent->getBufferContentCollection()) {
+        if (!$bufferContent->getChildContentCollection()) {
             return $bufferContent->getContentString();
         }
 
@@ -43,11 +43,11 @@ class BufferTranslate
     private function collectOriginalPacket(BufferContent $bufferContent, OriginalPhrasePacket $originalsPacket = null)
     {
         $originalsPacket = $originalsPacket ?: new OriginalPhrasePacket();
-        foreach ($bufferContent->getBufferContentCollection()->getBuffersContent() as $childBufferContent) {
+        foreach ($bufferContent->getChildContentCollection()->getBuffersContent() as $childBufferContent) {
             if ($childBufferContent->withContentTranslation()) {
                 $originalsPacket->add($childBufferContent->getContentString());
             }
-            if ($childBufferContent->getBufferContentCollection()) {
+            if ($childBufferContent->getChildContentCollection()) {
                 $originalsPacket = $this->collectOriginalPacket($childBufferContent, $originalsPacket);
             }
         }
@@ -66,7 +66,7 @@ class BufferTranslate
      */
     public function translateBuffersWithProcessors(BufferContent $bufferContent, TranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
     {
-        $buffer = $bufferContent->getBufferContentCollection();
+        $buffer = $bufferContent->getChildContentCollection();
         if (!$buffer) {
             return $bufferContent->getContentString();
         }
@@ -81,8 +81,8 @@ class BufferTranslate
             } else {
                 $translatedSting = $childBufferContent->getContentString();
             }
-            if ($childBufferContent->getBufferContentCollection()) {
-                $translatedSting = $this->translateBuffersWithProcessors(new BufferContent($translatedSting, $childBufferContent->getBufferContentCollection()), $translator, $contentProcessorsManager);
+            if ($childBufferContent->getChildContentCollection()) {
+                $translatedSting = $this->translateBuffersWithProcessors(new BufferContent($translatedSting, $childBufferContent->getChildContentCollection()), $translator, $contentProcessorsManager);
             }
             $content = str_replace(
                 $bufferKey,
@@ -128,7 +128,7 @@ class BufferTranslate
      */
     private function replaceBufferByTranslatedPacket(BufferContent $bufferContent, TranslatePhrasePacket $translatePhrasePacket)
     {
-        $buffer = $bufferContent->getBufferContentCollection();
+        $buffer = $bufferContent->getChildContentCollection();
         $content = $bufferContent->getContentString();
         foreach ($buffer->getBuffersContent() as $bufferId => $bufferContent) {
             $bufferKey = $buffer->generateBufferKey($bufferId);
@@ -139,8 +139,8 @@ class BufferTranslate
                 $translatedSting = $bufferContent->getContentString();
             }
 
-            if ($bufferContent->getBufferContentCollection()) {
-                $translatedSting = $this->replaceBufferByTranslatedPacket(new BufferContent($translatedSting, $bufferContent->getBufferContentCollection()), $translatePhrasePacket);
+            if ($bufferContent->getChildContentCollection()) {
+                $translatedSting = $this->replaceBufferByTranslatedPacket(new BufferContent($translatedSting, $bufferContent->getChildContentCollection()), $translatePhrasePacket);
             }
             $content = str_replace(
                 $bufferKey,
