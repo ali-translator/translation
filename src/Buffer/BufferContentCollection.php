@@ -101,7 +101,6 @@ class BufferContentCollection implements IteratorAggregate
         return $this->keyGenerator->generateKey($id);
     }
 
-
     /**
      * @return IteratorIterator|Traversable
      */

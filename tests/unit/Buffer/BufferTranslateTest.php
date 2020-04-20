@@ -54,7 +54,7 @@ class BufferTranslateTest extends TestCase
         $bufferContent = new BufferContent($html, $buffer);
 
         $bufferTranslate = new BufferTranslate();
-        $translatedHtml = $bufferTranslate->translateBuffer($bufferContent, $translator);
+        $translatedHtml = $bufferTranslate->translateChildContentCollection($bufferContent, $translator);
 
         $this->assertEquals('<div class="test">Hello</div>', $translatedHtml);
     }
@@ -75,7 +75,7 @@ class BufferTranslateTest extends TestCase
         $bufferContent = new BufferContent($html, $buffer);
 
         $bufferTranslate = new BufferTranslate();
-        $translatedHtml = $bufferTranslate->translateBuffer($bufferContent, $translator);
+        $translatedHtml = $bufferTranslate->translateChildContentCollection($bufferContent, $translator);
 
         $this->assertEquals('<div class="test">Привіт</div>', $translatedHtml);
 

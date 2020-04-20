@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Translate\Translators;
 
-use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
+use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
 use ALI\Translation\Translate\Sources\SourceInterface;
 
 /**
@@ -12,7 +12,7 @@ interface TranslatorInterface
 {
     /**
      * @param array $phrases
-     * @return TranslatePhrasePacket
+     * @return TranslatePhraseCollection
      */
     public function translateAll($phrases);
 

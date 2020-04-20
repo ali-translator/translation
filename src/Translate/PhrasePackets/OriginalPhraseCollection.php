@@ -2,10 +2,15 @@
 
 namespace ALI\Translation\Translate\PhrasePackets;
 
+use ArrayIterator;
+use IteratorAggregate;
+use IteratorIterator;
+use Traversable;
+
 /**
  * OriginalPhrasePacket
  */
-class OriginalPhrasePacket
+class OriginalPhraseCollection implements IteratorAggregate
 {
     /**
      * @var string[]
@@ -61,5 +66,13 @@ class OriginalPhrasePacket
     public function getAll()
     {
         return array_values($this->originals);
+    }
+
+    /**
+     * @return IteratorIterator|Traversable
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->originals);
     }
 }

@@ -45,8 +45,8 @@ class CollectorTranslateCallbackTest extends TestCase
         $this->assertEquals('Кіт', $translatePhrase);
 
         // Test one phrase without translate
-        $this->assertEquals(['Test'], $callBack->getOriginalPhrasePacket()->getAll());
-        $this->assertTrue($callBack->getOriginalPhrasePacket()->exist('Test'));
-        $this->assertFalse($callBack->getOriginalPhrasePacket()->exist('Test new'));
+        $this->assertEquals(['Test'], $callBack->getOriginalPhraseCollection()->getAll());
+        $this->assertTrue($callBack->getOriginalPhraseCollection()->exist('Test'));
+        $this->assertFalse($callBack->getOriginalPhraseCollection()->exist('Test new'));
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Translate\Translators;
 
-use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
+use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use ALI\Translation\Translate\Sources\SourceInterface;
 use function is_callable;
@@ -91,11 +91,11 @@ class Translator implements TranslatorInterface
 
     /**
      * @param array $phrases
-     * @return TranslatePhrasePacket
+     * @return TranslatePhraseCollection
      */
     public function translateAll($phrases)
     {
-        $translatePhrasePacket = new TranslatePhrasePacket();
+        $translatePhrasePacket = new TranslatePhraseCollection();
 
         if ($this->isCurrentLanguageOriginal()) {
             foreach ($phrases as $phrase) {

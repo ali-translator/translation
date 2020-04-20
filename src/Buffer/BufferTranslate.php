@@ -4,8 +4,8 @@ namespace ALI\Translation\Buffer;
 
 use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use ALI\Translation\ContentProcessors\ContentProcessorsManager;
-use ALI\Translation\Translate\PhrasePackets\OriginalPhrasePacket;
-use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
+use ALI\Translation\Translate\PhrasePackets\OriginalPhraseCollection;
+use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
 use ALI\Translation\Translate\Sources\FakeBufferSource;
 use ALI\Translation\Translate\Translators\Translator;
 use ALI\Translation\Translate\Translators\TranslatorInterface;
@@ -23,35 +23,35 @@ class BufferTranslate
      * @param TranslatorInterface $translator
      * @return string
      */
-    public function translateBuffer(BufferContent $bufferContent, TranslatorInterface $translator)
+    public function translateChildContentCollection(BufferContent $bufferContent, TranslatorInterface $translator)
     {
         if (!$bufferContent->getChildContentCollection()) {
             return $bufferContent->getContentString();
         }
 
-        $originalsPacket = $this->collectOriginalPacket($bufferContent);
-        $translatedPacket = $translator->translateAll($originalsPacket->getAll());
+        $originalsCollection = $this->prepareOriginals($bufferContent);
+        $translatedCollection = $translator->translateAll($originalsCollection->getAll());
 
-        return $this->replaceBufferByTranslatedPacket($bufferContent, $translatedPacket);
+        return $this->replaceBufferByTranslatedPacket($bufferContent, $translatedCollection);
     }
 
     /**
-     * @param BufferContent $bufferContent
-     * @param OriginalPhrasePacket|null $originalsPacket
-     * @return OriginalPhrasePacket
+     * @param BufferContent                 $bufferContent
+     * @param OriginalPhraseCollection|null $originals
+     * @return OriginalPhraseCollection
      */
-    private function collectOriginalPacket(BufferContent $bufferContent, OriginalPhrasePacket $originalsPacket = null)
+    private function prepareOriginals(BufferContent $bufferContent, OriginalPhraseCollection $originals = null)
     {
-        $originalsPacket = $originalsPacket ?: new OriginalPhrasePacket();
+        $originals = $originals ?: new OriginalPhraseCollection();
         foreach ($bufferContent->getChildContentCollection()->getBuffersContent() as $childBufferContent) {
             if ($childBufferContent->withContentTranslation()) {
-                $originalsPacket->add($childBufferContent->getContentString());
+                $originals->add($childBufferContent->getContentString());
             }
             if ($childBufferContent->getChildContentCollection()) {
-                $originalsPacket = $this->collectOriginalPacket($childBufferContent, $originalsPacket);
+                $originals = $this->prepareOriginals($childBufferContent, $originals);
             }
         }
-        return $originalsPacket;
+        return $originals;
     }
 
     /**
@@ -118,15 +118,15 @@ class BufferTranslate
         // Create additional buffering layer
         $layerContent = $this->translateBuffersWithProcessors($bufferContent, $bufferLayerTranslator, $contentProcessorsManager);
 
-        return $this->translateBuffer(new BufferContent($layerContent, $bufferLayer), $translator);
+        return $this->translateChildContentCollection(new BufferContent($layerContent, $bufferLayer), $translator);
     }
 
     /**
-     * @param BufferContent $bufferContent
-     * @param TranslatePhrasePacket $translatePhrasePacket
+     * @param BufferContent             $bufferContent
+     * @param TranslatePhraseCollection $translatePhrasePacket
      * @return string|string[]
      */
-    private function replaceBufferByTranslatedPacket(BufferContent $bufferContent, TranslatePhrasePacket $translatePhrasePacket)
+    private function replaceBufferByTranslatedPacket(BufferContent $bufferContent, TranslatePhraseCollection $translatePhrasePacket)
     {
         $buffer = $bufferContent->getChildContentCollection();
         $content = $bufferContent->getContentString();

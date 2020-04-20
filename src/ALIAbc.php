@@ -109,12 +109,12 @@ class ALIAbc
         $buffer = new BufferContentCollection($this->templatesKeyGenerator);
         $layoutBufferContent = new BufferContent($buffer->add($bufferContent), $buffer);
 
-        return $this->bufferTranslate->translateBuffer($layoutBufferContent, $this->translator);
+        return $this->bufferTranslate->translateChildContentCollection($layoutBufferContent, $this->translator);
     }
 
     /**
      * @param array $originalPhrases
-     * @return Translate\PhrasePackets\TranslatePhrasePacket
+     * @return Translate\PhrasePackets\TranslatePhraseCollection
      */
     public function translateAll($originalPhrases)
     {
@@ -166,7 +166,7 @@ class ALIAbc
         $bufferContent = new BufferContent($contentContext, $buffer);
 
         if (!$this->contentProcessorsManager) {
-            return $this->bufferTranslate->translateBuffer($bufferContent, $this->bufferTranslator);
+            return $this->bufferTranslate->translateChildContentCollection($bufferContent, $this->bufferTranslator);
         }
 
         if ($this->isSourceSensitiveForRequestsCount($this->bufferTranslator->getSource())) {
@@ -196,7 +196,7 @@ class ALIAbc
      */
     public function saveOriginalsWithoutTranslates()
     {
-        $originalsPacketWithoutTranslates = $this->collectorTranslateCallback->getOriginalPhrasePacket();
+        $originalsPacketWithoutTranslates = $this->collectorTranslateCallback->getOriginalPhraseCollection();
         if (!$originalsPacketWithoutTranslates->count()) {
             return;
         }

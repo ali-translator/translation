@@ -4,7 +4,7 @@ namespace ALI\Translation\Translate\Translators;
 
 use ALI\Translation\Translate\PhraseDecorators\OriginalPhraseDecoratorManager;
 use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
-use ALI\Translation\Translate\PhrasePackets\TranslatePhrasePacket;
+use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
 
 /**
  * Decorate original and translated phrases in conjunction with `Translator` class
@@ -44,7 +44,7 @@ class DecoratedTranslator implements TranslatorInterface
 
     /**
      * @param array $phrases
-     * @return TranslatePhrasePacket
+     * @return TranslatePhraseCollection
      */
     public function translateAll($phrases)
     {
@@ -52,7 +52,7 @@ class DecoratedTranslator implements TranslatorInterface
             $phrases[$phraseKey] = $this->originalDecoratorManager->decorate($phrase);
         }
         $translatePhrasePacket = $this->translator->translateAll($phrases);
-        $decoratedTranslatedPhrasePacket = new TranslatePhrasePacket();
+        $decoratedTranslatedPhrasePacket = new TranslatePhraseCollection();
         foreach ($translatePhrasePacket->getAll() as $originalPhrase => $translatePhrase) {
             if ($translatePhrase) {
                 $translatePhrase = $this->translateDecoratorManager->decorate($originalPhrase, $translatePhrase);

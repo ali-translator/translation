@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Translate\MissingTranslateCallbacks;
 
-use ALI\Translation\Translate\PhrasePackets\OriginalPhrasePacket;
+use ALI\Translation\Translate\PhrasePackets\OriginalPhraseCollection;
 use ALI\Translation\Translate\Translators\TranslatorInterface;
 
 /**
@@ -11,16 +11,16 @@ use ALI\Translation\Translate\Translators\TranslatorInterface;
 class CollectorMissingTranslatesCallback
 {
     /**
-     * @var OriginalPhrasePacket
+     * @var OriginalPhraseCollection
      */
-    private $originalPhrasePacket;
+    private $originalPhraseCollection;
 
     /**
-     * @param OriginalPhrasePacket $originalPhrasePacket
+     * @param OriginalPhraseCollection $originalPhrasePacket
      */
-    public function __construct(OriginalPhrasePacket $originalPhrasePacket = null)
+    public function __construct(OriginalPhraseCollection $originalPhrasePacket = null)
     {
-        $this->originalPhrasePacket = $originalPhrasePacket ?: new OriginalPhrasePacket();
+        $this->originalPhraseCollection = $originalPhrasePacket ?: new OriginalPhraseCollection();
     }
 
     /**
@@ -29,14 +29,14 @@ class CollectorMissingTranslatesCallback
      */
     public function __invoke($searchPhrase, $translator)
     {
-        $this->originalPhrasePacket->add($searchPhrase);
+        $this->originalPhraseCollection->add($searchPhrase);
     }
 
     /**
-     * @return OriginalPhrasePacket
+     * @return OriginalPhraseCollection
      */
-    public function getOriginalPhrasePacket()
+    public function getOriginalPhraseCollection()
     {
-        return $this->originalPhrasePacket;
+        return $this->originalPhraseCollection;
     }
 }

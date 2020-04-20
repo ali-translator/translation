@@ -2,10 +2,13 @@
 
 namespace ALI\Translation\Translate\PhrasePackets;
 
+use ArrayIterator;
+use IteratorAggregate;
+
 /**
  * TranslatePhrasePacket
  */
-class TranslatePhrasePacket
+class TranslatePhraseCollection implements IteratorAggregate
 {
     /**
      * @var string[]
@@ -69,13 +72,21 @@ class TranslatePhrasePacket
     }
 
     /**
-     * @return OriginalPhrasePacket
+     * @return OriginalPhraseCollection
      */
-    public function generateOriginalPhrasePacket()
+    public function generateOriginalPhraseCollection()
     {
         $allTranslatesPhrases = $this->getAll();
         $originalPhrases = array_values($allTranslatesPhrases);
 
-        return new OriginalPhrasePacket($originalPhrases);
+        return new OriginalPhraseCollection($originalPhrases);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->originalsWithTranslate);
     }
 }
