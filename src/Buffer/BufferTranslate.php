@@ -25,7 +25,7 @@ class BufferTranslate
      */
     public function translateBuffer(BufferContent $bufferContent, TranslatorInterface $translator)
     {
-        if (!$bufferContent->getBuffer()) {
+        if (!$bufferContent->getBufferCollection()) {
             return $bufferContent->getContentString();
         }
 
@@ -43,11 +43,11 @@ class BufferTranslate
     private function collectOriginalPacket(BufferContent $bufferContent, OriginalPhrasePacket $originalsPacket = null)
     {
         $originalsPacket = $originalsPacket ?: new OriginalPhrasePacket();
-        foreach ($bufferContent->getBuffer()->getBuffersContent() as $childBufferContent) {
+        foreach ($bufferContent->getBufferCollection()->getBuffersContent() as $childBufferContent) {
             if ($childBufferContent->withContentTranslation()) {
                 $originalsPacket->add($childBufferContent->getContentString());
             }
-            if ($childBufferContent->getBuffer()) {
+            if ($childBufferContent->getBufferCollection()) {
                 $originalsPacket = $this->collectOriginalPacket($childBufferContent, $originalsPacket);
             }
         }
@@ -66,7 +66,7 @@ class BufferTranslate
      */
     public function translateBuffersWithProcessors(BufferContent $bufferContent, TranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
     {
-        $buffer = $bufferContent->getBuffer();
+        $buffer = $bufferContent->getBufferCollection();
         if (!$buffer) {
             return $bufferContent->getContentString();
         }
@@ -81,8 +81,8 @@ class BufferTranslate
             } else {
                 $translatedSting = $childBufferContent->getContentString();
             }
-            if ($childBufferContent->getBuffer()) {
-                $translatedSting = $this->translateBuffersWithProcessors(new BufferContent($translatedSting, $childBufferContent->getBuffer()), $translator, $contentProcessorsManager);
+            if ($childBufferContent->getBufferCollection()) {
+                $translatedSting = $this->translateBuffersWithProcessors(new BufferContent($translatedSting, $childBufferContent->getBufferCollection()), $translator, $contentProcessorsManager);
             }
             $content = str_replace(
                 $bufferKey,
@@ -110,7 +110,7 @@ class BufferTranslate
     public function translateBuffersWithProcessorsByOneRequest(BufferContent $bufferContent, TranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
     {
         // Init additional objects
-        $bufferLayer = new Buffer(new StaticKeyGenerator('#ali-buffer-layer-content_', '#'));
+        $bufferLayer = new BufferCollection(new StaticKeyGenerator('#ali-buffer-layer-content_', '#'));
 
         $fakeBufferSource = new FakeBufferSource($translator->getSource()->getOriginalLanguageAlias(), $bufferLayer);
         $bufferLayerTranslator = new Translator($translator->getLanguageAlias(),$fakeBufferSource);
@@ -128,7 +128,7 @@ class BufferTranslate
      */
     private function replaceBufferByTranslatedPacket(BufferContent $bufferContent, TranslatePhrasePacket $translatePhrasePacket)
     {
-        $buffer = $bufferContent->getBuffer();
+        $buffer = $bufferContent->getBufferCollection();
         $content = $bufferContent->getContentString();
         foreach ($buffer->getBuffersContent() as $bufferId => $bufferContent) {
             $bufferKey = $buffer->generateBufferKey($bufferId);
@@ -139,8 +139,8 @@ class BufferTranslate
                 $translatedSting = $bufferContent->getContentString();
             }
 
-            if ($bufferContent->getBuffer()) {
-                $translatedSting = $this->replaceBufferByTranslatedPacket(new BufferContent($translatedSting, $bufferContent->getBuffer()), $translatePhrasePacket);
+            if ($bufferContent->getBufferCollection()) {
+                $translatedSting = $this->replaceBufferByTranslatedPacket(new BufferContent($translatedSting, $bufferContent->getBufferCollection()), $translatePhrasePacket);
             }
             $content = str_replace(
                 $bufferKey,

@@ -2,7 +2,7 @@
 
 namespace ALI\Translation;
 
-use ALI\Translation\Buffer\Buffer;
+use ALI\Translation\Buffer\BufferCollection;
 use ALI\Translation\Buffer\BufferCatcher;
 use ALI\Translation\Buffer\BufferContent;
 use ALI\Translation\Buffer\BufferTranslate;
@@ -60,6 +60,7 @@ class ALIAbc
      * @param BufferCatcher|null                      $bufferCatcher
      * @param KeyGenerator|null                       $templatesKeyGenerator
      * @param BufferTranslate|null                    $bufferTranslate
+     * @param bool                                    $htmlEncodeBufferTranslate
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -105,7 +106,7 @@ class ALIAbc
             return $this->translator->translate($phrase);
         }
         $bufferContent = $this->generateBufferContentByTemplate($phrase, $params);
-        $buffer = new Buffer($this->templatesKeyGenerator);
+        $buffer = new BufferCollection($this->templatesKeyGenerator);
         $layoutBufferContent = new BufferContent($buffer->add($bufferContent), $buffer);
 
         return $this->bufferTranslate->translateBuffer($layoutBufferContent, $this->translator);
@@ -266,7 +267,7 @@ class ALIAbc
      */
     protected function generateBufferContentByTemplate($phrase, array $contentParams = [])
     {
-        $buffer = new Buffer($this->templatesKeyGenerator);
+        $buffer = new BufferCollection($this->templatesKeyGenerator);
 
         foreach ($contentParams as $bufferId => $bufferValue) {
             $buffer->add(new BufferContent($bufferValue, null, false), $bufferId);

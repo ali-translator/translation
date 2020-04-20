@@ -6,10 +6,6 @@ services:
          working_dir: /var/www/ali
          volumes:
             - ./:/var/www/ali/
-            - ~/.ssh:/root/.ssh:ro
-            - ~/.composer:/root/.composer/
-            - /etc/timezone:/etc/timezone:ro
-            - /etc/localtime:/etc/localtime:ro
          restart: always
 
     mysql:
@@ -18,7 +14,4 @@ services:
          environment:
            MYSQL_ROOT_PASSWORD: root
            MYSQL_DATABASE: test
-         volumes:
-            - /etc/timezone:/etc/timezone:ro
-            - /etc/localtime:/etc/localtime:ro
          restart: always

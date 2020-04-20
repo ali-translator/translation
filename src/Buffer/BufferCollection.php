@@ -3,12 +3,16 @@
 namespace ALI\Translation\Buffer;
 
 use ALI\Translation\Buffer\KeyGenerators\KeyGenerator;
+use ArrayIterator;
+use IteratorAggregate;
+use IteratorIterator;
+use Traversable;
 
 /**
  * Class Buffer
  * @package ALI
  */
-class Buffer
+class BufferCollection implements IteratorAggregate
 {
     /**
      * @var KeyGenerator
@@ -99,5 +103,14 @@ class Buffer
     public function generateBufferKey($id)
     {
         return $this->keyGenerator->generateKey($id);
+    }
+
+
+    /**
+     * @return IteratorIterator|Traversable
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->buffersContent);
     }
 }
