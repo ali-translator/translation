@@ -3,6 +3,7 @@
 namespace ALI\Translation\Languages\Repositories;
 
 use ALI\Translation\Languages\Language;
+use ALI\Translation\Languages\LanguageInterface;
 use ALI\Translation\Languages\LanguageRepositoryInterface;
 
 /**
@@ -31,11 +32,11 @@ class MySqlLanguageRepository implements LanguageRepositoryInterface
     }
 
     /**
-     * @param Language $language
+     * @param LanguageInterface $language
      * @param bool $isActive
      * @return bool
      */
-    public function save(Language $language, $isActive)
+    public function save(LanguageInterface $language, $isActive)
     {
         $isActive = (int)$isActive;
         $statement = $this->pdo->prepare('
@@ -51,7 +52,7 @@ class MySqlLanguageRepository implements LanguageRepositoryInterface
 
     /**
      * @param string $alias
-     * @return Language|null
+     * @return LanguageInterface|null
      */
     public function find($alias)
     {
@@ -71,7 +72,7 @@ class MySqlLanguageRepository implements LanguageRepositoryInterface
 
     /**
      * @param bool $onlyActive
-     * @return Language[]|array
+     * @return LanguageInterface[]|array
      */
     public function getAll($onlyActive)
     {

@@ -8,21 +8,21 @@ namespace ALI\Translation\Languages;
 interface LanguageRepositoryInterface
 {
     /**
-     * @param Language $language
+     * @param LanguageInterface $language
      * @param bool $isActive
      * @return mixed
      */
-    public function save(Language $language, $isActive);
+    public function save(LanguageInterface $language, $isActive);
 
     /**
      * @param string $alias
-     * @return null|Language
+     * @return null|LanguageInterface
      */
     public function find($alias);
 
     /**
      * @param bool $onlyActive
-     * @return Language[]
+     * @return LanguageInterface[]
      */
     public function getAll($onlyActive);
 }
