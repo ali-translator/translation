@@ -8,6 +8,7 @@ use ALI\Translation\ContentProcessors\PreTranslateProcessors\IgnoreHtmlTagsPrePr
 use ALI\Translation\ContentProcessors\PreTranslateProcessors\SliIgnoreTagPreProcessor;
 use ALI\Translation\ContentProcessors\ContentProcessorsManager;
 use ALI\Translation\ContentProcessors\TranslateProcessors\HtmlAttributesProcessor;
+use ALI\Translation\ContentProcessors\TranslateProcessors\HtmlLinkProcessor;
 use ALI\Translation\ContentProcessors\TranslateProcessors\HtmlTagProcessor;
 use ALI\Translation\ContentProcessors\TranslateProcessors\SimpleTextProcessor;
 use ALI\Translation\Translate\PhraseDecorators\OriginalDecorators\ReplaceNumbersOriginalDecorator;
@@ -118,6 +119,8 @@ class ALIAbcFactory
 
         $contentProcessorsManager->addTranslateProcessor(new HtmlTagProcessor());
         $contentProcessorsManager->addTranslateProcessor(new HtmlAttributesProcessor());
+        //todo $_SERVER['HTTP_HOST']
+        $contentProcessorsManager->addTranslateProcessor(new HtmlLinkProcessor($_SERVER['HTTP_HOST']));
         $contentProcessorsManager->addTranslateProcessor(new SimpleTextProcessor());
 
         return $contentProcessorsManager;
