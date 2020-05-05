@@ -80,6 +80,16 @@ class ALIAbcTest extends TestCase
     /**
      * @param ALIAbc $aliAbc
      */
+    private function checkTranslateContentWithProcessors(ALIAbc $aliAbc)
+    {
+        $content = '<div>sun</div>';
+        $translated = $aliAbc->translateBuffer($content);
+        $this->assertEquals('<div>сонце</div>', $translated);
+    }
+
+    /**
+     * @param ALIAbc $aliAbc
+     */
     private function checkSaveMissingOriginals(ALIAbc $aliAbc)
     {
         $missingPhrase = 'Some missing phrase';
