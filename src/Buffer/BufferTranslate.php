@@ -72,6 +72,10 @@ class BufferTranslate
         }
         $content = $bufferContent->getContentString();
 
+        // Translate main content
+        $content = $contentProcessorsManager->executeProcesses($content, $translator);
+
+        // Translate child content
         foreach ($buffer->getBuffersContent() as $bufferId => $childBufferContent) {
             $bufferKey = $buffer->generateBufferKey($bufferId);
 
