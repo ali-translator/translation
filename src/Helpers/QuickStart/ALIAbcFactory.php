@@ -8,6 +8,7 @@ use ALI\Translation\ContentProcessors\PreTranslateProcessors\IgnoreHtmlTagsPrePr
 use ALI\Translation\ContentProcessors\PreTranslateProcessors\SliIgnoreTagPreProcessor;
 use ALI\Translation\ContentProcessors\ContentProcessorsManager;
 use ALI\Translation\ContentProcessors\TranslateProcessors\HtmlAttributesProcessor;
+use ALI\Translation\ContentProcessors\TranslateProcessors\HtmlLinkProcessor;
 use ALI\Translation\ContentProcessors\TranslateProcessors\HtmlTagProcessor;
 use ALI\Translation\ContentProcessors\TranslateProcessors\SimpleTextProcessor;
 use ALI\Translation\Translate\PhraseDecorators\OriginalDecorators\ReplaceNumbersOriginalDecorator;
@@ -29,16 +30,17 @@ use PDO;
 class ALIAbcFactory
 {
     /**
-     * @param PDO $connection
+     * @param PDO  $connection
      * @param $originalLanguageAlias
      * @param $currentLanguageAlias
+     * @param string|null $httHost
      * @return ALIAbc
      */
-    public function createALIByHtmlBufferMysqlSource(PDO $connection, $originalLanguageAlias, $currentLanguageAlias)
+    public function createALIByHtmlBufferMysqlSource(PDO $connection, $originalLanguageAlias, $currentLanguageAlias, $httHost = null)
     {
         $translator = $this->generateMysqlTranslator($connection, $originalLanguageAlias, $currentLanguageAlias);
 
-        $processorsManager = $this->generateBaseHtmlProcessorManager();
+        $processorsManager = $this->generateBaseHtmlProcessorManager($httHost);
 
         return new ALIAbc($translator, $processorsManager);
     }
@@ -60,14 +62,15 @@ class ALIAbcFactory
      * @param $translationDirectoryPath
      * @param $originalLanguageAlias
      * @param $currentLanguageAlias
+     * @param string|null $httHost
      * @return ALIAbc
      * @throws UnsupportedLanguageAliasException
      */
-    public function createALIByHtmlBufferCsvSource($translationDirectoryPath, $originalLanguageAlias, $currentLanguageAlias)
+    public function createALIByHtmlBufferCsvSource($translationDirectoryPath, $originalLanguageAlias, $currentLanguageAlias, $httHost = null)
     {
         $translator = $this->generateCsvTranslator($translationDirectoryPath, $originalLanguageAlias, $currentLanguageAlias);
 
-        $processorsManager = $this->generateBaseHtmlProcessorManager();
+        $processorsManager = $this->generateBaseHtmlProcessorManager($httHost);
 
         return new ALIAbc($translator, $processorsManager);
     }
@@ -106,10 +109,15 @@ class ALIAbcFactory
     }
 
     /**
+     * @param string|null $httHost
      * @return ContentProcessorsManager
      */
-    private function generateBaseHtmlProcessorManager()
+    private function generateBaseHtmlProcessorManager($httHost = null)
     {
+        if (is_null($httHost)) {
+            $httHost = $_SERVER['HTTP_HOST'];
+        }
+
         $contentProcessorsManager = new ContentProcessorsManager();
 
         $contentProcessorsManager->addPreProcessor(new HtmlCommentPreProcessor());
@@ -119,6 +127,7 @@ class ALIAbcFactory
         $contentProcessorsManager->addTranslateProcessor(new HtmlTagProcessor());
         $contentProcessorsManager->addTranslateProcessor(new HtmlAttributesProcessor());
         $contentProcessorsManager->addTranslateProcessor(new SimpleTextProcessor());
+        $contentProcessorsManager->addTranslateProcessor(new HtmlLinkProcessor($httHost));
 
         return $contentProcessorsManager;
     }
