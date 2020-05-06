@@ -139,7 +139,7 @@ class HtmlLinkProcessor implements TranslateProcessors
                 (?:
                     (?:(?:https?:)?//' . preg_quote($this->getCurrentHttpHost()) . '/)
                     |
-                    (?:/(?!/))
+                    (?:\.?/(?!/))
                 )
                 (?!' . preg_quote($languageAlias) . '(?:/|\Z))#Uixs',
             '$0' . $languageAlias . '/', $url
