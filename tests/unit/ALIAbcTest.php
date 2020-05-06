@@ -55,6 +55,22 @@ class ALIAbcTest extends TestCase
     }
 
     /**
+     * @throws SourceException
+     * @throws UnsupportedLanguageAliasException
+     */
+    public function testTranslateContentWithProcessors()
+    {
+        $aliAbc = (new ALIAbcFactory())->createALIByHtmlBufferCsvSource(SOURCE_CSV_PATH, LanguageFactory::ORIGINAL_LANGUAGE_ALIAS, LanguageFactory::CURRENT_LANGUAGE_ALIAS);
+        $aliAbc->saveTranslate('sun', 'сонце');
+
+        $content = '<div>sun</div>';
+        $translated = $aliAbc->translateBuffer($content);
+        $this->assertEquals('<div>сонце</div>', $translated);
+
+        $aliAbc->deleteOriginal('sun');
+    }
+
+    /**
      * @param ALIAbc $aliAbc
      */
     private function checkTranslate(ALIAbc $aliAbc)
@@ -75,16 +91,6 @@ class ALIAbcTest extends TestCase
             ]) . '</div>';
         $translated = $aliAbc->translateBuffer($content);
         $this->assertEquals('<div>Привіт sun!</div>', $translated);
-    }
-
-    /**
-     * @param ALIAbc $aliAbc
-     */
-    private function checkTranslateContentWithProcessors(ALIAbc $aliAbc)
-    {
-        $content = '<div>sun</div>';
-        $translated = $aliAbc->translateBuffer($content);
-        $this->assertEquals('<div>сонце</div>', $translated);
     }
 
     /**
