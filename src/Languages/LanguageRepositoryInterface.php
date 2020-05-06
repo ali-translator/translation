@@ -24,5 +24,5 @@ interface LanguageRepositoryInterface
      * @param bool $onlyActive
      * @return LanguageInterface[]
      */
-    public function getAll($onlyActive);
+    public function getAll($onlyActive = true);
 }

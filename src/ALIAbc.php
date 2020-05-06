@@ -10,6 +10,7 @@ use ALI\Translation\Buffer\KeyGenerators\KeyGenerator;
 use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use ALI\Translation\Exceptions\TranslateNotDefinedException;
 use ALI\Translation\ContentProcessors\ContentProcessorsManager;
+use ALI\Translation\Languages\LanguageRepositoryInterface;
 use ALI\Translation\Translate\MissingTranslateCallbacks\CollectorMissingTranslatesCallback;
 use ALI\Translation\Translate\PhraseDecorators\TranslateDecorators\HtmlEncodeTranslateDecorator;
 use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
@@ -52,6 +53,11 @@ class ALIAbc
      * @var CollectorMissingTranslatesCallback
      */
     protected $collectorTranslateCallback;
+
+    /**
+     * @var LanguageRepositoryInterface
+     */
+    protected $languageRepository;
 
     /**
      * @param TranslatorInterface                     $translator
@@ -274,5 +280,24 @@ class ALIAbc
         }
 
         return new BufferContent($phrase, $buffer);
+    }
+
+    /**
+     * @return LanguageRepositoryInterface
+     */
+    public function getLanguageRepository()
+    {
+        return $this->languageRepository;
+    }
+
+    /**
+     * @param LanguageRepositoryInterface $languageRepository
+     * @return $this
+     */
+    public function setLanguageRepository(LanguageRepositoryInterface $languageRepository)
+    {
+        $this->languageRepository = $languageRepository;
+
+        return $this;
     }
 }

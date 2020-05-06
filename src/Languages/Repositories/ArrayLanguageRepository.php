@@ -60,7 +60,7 @@ class ArrayLanguageRepository implements LanguageRepositoryInterface
      * @param bool $onlyActive
      * @return LanguageInterface[]
      */
-    public function getAll($onlyActive)
+    public function getAll($onlyActive = true)
     {
         if ($onlyActive) {
             return array_values($this->activeLanguages);

@@ -74,7 +74,7 @@ class MySqlLanguageRepository implements LanguageRepositoryInterface
      * @param bool $onlyActive
      * @return LanguageInterface[]|array
      */
-    public function getAll($onlyActive)
+    public function getAll($onlyActive = true)
     {
         $onlyActive = (int)$onlyActive;
         $statement = $this->pdo->prepare('
