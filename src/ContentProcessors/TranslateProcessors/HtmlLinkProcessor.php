@@ -134,12 +134,17 @@ class HtmlLinkProcessor implements TranslateProcessors
             return $url;
         }
 
+        //fix for path that start from "./"
+        if (strpos($url, './') === 0) {
+            $url = substr($url, 1);
+        }
+
         return preg_replace(
             '#^
                 (?:
                     (?:(?:https?:)?//' . preg_quote($this->getCurrentHttpHost()) . '/)
                     |
-                    (?:\.?/(?!/))
+                    (?:/(?!/))
                 )
                 (?!' . preg_quote($languageAlias) . '(?:/|\Z))#Uixs',
             '$0' . $languageAlias . '/', $url
