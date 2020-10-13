@@ -60,7 +60,7 @@ class ALIAbcTest extends TestCase
      */
     public function testTranslateContentWithProcessors()
     {
-        $aliAbc = (new ALIAbcFactory())->createALIByHtmlBufferCsvSource(SOURCE_CSV_PATH, LanguageFactory::ORIGINAL_LANGUAGE_ALIAS, LanguageFactory::CURRENT_LANGUAGE_ALIAS);
+        $aliAbc = (new ALIAbcFactory())->createALIByHtmlBufferCsvSource(SOURCE_CSV_PATH, LanguageFactory::ORIGINAL_LANGUAGE_ALIAS, LanguageFactory::CURRENT_LANGUAGE_ALIAS, 'https://test.com/en/');
         $aliAbc->saveTranslate('sun', 'сонце');
 
         $content = '<div>sun</div>';

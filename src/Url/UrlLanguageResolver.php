@@ -32,15 +32,24 @@ class UrlLanguageResolver
     public function resolveUrlCurrentLanguage()
     {
         if ($this->_currentLanguageAlias === false) {
-            $currentLanguageAlias = $this->urlParser->getLangAliasFromURI($_SERVER['REQUEST_URI']);
-            if ($currentLanguageAlias === null) {
-                $this->_currentLanguageAlias = $this->urlParser->getDefaultLanguageAlias();
-            } else {
-                $this->_currentLanguageAlias = $currentLanguageAlias;
-            }
+            $this->_currentLanguageAlias = $this->detectLanguage($_SERVER['REQUEST_URI']);
             $_SERVER['REQUEST_URI'] = $this->urlParser->getRequestUriWithoutLangAlias($_SERVER['REQUEST_URI']);
         }
 
         return (string)$this->_currentLanguageAlias;
+    }
+
+    /**
+     * @param $url
+     * @return string|null
+     */
+    public function detectLanguage($url)
+    {
+        $currentLanguageAlias = $this->urlParser->getLangAliasFromURI($url);
+        if ($currentLanguageAlias === null) {
+            $currentLanguageAlias = $this->urlParser->getDefaultLanguageAlias();
+        }
+
+        return $currentLanguageAlias;
     }
 }

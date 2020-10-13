@@ -23,8 +23,12 @@ class UrlLanguageResolverTest extends TestCase
         $_SERVER['REQUEST_URI'] = '/' . $expectCurrentLanguage . $expectRequestUri;
 
         $urlParser = new UrlParser([$expectCurrentLanguage]);
-        $currentLanguageAlias = (new UrlLanguageResolver($urlParser))->resolveUrlCurrentLanguage();
+        $urlLanguageResolver = new UrlLanguageResolver($urlParser);
 
+        $detectedLanguage = $urlLanguageResolver->detectLanguage($_SERVER['REQUEST_URI']);
+        $this->assertEquals($expectCurrentLanguage, $detectedLanguage);
+
+        $currentLanguageAlias = $urlLanguageResolver->resolveUrlCurrentLanguage();
         $this->assertEquals($expectRequestUri, $_SERVER['REQUEST_URI']);
         $this->assertEquals($expectCurrentLanguage, $currentLanguageAlias);
     }

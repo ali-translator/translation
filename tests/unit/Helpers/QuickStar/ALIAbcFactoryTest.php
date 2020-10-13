@@ -27,13 +27,13 @@ class ALIAbcFactoryTest extends TestCase
         $csvSourceALIAb = $quickStart->createALIByCsvSource(SOURCE_CSV_PATH, $originalLanguageAlias, $currentLanguageAlias);
         $this->assertInstanceOf(ALIAbc::class, $csvSourceALIAb);
 
-        $htmlBufferCsvSourceALIAb = $quickStart->createALIByHtmlBufferCsvSource(SOURCE_CSV_PATH, $originalLanguageAlias, $currentLanguageAlias);
+        $htmlBufferCsvSourceALIAb = $quickStart->createALIByHtmlBufferCsvSource(SOURCE_CSV_PATH, $originalLanguageAlias, $currentLanguageAlias, 'https://test.com/en/');
         $this->assertInstanceOf(ALIAbc::class, $htmlBufferCsvSourceALIAb);
 
         $mysqlSourceALIAb = $quickStart->createALIByMysqlSource($connection, $originalLanguageAlias, $currentLanguageAlias);
         $this->assertInstanceOf(ALIAbc::class, $mysqlSourceALIAb);
 
-        $htmlBufferMysqlSource = $quickStart->createALIByHtmlBufferMysqlSource($connection, $originalLanguageAlias, $currentLanguageAlias);
+        $htmlBufferMysqlSource = $quickStart->createALIByHtmlBufferMysqlSource($connection, $originalLanguageAlias, $currentLanguageAlias, 'https://test.com/en/');
         $this->assertInstanceOf(ALIAbc::class, $htmlBufferMysqlSource);
     }
 }

@@ -48,8 +48,6 @@ class SourceFactory
      */
     public function createCsvSource($originalLanguageAlias)
     {
-        $csvFileSource = new CsvFileSource(SOURCE_CSV_PATH, $originalLanguageAlias);
-
-        return $csvFileSource;
+        return new CsvFileSource(SOURCE_CSV_PATH, $originalLanguageAlias);
     }
 }
