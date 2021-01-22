@@ -21,6 +21,11 @@ class BufferContentCollection implements IteratorAggregate
     protected $buffersContent = [];
 
     /**
+     * @var mixed[]
+     */
+    protected $indexedSimplyBufferContensByContent = [];
+
+    /**
      * @var int
      */
     protected $idIncrementValue = 0;
@@ -51,8 +56,19 @@ class BufferContentCollection implements IteratorAggregate
      */
     public function add(BufferContent $bufferContent, $bufferContentId = null)
     {
-        $bufferContentId = $bufferContentId ?: $this->idIncrementValue++;
-        $this->buffersContent[$bufferContentId] = $bufferContent;
+        $isSimpleBufferContent = !$bufferContent->getChildContentCollection();
+
+        if ($isSimpleBufferContent && isset($this->indexedSimplyBufferContensByContent[$bufferContent->getContentString()])) {
+            // If this text already exist, and their without parameters - return old buffer id
+            $bufferContentId = $this->indexedSimplyBufferContensByContent[$bufferContent->getContentString()];
+        } else {
+            // Adding new unique bufferContent
+            $bufferContentId = $bufferContentId ?: $this->idIncrementValue++;
+            $this->buffersContent[$bufferContentId] = $bufferContent;
+            if ($isSimpleBufferContent) {
+                $this->indexedSimplyBufferContensByContent[$bufferContent->getContentString()] = $bufferContentId;
+            }
+        }
 
         return $this->generateBufferKey($bufferContentId);
     }
@@ -80,7 +96,9 @@ class BufferContentCollection implements IteratorAggregate
     public function remove($bufferContentId)
     {
         if (isset($this->buffersContent[$bufferContentId])) {
+            $buffersContent = $this->buffersContent[$bufferContentId];
             unset($this->buffersContent[$bufferContentId]);
+            unset($this->indexedSimplyBufferContensByContent[$buffersContent->getContentString()]);
         }
     }
 

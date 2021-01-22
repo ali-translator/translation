@@ -134,6 +134,9 @@ class BufferTranslate
     {
         $buffer = $bufferContent->getChildContentCollection();
         $content = $bufferContent->getContentString();
+
+        $forReplacingKeys = [];
+        $forReplacingValues = [];
         foreach ($buffer->getBuffersContent() as $bufferId => $bufferContent) {
             $bufferKey = $buffer->generateBufferKey($bufferId);
 
@@ -146,13 +149,16 @@ class BufferTranslate
             if ($bufferContent->getChildContentCollection()) {
                 $translatedSting = $this->replaceBufferByTranslatedPacket(new BufferContent($translatedSting, $bufferContent->getChildContentCollection()), $translatePhrasePacket);
             }
-            $content = str_replace(
-                $bufferKey,
-                $translatedSting,
-                $content
-            );
+            $forReplacingKeys[] = $bufferKey;
+            $forReplacingValues[] = $translatedSting;
             $buffer->remove($bufferId);
         }
+
+        $content = str_replace(
+            $forReplacingKeys,
+            $forReplacingValues,
+            $content
+        );
 
         return $content;
     }
