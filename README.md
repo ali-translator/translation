@@ -61,7 +61,7 @@ $html =  $aliAbc->addToBuffer('<div>Hello</div>');
 echo $aliAbc->translateBuffer($html); // '<div>Привіт</div>'
 
 // To save originals for which not translation was found, call the following method:
-$aliAbc->saveOriginalsWithoutTranslates();
+$aliAbc->saveMissedOriginals();
 ```
 Also you may discover object `$aliAbc->getBufferCatcher()` for additional methods
 
@@ -72,6 +72,10 @@ Also you may translate templates with parameters:
 ```php
 /** @var ALI\Translation\ALIAbc $aliAbc */
 echo $aliAbc->translate('Hello {objectName}!', [
+    'objectName' => 'sun',
+]);
+// or to get the original if there is no translation
+echo $aliAbc->translateWithFailback('Hello {objectName}!', [
     'objectName' => 'sun',
 ]);
 

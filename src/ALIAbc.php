@@ -14,8 +14,6 @@ use ALI\Translation\Languages\LanguageRepositoryInterface;
 use ALI\Translation\Translate\MissingTranslateCallbacks\CollectorMissingTranslatesCallback;
 use ALI\Translation\Translate\PhraseDecorators\TranslateDecorators\HtmlEncodeTranslateDecorator;
 use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
-use ALI\Translation\Translate\Sources\MySqlSource;
-use ALI\Translation\Translate\Sources\SourceInterface;
 use ALI\Translation\Translate\Translators\DecoratedTranslator;
 use ALI\Translation\Translate\Translators\TranslatorInterface;
 
@@ -108,14 +106,35 @@ class ALIAbc
      */
     public function translate($phrase, array $params = [])
     {
-        if (!$params) {
-            return $this->translator->translate($phrase);
+        if (!$phrase) {
+            return $phrase;
         }
-        $bufferContent = $this->generateBufferContentByTemplate($phrase, $params);
-        $buffer = new BufferContentCollection($this->templatesKeyGenerator);
-        $layoutBufferContent = new BufferContent($buffer->add($bufferContent), $buffer);
 
-        return $this->bufferTranslate->translateChildContentCollection($layoutBufferContent, $this->translator);
+        if ($params) {
+            $bufferContent = $this->generateBufferContentByTemplate($phrase, $params);
+            $buffer = new BufferContentCollection($this->templatesKeyGenerator);
+            $layoutBufferContent = new BufferContent($buffer->add($bufferContent), $buffer);
+            $translate = $this->bufferTranslate->translateChildContentCollection($layoutBufferContent, $this->translator);
+        } else {
+            $translate = $this->translator->translate($phrase);
+        }
+
+        return $translate;
+    }
+
+    /**
+     * @param string $phrase
+     * @param array $params
+     * @return string
+     */
+    public function translateWithFailback($phrase, array $params = [])
+    {
+        $translate = $this->translate($phrase, $params);
+        if (!$translate) {
+            return $phrase;
+        }
+
+        return $translate;
     }
 
     /**
@@ -175,7 +194,7 @@ class ALIAbc
             return $this->bufferTranslate->translateChildContentCollection($bufferContent, $this->bufferTranslator);
         }
 
-        if ($this->isSourceSensitiveForRequestsCount($this->bufferTranslator->getSource())) {
+        if ($this->translator->getSource()->isSensitiveForRequestsCount()) {
             return $this->bufferTranslate->translateBuffersWithProcessorsByOneRequest($bufferContent, $this->bufferTranslator, $this->contentProcessorsManager);
         } else {
             return $this->bufferTranslate->translateBuffersWithProcessors($bufferContent, $this->bufferTranslator, $this->contentProcessorsManager);
@@ -183,24 +202,9 @@ class ALIAbc
     }
 
     /**
-     * @param SourceInterface $source
-     * @return bool
-     */
-    protected function isSourceSensitiveForRequestsCount(SourceInterface $source)
-    {
-        switch (get_class($source)) {
-            case MySqlSource::class:
-                return true;
-                break;
-        }
-
-        return false;
-    }
-
-    /**
      * Save originals without translate to source
      */
-    public function saveOriginalsWithoutTranslates()
+    public function saveMissedOriginals()
     {
         $originalsPacketWithoutTranslates = $this->collectorTranslateCallback->getOriginalPhraseCollection();
         if (!$originalsPacketWithoutTranslates->count()) {

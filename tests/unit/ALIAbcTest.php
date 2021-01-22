@@ -43,6 +43,8 @@ class ALIAbcTest extends TestCase
 
         // Original without fallback, without encoding
         $this->assertEquals($aliAbc->translate($originalPhrase), '');
+        // Original without fallback, without encoding
+        $this->assertEquals($aliAbc->translateWithFailback($originalPhrase), 'Hi <br> bro!');
         // Original, with fallback, with encoding
         $content = '<div>' . $aliAbc->addToBuffer($originalPhrase) . '</div>';
         $this->assertEquals($aliAbc->translateBuffer($content), '<div>Hi <br> bro!</div>');
@@ -101,7 +103,7 @@ class ALIAbcTest extends TestCase
         $missingPhrase = 'Some missing phrase';
         $this->assertEquals([], $aliAbc->getTranslator()->getSource()->getExistOriginals([$missingPhrase]));
         $aliAbc->translate($missingPhrase);
-        $aliAbc->saveOriginalsWithoutTranslates();
+        $aliAbc->saveMissedOriginals();
         $this->assertEquals([$missingPhrase], $aliAbc->getTranslator()->getSource()->getExistOriginals([$missingPhrase]));
         $aliAbc->getTranslator()->getSource()->delete($missingPhrase);
         $this->assertEquals([], $aliAbc->getTranslator()->getSource()->getExistOriginals([$missingPhrase]));

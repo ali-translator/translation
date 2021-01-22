@@ -55,4 +55,9 @@ interface SourceInterface
      * @param string $original
      */
     public function delete($original);
+
+    /**
+     * @return bool
+     */
+    public function isSensitiveForRequestsCount();
 }

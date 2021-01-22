@@ -53,6 +53,14 @@ class MySqlSource implements SourceInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isSensitiveForRequestsCount()
+    {
+        return true;
+    }
+
+    /**
      * @return string
      */
     public function getOriginalLanguageAlias()

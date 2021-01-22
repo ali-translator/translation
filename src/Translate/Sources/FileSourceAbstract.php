@@ -22,4 +22,12 @@ abstract class FileSourceAbstract implements SourceInterface
 
         return $translatePhrases;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSensitiveForRequestsCount()
+    {
+        return false;
+    }
 }

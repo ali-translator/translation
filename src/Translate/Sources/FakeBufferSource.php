@@ -30,6 +30,14 @@ class FakeBufferSource implements SourceInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isSensitiveForRequestsCount()
+    {
+        return false;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getOriginalLanguageAlias()
