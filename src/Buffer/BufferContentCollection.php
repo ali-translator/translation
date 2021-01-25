@@ -126,4 +126,12 @@ class BufferContentCollection implements IteratorAggregate
     {
         return new ArrayIterator($this->buffersContent);
     }
+
+    /**
+     * @return KeyGenerator
+     */
+    public function getKeyGenerator()
+    {
+        return $this->keyGenerator;
+    }
 }

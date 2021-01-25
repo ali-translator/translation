@@ -12,4 +12,9 @@ interface KeyGenerator
      * @return string
      */
     public function generateKey($contentId);
+
+    /**
+     * @return string
+     */
+    public function getRegularExpression();
 }
