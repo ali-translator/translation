@@ -75,7 +75,7 @@ echo $aliAbc->translate('Hello {objectName}!', [
     'objectName' => 'sun',
 ]);
 // or to get the original if there is no translation
-echo $aliAbc->translateWithFailback('Hello {objectName}!', [
+echo $aliAbc->translateWithFallback('Hello {objectName}!', [
     'objectName' => 'sun',
 ]);
 

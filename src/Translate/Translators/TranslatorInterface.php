@@ -18,9 +18,10 @@ interface TranslatorInterface
 
     /**
      * @param string $phrase
+     * @param bool $withTranslationFallback
      * @return string
      */
-    public function translate($phrase);
+    public function translate($phrase, $withTranslationFallback = false);
 
     /**
      * @param string $original

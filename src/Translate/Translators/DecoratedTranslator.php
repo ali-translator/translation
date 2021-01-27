@@ -65,12 +65,13 @@ class DecoratedTranslator implements TranslatorInterface
 
     /**
      * @param string $phrase
+     * @param bool $withTranslationFallback
      * @return string
      */
-    public function translate($phrase)
+    public function translate($phrase, $withTranslationFallback = false)
     {
         $phrase = $this->originalDecoratorManager->decorate($phrase);
-        $translate = $this->translator->translate($phrase);
+        $translate = $this->translator->translate($phrase, $withTranslationFallback);
         if ($translate) {
             $translate = $this->translateDecoratorManager->decorate($phrase, $translate);
         }

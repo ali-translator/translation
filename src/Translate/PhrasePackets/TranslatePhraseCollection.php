@@ -33,16 +33,23 @@ class TranslatePhraseCollection implements IteratorAggregate
     }
 
     /**
-     * @param $original
+     * @param string $original
+     * @param bool $withTranslationFallback
      * @return string|null
      */
-    public function getTranslate($original)
+    public function getTranslate($original, $withTranslationFallback = false)
     {
-        if (!isset($this->originalsWithTranslate[$original])) {
-            return null;
+        if (isset($this->originalsWithTranslate[$original])) {
+            $translation = $this->originalsWithTranslate[$original];
+        } else {
+            $translation = null;
         }
 
-        return $this->originalsWithTranslate[$original];
+        if ($withTranslationFallback && !$translation) {
+            $translation = $original;
+        }
+
+        return $translation;
     }
 
     /**

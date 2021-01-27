@@ -127,7 +127,7 @@ class ALIAbc
      * @param array $params
      * @return string
      */
-    public function translateWithFailback($phrase, array $params = [])
+    public function translateWithFallback($phrase, array $params = [])
     {
         $translate = $this->translate($phrase, $params);
         if (!$translate) {

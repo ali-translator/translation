@@ -44,7 +44,7 @@ class ALIAbcTest extends TestCase
         // Original without fallback, without encoding
         $this->assertEquals($aliAbc->translate($originalPhrase), '');
         // Original without fallback, without encoding
-        $this->assertEquals($aliAbc->translateWithFailback($originalPhrase), 'Hi <br> bro!');
+        $this->assertEquals($aliAbc->translateWithFallback($originalPhrase), 'Hi <br> bro!');
         // Original, with fallback, with encoding
         $content = '<div>' . $aliAbc->addToBuffer($originalPhrase) . '</div>';
         $this->assertEquals($aliAbc->translateBuffer($content), '<div>Hi <br> bro!</div>');
@@ -70,6 +70,26 @@ class ALIAbcTest extends TestCase
         $this->assertEquals('<div>сонце</div>', $translated);
 
         $aliAbc->deleteOriginal('sun');
+    }
+
+    /**
+     * Check "translateAll" method
+     */
+    public function testCheckTranslateAll()
+    {
+        $aliAbc = (new ALIAbcFactory())->createALIByCsvSource(SOURCE_CSV_PATH, LanguageFactory::ORIGINAL_LANGUAGE_ALIAS, LanguageFactory::CURRENT_LANGUAGE_ALIAS);
+
+        $translates = $aliAbc->translateAll(['Hello!', 'Bye!']);
+        $this->assertEquals(['Hello!' => null, 'Bye!' => null], $translates->getAll());
+
+        $aliAbc->saveTranslate('Hello!', 'Привіт!');
+        $translates = $aliAbc->translateAll(['Hello!', 'Bye!']);
+        $this->assertEquals(['Hello!' => 'Привіт!', 'Bye!' => null], $translates->getAll());
+
+        $aliAbc->deleteOriginal('Hello!');
+
+        $translates = $aliAbc->translateAll(['Hello!', 'Bye!']);
+        $this->assertEquals(['Hello!' => null, 'Bye!' => null], $translates->getAll());
     }
 
     /**

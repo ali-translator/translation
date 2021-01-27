@@ -38,8 +38,7 @@ class TranslatorTest extends TestCase
     {
         $translator = new Translator(
             LanguageFactory::CURRENT_LANGUAGE_ALIAS,
-            $source,
-            false
+            $source
         );
 
         $this->assertEquals($translator->translate($originalPhrase), '');
@@ -59,13 +58,12 @@ class TranslatorTest extends TestCase
     {
         $translator = new Translator(
             LanguageFactory::CURRENT_LANGUAGE_ALIAS,
-            $source,
-            true
+            $source
         );
 
-        $this->assertEquals($translator->translate($originalPhrase), $originalPhrase);
+        $this->assertEquals($originalPhrase, $translator->translate($originalPhrase, true));
         $translator->saveTranslate($originalPhrase, $translatedPhrase);
-        $this->assertEquals($translator->translate($originalPhrase), $translatedPhrase);
+        $this->assertEquals($translatedPhrase,$translator->translate($originalPhrase,true));
         $translator->delete($originalPhrase);
     }
 }

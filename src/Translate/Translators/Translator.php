@@ -23,11 +23,6 @@ class Translator implements TranslatorInterface
     protected $source;
 
     /**
-     * @var bool
-     */
-    protected $translationFallback;
-
-    /**
      * @var callable[]
      */
     protected $missingTranslationCallbacks = [];
@@ -40,13 +35,11 @@ class Translator implements TranslatorInterface
      */
     public function __construct(
         $languageAlias,
-        SourceInterface $source,
-        $translationFallback = false
+        SourceInterface $source
     )
     {
         $this->languageAlias = $languageAlias;
         $this->source = $source;
-        $this->translationFallback = $translationFallback;
     }
 
     /**
@@ -113,11 +106,11 @@ class Translator implements TranslatorInterface
         );
 
         foreach ($searchPhrases as $originalPhrase => $searchPhrase) {
-            $translate = isset($translatesFromSource[$searchPhrase]) ? $translatesFromSource[$searchPhrase] : '';
+            $translate = isset($translatesFromSource[$searchPhrase]) ? $translatesFromSource[$searchPhrase] : null;
             if (!$translate) {
                 foreach ($this->getMissingTranslationCallbacks() as $missingTranslationCallbacks) {
                     if (is_callable($missingTranslationCallbacks)) {
-                        $translate = call_user_func($missingTranslationCallbacks, $searchPhrase, $this) ?: '';
+                        $translate = call_user_func($missingTranslationCallbacks, $searchPhrase, $this) ?: null;
                         if ($translate) {
                             break;
                         }
@@ -125,9 +118,6 @@ class Translator implements TranslatorInterface
                 }
             }
 
-            if (!$translate && $this->translationFallback) {
-                $translate = $originalPhrase;
-            }
             $translatePhrasePacket->addTranslate($originalPhrase, $translate);
         }
 
@@ -138,11 +128,14 @@ class Translator implements TranslatorInterface
      * Fast translate without buffers and processors
      *
      * @param string $phrase
+     * @param bool $withTranslationFallback
      * @return string|null
      */
-    public function translate($phrase)
+    public function translate($phrase, $withTranslationFallback = false)
     {
-        return $this->translateAll([$phrase])->getTranslate($phrase);
+        $translatePhraseCollection = $this->translateAll([$phrase]);
+
+        return $translatePhraseCollection->getTranslate($phrase, $withTranslationFallback);
     }
 
     /**
