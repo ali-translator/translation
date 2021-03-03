@@ -2,7 +2,6 @@
 
 namespace ALI\Translation\Translate\Sources;
 
-use ALI\Translation\Languages\LanguageInterface;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\DirectoryNotFoundException;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileNotWritableException;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileReadPermissionsException;
@@ -33,13 +32,9 @@ class CsvFileSource extends FileSourceAbstract
      * @var string
      */
     protected $delimiter;
-    /**
-     * @var string
-     */
-    protected $filesExtension;
 
     /**
-     * @var array
+     * @var string[][]
      */
     protected $allTranslates = [];
 
@@ -85,7 +80,7 @@ class CsvFileSource extends FileSourceAbstract
             throw new UnsupportedLanguageAliasException('Unsupported language alias');
         }
 
-        return $this->getDirectoryPath() . DIRECTORY_SEPARATOR . $languageAlias . '.' . $this->filesExtension;
+        return $this->getDirectoryPath() . DIRECTORY_SEPARATOR . $this->originalLanguageAlias . '_' . $languageAlias . '.' . $this->filesExtension;
     }
 
     /**
@@ -98,15 +93,20 @@ class CsvFileSource extends FileSourceAbstract
      */
     public function getTranslate($phrase, $languageAliasAlias)
     {
-        if (!isset($this->allTranslates[$languageAliasAlias]) || is_null($this->allTranslates[$languageAliasAlias])) {
-            $this->allTranslates[$languageAliasAlias] = $this->parseLanguageFile($languageAliasAlias);
-        }
+        $this->preloadTranslates($languageAliasAlias);
 
         if (isset($this->allTranslates[$languageAliasAlias][$phrase])) {
             return $this->allTranslates[$languageAliasAlias][$phrase];
         }
 
         return '';
+    }
+
+    protected function preloadTranslates($languageAlias, $forceLoading = false)
+    {
+        if (!isset($this->allTranslates[$languageAlias]) || $forceLoading) {
+            $this->allTranslates[$languageAlias] = $this->parseLanguageFile($languageAlias);
+        }
     }
 
     /**
@@ -147,13 +147,10 @@ class CsvFileSource extends FileSourceAbstract
      * @throws UnsupportedLanguageAliasException
      * @throws FileNotWritableException
      */
-    protected function saveLanguageFile($languageAlias, $translatesData)
+    protected function saveLanguageFile($languageAlias)
     {
+        $translatesData = $this->allTranslates[$languageAlias];
         $filePath = $this->getLanguageFilePath($languageAlias);
-        if (!is_writable($filePath)) {
-            throw new FileNotWritableException('File is not writable ' . $filePath);
-        }
-
         $fileResource = fopen($filePath, 'w');
 
         foreach ($translatesData as $original => $translate) {
@@ -174,10 +171,14 @@ class CsvFileSource extends FileSourceAbstract
      */
     public function saveTranslate($languageAlias, $original, $translate)
     {
-        $translates = $this->parseLanguageFile($languageAlias);
-        $translates[$original] = $translate;
-        $this->saveLanguageFile($languageAlias, $translates);
-        $this->allTranslates[$languageAlias] = $this->parseLanguageFile($languageAlias);
+        $this->saveOriginals([$original]);
+
+        // Save to translate
+        $this->preloadTranslates($languageAlias);
+        if (!isset($this->allTranslates[$languageAlias][$original]) || $this->allTranslates[$languageAlias][$original] !== $translate) {
+            $this->allTranslates[$languageAlias][$original] = $translate;
+            $this->saveLanguageFile($languageAlias);
+        }
     }
 
     /**
@@ -193,16 +194,11 @@ class CsvFileSource extends FileSourceAbstract
         $dataFiles = glob($this->getDirectoryPath() . DIRECTORY_SEPARATOR . '*.' . $this->filesExtension);
         foreach ($dataFiles as $file) {
             $fileInfo = pathinfo($file);
-            $languageAlias = $fileInfo['filename'];
-            $translates = $this->parseLanguageFile($languageAlias);
-            if (key_exists($original, $translates)) {
-                unset($translates[$original]);
-                $this->saveLanguageFile($languageAlias, $translates);
-            }
-        }
-        foreach ($this->allTranslates as $languageAlias => $languageTranslateData) {
-            if (isset($this->allTranslates[$languageAlias][$original])) {
+            $languageAlias = explode('_', $fileInfo['filename'])[1];
+            $this->allTranslates[$languageAlias] = $this->parseLanguageFile($languageAlias);
+            if (key_exists($original, $this->allTranslates[$languageAlias])) {
                 unset($this->allTranslates[$languageAlias][$original]);
+                $this->saveLanguageFile($languageAlias);
             }
         }
     }
@@ -217,13 +213,16 @@ class CsvFileSource extends FileSourceAbstract
     public function saveOriginals(array $phrases)
     {
         $phrases = array_diff($phrases, $this->getExistOriginals($phrases));
+
+        $needSaving = false;
         foreach ($phrases as $phrase) {
-            foreach ($this->allTranslates as $languageAlias => $translates) {
-                if (isset($translates[$phrase])) {
-                    continue;
-                }
-                $this->saveTranslate($languageAlias,$phrase,'');
+            if (!isset($this->allTranslates[$this->originalLanguageAlias][$phrase])) {
+                $this->allTranslates[$this->originalLanguageAlias][$phrase] = $phrase;
+                $needSaving = true;
             }
+        }
+        if ($needSaving) {
+            $this->saveLanguageFile($this->originalLanguageAlias);
         }
     }
 
@@ -232,10 +231,11 @@ class CsvFileSource extends FileSourceAbstract
      */
     public function getExistOriginals(array $phrases)
     {
+        $this->preloadTranslates($this->originalLanguageAlias);
+
         $existPhrases = [];
-        $firstLanguageTranslation = reset($this->allTranslates);
         foreach ($phrases as $phrase) {
-            if (isset($firstLanguageTranslation[$phrase])) {
+            if (isset($this->allTranslates[$this->originalLanguageAlias][$phrase])) {
                 $existPhrases[] = $phrase;
             }
         }

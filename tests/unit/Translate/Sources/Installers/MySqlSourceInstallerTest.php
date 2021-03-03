@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Tests\unit\Sources;
+namespace ALI\Translation\Tests\unit\Translate\Sources\Installers;
 
 use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;

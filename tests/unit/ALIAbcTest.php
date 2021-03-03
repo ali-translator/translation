@@ -42,17 +42,17 @@ class ALIAbcTest extends TestCase
         $originalPhrase = 'Hi <br> bro!';
 
         // Original without fallback, without encoding
-        $this->assertEquals($aliAbc->translate($originalPhrase), '');
+        $this->assertEquals('', $aliAbc->translate($originalPhrase));
         // Original without fallback, without encoding
-        $this->assertEquals($aliAbc->translateWithFallback($originalPhrase), 'Hi <br> bro!');
+        $this->assertEquals('Hi <br> bro!', $aliAbc->translateWithFallback($originalPhrase));
         // Original, with fallback, with encoding
         $content = '<div>' . $aliAbc->addToBuffer($originalPhrase) . '</div>';
-        $this->assertEquals($aliAbc->translateBuffer($content), '<div>Hi <br> bro!</div>');
+        $this->assertEquals('<div>Hi <br> bro!</div>', $aliAbc->translateBuffer($content));
 
         // With translate
-        $aliAbc->saveTranslate($originalPhrase,'Привіт <br> бро!');
+        $aliAbc->saveTranslate($originalPhrase, 'Привіт <br> бро!');
         $content = '<div>' . $aliAbc->addToBuffer($originalPhrase) . '</div>';
-        $this->assertEquals($aliAbc->translateBuffer($content), '<div>Привіт &lt;br&gt; бро!</div>');
+        $this->assertEquals('<div>Привіт &lt;br&gt; бро!</div>', $aliAbc->translateBuffer($content));
         $aliAbc->deleteOriginal($originalPhrase);
     }
 

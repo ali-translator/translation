@@ -7,6 +7,9 @@ namespace ALI\Translation\Buffer;
  */
 class BufferContent
 {
+    const OPTION_FORMAT = 1;
+    const OPTION_WITH_CONTENT_TRANSLATION = 2;
+
     /**
      * @var string
      */
@@ -18,20 +21,24 @@ class BufferContent
     protected $childContentCollection;
 
     /**
-     * @var bool
+     * @var array
      */
-    protected $withContentTranslation;
+    protected $options = [
+        self::OPTION_FORMAT => 'string',
+        self::OPTION_WITH_CONTENT_TRANSLATION => true,
+    ];
 
     /**
-     * @param string                  $content
+     * @param string $content
      * @param BufferContentCollection $childContentCollection - this is for nested buffers (buffers inside buffer)
-     * @param bool                    $withContentTranslation
+     * @param array $options
+     * @param bool $withContentTranslation
      */
-    public function __construct($content, BufferContentCollection $childContentCollection = null, $withContentTranslation = true)
+    public function __construct($content, BufferContentCollection $childContentCollection = null, $options = [])
     {
         $this->content = $content;
         $this->childContentCollection = $childContentCollection;
-        $this->withContentTranslation = $withContentTranslation;
+        $this->options = $options + $this->options;
     }
 
     /**
@@ -55,6 +62,6 @@ class BufferContent
      */
     public function withContentTranslation()
     {
-        return $this->withContentTranslation;
+        return $this->options[self::OPTION_WITH_CONTENT_TRANSLATION];
     }
 }

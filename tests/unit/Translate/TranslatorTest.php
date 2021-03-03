@@ -6,6 +6,7 @@ use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Translate\Sources\CsvFileSource;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\SourceInterface;
 use ALI\Translation\Translate\Translators\Translator;
 use PHPUnit\Framework\TestCase;
 
@@ -19,22 +20,22 @@ class TranslatorTest extends TestCase
      */
     public function testTranslationFallback()
     {
-        $source = (new SourceFactory())->createCsvSource(LanguageFactory::ORIGINAL_LANGUAGE_ALIAS);
+        foreach ((new SourceFactory())->iterateAllSources(LanguageFactory::ORIGINAL_LANGUAGE_ALIAS) as $source) {
+            $originalPhrase = 'Some test phrase';
+            $translatedPhrase = 'Деяка тестова фраза';
 
-        $originalPhrase = 'Some test phrase';
-        $translatedPhrase = 'Деяка тестова фраза';
-
-        $this->checkTranslationWithoutFallback($source, $originalPhrase, $translatedPhrase);
-        $this->checkTranslationFallback($source, $originalPhrase, $translatedPhrase);
+            $this->checkTranslationWithoutFallback($source, $originalPhrase, $translatedPhrase);
+            $this->checkTranslationFallback($source, $originalPhrase, $translatedPhrase);
+        }
     }
 
     /**
-     * @param CsvFileSource $source
+     * @param SourceInterface $source
      * @param $originalPhrase
      * @param $translatedPhrase
      * @throws SourceException
      */
-    private function checkTranslationWithoutFallback(CsvFileSource $source, $originalPhrase, $translatedPhrase)
+    private function checkTranslationWithoutFallback(SourceInterface $source, $originalPhrase, $translatedPhrase)
     {
         $translator = new Translator(
             LanguageFactory::CURRENT_LANGUAGE_ALIAS,
@@ -47,14 +48,13 @@ class TranslatorTest extends TestCase
         $translator->delete($originalPhrase);
     }
 
-
     /**
-     * @param CsvFileSource $source
+     * @param SourceInterface $source
      * @param $originalPhrase
      * @param $translatedPhrase
      * @throws SourceException
      */
-    private function checkTranslationFallback(CsvFileSource $source, $originalPhrase, $translatedPhrase)
+    private function checkTranslationFallback(SourceInterface $source, $originalPhrase, $translatedPhrase)
     {
         $translator = new Translator(
             LanguageFactory::CURRENT_LANGUAGE_ALIAS,
@@ -63,7 +63,7 @@ class TranslatorTest extends TestCase
 
         $this->assertEquals($originalPhrase, $translator->translate($originalPhrase, true));
         $translator->saveTranslate($originalPhrase, $translatedPhrase);
-        $this->assertEquals($translatedPhrase,$translator->translate($originalPhrase,true));
+        $this->assertEquals($translatedPhrase, $translator->translate($originalPhrase, true));
         $translator->delete($originalPhrase);
     }
 }

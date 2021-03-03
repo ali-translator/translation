@@ -271,19 +271,19 @@ class ALIAbc
     }
 
     /**
-     * @param $phrase
+     * @param string $phrase
      * @param array $contentParams
      * @return BufferContent
      */
     protected function generateBufferContentByTemplate($phrase, array $contentParams = [])
     {
-        $buffer = new BufferContentCollection($this->templatesKeyGenerator);
+        $bufferContentCollection = new BufferContentCollection($this->templatesKeyGenerator);
 
         foreach ($contentParams as $bufferId => $bufferValue) {
-            $buffer->add(new BufferContent($bufferValue, null, false), $bufferId);
+            $bufferContentCollection->add(new BufferContent($bufferValue, null, [BufferContent::OPTION_WITH_CONTENT_TRANSLATION => false]), $bufferId);
         }
 
-        return new BufferContent($phrase, $buffer);
+        return new BufferContent($phrase, $bufferContentCollection);
     }
 
     /**

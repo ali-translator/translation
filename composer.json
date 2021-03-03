@@ -44,6 +44,7 @@
         "phpunit/phpunit": "^9.0"
     },
     "suggest": {
-        "ali-translator/translation-js-integrate": "integrate this packet to frontend js"
+        "ali-translator/translation-js-integrate": "Integrate this packet to frontend js",
+        "ali-translator/url-template": "Helps on url language resolving"
     }
 }

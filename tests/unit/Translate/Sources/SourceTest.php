@@ -1,13 +1,12 @@
 <?php
 
-namespace ALI\Translation\Tests\unit\Sources;
+namespace ALI\Translation\Tests\unit\Translate\Sources;
 
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Tests\components\SourceTester;
 use ALI\Translation\Languages\Language;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
-use ALI\Translation\Translate\Sources\SourceInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,89 +21,44 @@ class SourceTest extends TestCase
     {
         $originalLanguage = (new LanguageFactory())->createOriginalLanguage();
 
-        $this->checkMysqlSource($originalLanguage);
-        $this->checkCsvSource($originalLanguage);
-
-        $this->checkSavedStateMysqlSource($originalLanguage);
-        $this->checkSavedStateCsvSource($originalLanguage);
+        $this->checkSources($originalLanguage);
+        $this->checkSavedStateSources($originalLanguage);
     }
 
     /**
      * @param Language $originalLanguage
      * @throws SourceException
      */
-    private function checkMysqlSource(Language $originalLanguage)
+    private function checkSources(Language $originalLanguage)
     {
         $sourceFactory = new SourceFactory();
-
-        list($mysqlSource, $mysqlSourceInstaller) = $sourceFactory->createMysqlSource($originalLanguage);
-
-        $sourceTester = new SourceTester();
-        $sourceTester->testSource($mysqlSource, $this);
-
-        $mysqlSourceInstaller->destroy();
+        foreach ($sourceFactory->iterateAllSources($originalLanguage->getAlias()) as $source) {
+            $sourceTester = new SourceTester();
+            $sourceTester->testSource($source, $this);
+            $source->generateInstaller()->destroy();
+        }
     }
 
     /**
      * @param Language $originalLanguage
      * @throws SourceException
      */
-    private function checkCsvSource(Language $originalLanguage)
+    private function checkSavedStateSources(Language $originalLanguage)
     {
         $sourceFactory = new SourceFactory();
+        foreach ($sourceFactory->iterateAllSources($originalLanguage->getAlias()) as $source) {
+            // Save
+            $source->saveOriginals(['Happy New Year!']);
+            $source->saveTranslate(LanguageFactory::CURRENT_LANGUAGE_ALIAS, 'What\'s happening?', 'Що відбувається?');
 
-        $csvSource = $sourceFactory->createCsvSource($originalLanguage->getAlias());
+            // Get new instance from saved state
+            $source = $sourceFactory->regenerateSource($source, false);
+            $translate = $source->getTranslate('What\'s happening?', LanguageFactory::CURRENT_LANGUAGE_ALIAS);
+            $this->assertEquals('Що відбувається?', $translate);
+            $this->assertEquals(['Happy New Year!'], $source->getExistOriginals(['Happy New Year!']));
+            $this->assertEquals([], $source->getExistOriginals(['Happy birthday!']));
 
-        $sourceTester = new SourceTester();
-        $sourceTester->testSource($csvSource, $this);
-    }
-
-    /**
-     * @param Language $originalLanguage
-     * @throws SourceException
-     */
-    private function checkSavedStateMysqlSource(Language $originalLanguage)
-    {
-        $sourceFactory = new SourceFactory();
-
-        // Save
-        list($mysqlSource) = $sourceFactory->createMysqlSource($originalLanguage);
-        /** @var SourceInterface $mysqlSource */
-        $mysqlSource->saveTranslate(LanguageFactory::CURRENT_LANGUAGE_ALIAS, 'What\'s happening?', 'Що відбувається?');
-        $mysqlSource->saveOriginals(['Happy New Year!']);
-
-        // Get new instance from saved state
-        list($mysqlSource, $mysqlSourceInstaller) = $sourceFactory->createMysqlSource($originalLanguage);
-        $translate = $mysqlSource->getTranslate('What\'s happening?', LanguageFactory::CURRENT_LANGUAGE_ALIAS);
-        $this->assertEquals('Що відбувається?', $translate);
-        $this->assertEquals(['Happy New Year!'], $mysqlSource->getExistOriginals(['Happy New Year!']));
-        $this->assertEquals([], $mysqlSource->getExistOriginals(['Happy birthday!']));
-
-        $mysqlSourceInstaller->destroy();
-    }
-
-    /**
-     * @param Language $originalLanguage
-     * @throws SourceException
-     */
-    private function checkSavedStateCsvSource(Language $originalLanguage)
-    {
-        $sourceFactory = new SourceFactory();
-
-        // Save
-        $csvSource = $sourceFactory->createCsvSource($originalLanguage->getAlias());
-        /** @var SourceInterface $csvSource */
-        $csvSource->saveTranslate(LanguageFactory::CURRENT_LANGUAGE_ALIAS, 'What\'s happening?', 'Що відбувається?');
-        $csvSource->saveOriginals(['Happy New Year!']);
-
-        // Get new instance from saved state
-        $csvSource = $sourceFactory->createCsvSource($originalLanguage->getAlias());
-        $translate = $csvSource->getTranslate('What\'s happening?', LanguageFactory::CURRENT_LANGUAGE_ALIAS);
-        $this->assertEquals('Що відбувається?', $translate);
-        $this->assertEquals(['Happy New Year!'], $csvSource->getExistOriginals(['Happy New Year!']));
-        $this->assertEquals([], $csvSource->getExistOriginals(['Happy birthday!']));
-
-        $csvSource->delete('What\'s happening?');
-        $csvSource->delete('Happy New Year!');
+            $source->generateInstaller()->destroy();
+        }
     }
 }

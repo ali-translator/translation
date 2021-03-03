@@ -26,27 +26,27 @@ class CollectorTranslateCallbackTest extends TestCase
     public function test()
     {
         $originalLanguage = (new LanguageFactory())->createOriginalLanguage();
-        $source = (new SourceFactory())->createCsvSource($originalLanguage->getAlias());
+        foreach ((new SourceFactory())->iterateAllSources($originalLanguage->getAlias()) as $source) {
+            $currentLanguage = (new LanguageFactory())->createCurrentLanguage();
+            $translator = new Translator($currentLanguage->getAlias(), $source);
 
-        $currentLanguage = (new LanguageFactory())->createCurrentLanguage();
-        $translator = new Translator($currentLanguage->getAlias(), $source);
+            $callBack = new CollectorMissingTranslatesCallback();
 
-        $callBack = new CollectorMissingTranslatesCallback();
+            $translator->addMissingTranslationCallback($callBack);
 
-        $translator->addMissingTranslationCallback($callBack);
+            $translatePhrase = $translator->translate('Test');
+            $this->assertEquals('', $translatePhrase);
 
-        $translatePhrase = $translator->translate('Test');
-        $this->assertEquals('', $translatePhrase);
+            // Add translate
+            $source->saveTranslate($currentLanguage->getAlias(), 'Cat', 'Кіт');
+            $translatePhrase = $translator->translate('Cat');
+            $source->delete('Cat');
+            $this->assertEquals('Кіт', $translatePhrase);
 
-        // Add translate
-        $source->saveTranslate($currentLanguage->getAlias(), 'Cat', 'Кіт');
-        $translatePhrase = $translator->translate('Cat');
-        $source->delete('Cat');
-        $this->assertEquals('Кіт', $translatePhrase);
-
-        // Test one phrase without translate
-        $this->assertEquals(['Test'], $callBack->getOriginalPhraseCollection()->getAll());
-        $this->assertTrue($callBack->getOriginalPhraseCollection()->exist('Test'));
-        $this->assertFalse($callBack->getOriginalPhraseCollection()->exist('Test new'));
+            // Test one phrase without translate
+            $this->assertEquals(['Test'], $callBack->getOriginalPhraseCollection()->getAll());
+            $this->assertTrue($callBack->getOriginalPhraseCollection()->exist('Test'));
+            $this->assertFalse($callBack->getOriginalPhraseCollection()->exist('Test new'));
+        }
     }
 }

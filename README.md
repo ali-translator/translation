@@ -86,6 +86,10 @@ echo $aliAbc->translateBuffer($content);
 
 ```
 
+### Suggest
+* <b>ali-translator/translation-js-integrate</b> - Integrate this packet to frontend js
+* <b>ali-translator/url-template</b> - Helps on url language resolving 
+
 ### Tests
 In packet exist docker-compose file, with environment for testing.
 ```bash

@@ -7,7 +7,7 @@ use PDO;
 /**
  * MySqlSourceInstaller
  */
-class MySqlSourceInstaller
+class MySqlSourceInstaller implements SourceInstallerInterface
 {
     /**
      * @var PDO

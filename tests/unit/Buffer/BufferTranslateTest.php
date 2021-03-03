@@ -30,17 +30,17 @@ class BufferTranslateTest extends TestCase
         list($originalLanguage, $currentLanguage) = (new LanguageFactory())->createOriginalAndCurrentLanguage();
 
         $sourceFactory = new SourceFactory();
-        $source = $sourceFactory->createCsvSource($originalLanguage->getAlias());
+        foreach ($sourceFactory->iterateAllSources($originalLanguage->getAlias()) as $source) {
+            $translator = new Translator($currentLanguage->getAlias(), $source);
 
-        $translator = new Translator($currentLanguage->getAlias(), $source);
+            $this->checkTranslateBufferWithoutTranslatedPhrase($translator);
 
-        $this->checkTranslateBufferWithoutTranslatedPhrase($translator);
+            $this->checkTranslateBuffer($source, $currentLanguage, $translator);
 
-        $this->checkTranslateBuffer($source, $currentLanguage, $translator);
+            $this->checkTranslateBuffersWithProcessors($source, $currentLanguage, $translator);
 
-        $this->checkTranslateBuffersWithProcessors($source, $currentLanguage, $translator);
-
-        $this->checkTranslateBuffersWithProcessorsByOneRequest($source, $currentLanguage, $translator);
+            $this->checkTranslateBuffersWithProcessorsByOneRequest($source, $currentLanguage, $translator);
+        }
     }
 
     /**
@@ -101,7 +101,7 @@ class BufferTranslateTest extends TestCase
         // SimpleTextProcessor
         $html .= $bufferCatcher->add('Hello');
         // CustomTagProcessor
-        $html .= ' - '.$bufferCatcher->add('<translate>Hello</translate>');
+        $html .= ' - ' . $bufferCatcher->add('<translate>Hello</translate>');
         // It should not be translated
         $html .= '<div>Hello</div>';
         $html .= '</div>';
@@ -138,7 +138,7 @@ class BufferTranslateTest extends TestCase
         // SimpleTextProcessor
         $html .= $bufferCatcher->add('Hello');
         // CustomTagProcessor
-        $html .= ' - '.$bufferCatcher->add('<translate>Hello</translate>');
+        $html .= ' - ' . $bufferCatcher->add('<translate>Hello</translate>');
         // It should not be translated
         $html .= '<div>Hello</div>';
         $html .= '</div>';

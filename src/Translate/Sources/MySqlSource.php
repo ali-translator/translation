@@ -3,6 +3,8 @@
 namespace ALI\Translation\Translate\Sources;
 
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
+use ALI\Translation\Translate\Sources\Installers\SourceInstallerInterface;
 use PDO;
 use ALI\Translation\Languages\LanguageInterface;
 use ALI\Translation\Translate\Sources\Exceptions\MySqlSource\LanguageNotExistsException;
@@ -257,7 +259,7 @@ class MySqlSource implements SourceInterface
                             '
         );
 
-        $this->bindParams($valuesForWhereBinding,$statement);
+        $this->bindParams($valuesForWhereBinding, $statement);
 
         $statement->execute();
     }
@@ -312,7 +314,7 @@ class MySqlSource implements SourceInterface
                 'contentIndexKey' => $contentIndexKey,
                 'contentKey' => $contentKey,
             ];
-            switch ($type){
+            switch ($type) {
                 case 'select':
                     $queryParts[$keyForBinding] = '(o.`content_index`=:' . $contentIndexKey . ' AND BINARY o.`content`=:' . $contentKey . ')';
                     break;
@@ -345,5 +347,13 @@ class MySqlSource implements SourceInterface
             $dataQuery->bindValue($contentIndexKey, $contentIndex, PDO::PARAM_STR);
             $dataQuery->bindValue($contentKey, $content, PDO::PARAM_STR);
         }
+    }
+
+    /**
+     * @return MySqlSourceInstaller|SourceInstallerInterface
+     */
+    public function generateInstaller()
+    {
+        return new MySqlSourceInstaller($this->pdo, $this->originalTableName, $this->translateTableName);
     }
 }

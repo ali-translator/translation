@@ -3,6 +3,7 @@
 namespace ALI\Translation\Translate\Sources;
 
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Sources\Installers\SourceInstallerInterface;
 
 /**
  * SourceInterface Interface
@@ -60,4 +61,9 @@ interface SourceInterface
      * @return bool
      */
     public function isSensitiveForRequestsCount();
+
+    /**
+     * @return SourceInstallerInterface
+     */
+    public function generateInstaller();
 }

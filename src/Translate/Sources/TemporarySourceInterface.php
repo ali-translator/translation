@@ -3,11 +3,12 @@
 namespace ALI\Translation\Translate\Sources;
 
 use ALI\Translation\Buffer\BufferContentCollection;
+use ALI\Translation\Translate\Sources\Installers\SourceInstallerInterface;
 
 /**
- * FakeBufferSource
+ * TemporarySource
  */
-class FakeBufferSource implements SourceInterface
+class TemporarySourceInterface implements SourceInterface, SourceInstallerInterface
 {
     /**
      * @var string
@@ -20,7 +21,7 @@ class FakeBufferSource implements SourceInterface
     protected $buffer;
 
     /**
-     * @param string                  $originalLanguageAlias
+     * @param string $originalLanguageAlias
      * @param BufferContentCollection $buffer
      */
     public function __construct($originalLanguageAlias, BufferContentCollection $buffer)
@@ -83,7 +84,7 @@ class FakeBufferSource implements SourceInterface
     /**
      * @var array
      */
-    protected $temporaryTranslation;
+    protected $temporaryTranslation = [];
 
     /**
      * @param string $languageAlias
@@ -131,5 +132,37 @@ class FakeBufferSource implements SourceInterface
         }
 
         return $existPhrases;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInstalled()
+    {
+        return true;
+    }
+
+    /**
+     * Install
+     */
+    public function install()
+    {
+        return;
+    }
+
+    /**
+     * Destroy
+     */
+    public function destroy()
+    {
+        $this->temporaryTranslation = [];
+    }
+
+    /**
+     * @return $this|SourceInstallerInterface
+     */
+    public function generateInstaller()
+    {
+        return $this;
     }
 }
