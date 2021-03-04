@@ -73,7 +73,7 @@ class MySqlSource implements SourceInterface
     /**
      * @param string $phrase
      * @param string $languageAliasAlias
-     * @return string
+     * @return string|null
      * @throws SourceException
      */
     public function getTranslate($phrase, $languageAliasAlias)
@@ -124,8 +124,8 @@ class MySqlSource implements SourceInterface
 
         //phrases that aren't in the database
         foreach ($phrases as $phrase) {
-            if (!array_key_exists($phrase, $translates)) {
-                $translates[$phrase] = '';
+            if (!array_key_exists($phrase, $translates) || !$phrase) {
+                $translates[$phrase] = null;
             }
         }
 

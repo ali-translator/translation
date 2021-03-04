@@ -14,8 +14,8 @@ use ALI\Translation\Languages\LanguageRepositoryInterface;
 use ALI\Translation\Translate\MissingTranslateCallbacks\CollectorMissingTranslatesCallback;
 use ALI\Translation\Translate\PhraseDecorators\TranslateDecorators\HtmlEncodeTranslateDecorator;
 use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
-use ALI\Translation\Translate\Translators\DecoratedTranslator;
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\DecoratedPlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 
 /**
  * Class
@@ -23,7 +23,7 @@ use ALI\Translation\Translate\Translators\TranslatorInterface;
 class ALIAbc
 {
     /**
-     * @var TranslatorInterface
+     * @var PlainTranslatorInterface
      */
     protected $translator;
 
@@ -58,7 +58,7 @@ class ALIAbc
     protected $languageRepository;
 
     /**
-     * @param TranslatorInterface                     $translator
+     * @param PlainTranslatorInterface                     $translator
      * @param ContentProcessorsManager|null           $contentProcessorsManager
      * @param CollectorMissingTranslatesCallback|null $collectorTranslateCallback
      * @param BufferCatcher|null                      $bufferCatcher
@@ -67,7 +67,7 @@ class ALIAbc
      * @param bool                                    $htmlEncodeBufferTranslate
      */
     public function __construct(
-        TranslatorInterface $translator,
+        PlainTranslatorInterface $translator,
         ContentProcessorsManager $contentProcessorsManager = null,
         CollectorMissingTranslatesCallback $collectorTranslateCallback = null,
         BufferCatcher $bufferCatcher = null,
@@ -82,7 +82,7 @@ class ALIAbc
 
         // Make additional translator with encoding for buffer translation
         if ($htmlEncodeBufferTranslate) {
-            $this->bufferTranslator = new DecoratedTranslator(
+            $this->bufferTranslator = new DecoratedPlainTranslator(
                 $this->translator,
                 null,
                 new TranslatePhraseDecoratorManager([
@@ -239,7 +239,7 @@ class ALIAbc
     }
 
     /**
-     * @return TranslatorInterface
+     * @return PlainTranslatorInterface
      */
     public function getTranslator()
     {

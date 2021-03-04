@@ -5,19 +5,24 @@ namespace ALI\Translation\Translate\Translators;
 use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use ALI\Translation\Translate\Sources\SourceInterface;
+use function is_callable;
 
 /**
- * Translator
- *
- * Class allow translation from different original languages,
- * to different translation languages
+ * PlainTranslator
+ * with one selected "original" language
+ * and one selected "translation" language
  */
-class Translator
+class PlainTranslator implements PlainTranslatorInterface
 {
     /**
-     * @var SourcesCollection
+     * @var string
      */
-    protected $sourceCollection;
+    protected $languageAlias;
+
+    /**
+     * @var SourceInterface
+     */
+    protected $source;
 
     /**
      * @var callable[]
@@ -25,35 +30,42 @@ class Translator
     protected $missingTranslationCallbacks = [];
 
     /**
-     * @param SourcesCollection $sourceCollection
+     * Translate constructor
+     *
+     * @param $languageAlias
+     * @param SourceInterface $source
      */
-    public function __construct(SourcesCollection $sourceCollection)
+    public function __construct(
+        $languageAlias,
+        SourceInterface $source
+    )
     {
-        $this->sourceCollection = $sourceCollection;
+        $this->languageAlias = $languageAlias;
+        $this->source = $source;
     }
 
     /**
-     * @return SourcesCollection
+     * @return bool
      */
-    public function getSourceCollection()
+    public function isCurrentLanguageOriginal()
     {
-        return $this->sourceCollection;
+        return $this->languageAlias === $this->source->getOriginalLanguageAlias();
     }
 
     /**
-     * @param $originalLanguageAlias
-     * @param $translationLanguageAlias
-     * @return SourceInterface|null
-     * @throws \Exception
+     * @return string
      */
-    public function getSource($originalLanguageAlias, $translationLanguageAlias = null)
+    public function getLanguageAlias()
     {
-        $source = $this->sourceCollection->getSource($originalLanguageAlias, $translationLanguageAlias);
-        if (!$source) {
-            throw new \Exception('Not found source for ' . $originalLanguageAlias . '_' . $translationLanguageAlias . ' language pair');
-        }
+        return $this->languageAlias;
+    }
 
-        return $source;
+    /**
+     * @return SourceInterface
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 
     /**
@@ -72,10 +84,15 @@ class Translator
         $this->missingTranslationCallbacks[] = $missingTranslationCallback;
     }
 
-    public function translateAll($originalLanguageAlias, $translationLanguageAlias, $phrases)
+    /**
+     * @param array $phrases
+     * @return TranslatePhraseCollection
+     */
+    public function translateAll($phrases)
     {
         $translatePhrasePacket = new TranslatePhraseCollection();
-        if ($originalLanguageAlias === $translationLanguageAlias) {
+
+        if ($this->isCurrentLanguageOriginal()) {
             foreach ($phrases as $phrase) {
                 $translatePhrasePacket->addTranslate($phrase, null);
             }
@@ -83,13 +100,11 @@ class Translator
             return $translatePhrasePacket;
         }
 
-        $source = $this->getSource($originalLanguageAlias, $translationLanguageAlias);
-
         $searchPhrases = array_combine($phrases, $phrases);
 
-        $translatesFromSource = $source->getTranslates(
+        $translatesFromSource = $this->getSource()->getTranslates(
             $searchPhrases,
-            $translationLanguageAlias
+            $this->getLanguageAlias()
         );
 
         foreach ($searchPhrases as $originalPhrase => $searchPhrase) {
@@ -112,25 +127,15 @@ class Translator
     }
 
     /**
-     * @param string $originalLanguageAlias
-     * @param string $translationLanguageAlias
+     * Fast translate without buffers and processors
+     *
      * @param string $phrase
      * @param bool $withTranslationFallback
      * @return string|null
-     * @throws \Exception
      */
-    public function translate(
-        $originalLanguageAlias,
-        $translationLanguageAlias,
-        $phrase,
-        $withTranslationFallback = false
-    )
+    public function translate($phrase, $withTranslationFallback = false)
     {
-        if ($originalLanguageAlias === $translationLanguageAlias) {
-            return $phrase;
-        }
-
-        $translatePhraseCollection = $this->translateAll($originalLanguageAlias, $translationLanguageAlias, [$phrase]);
+        $translatePhraseCollection = $this->translateAll([$phrase]);
 
         return $translatePhraseCollection->getTranslate($phrase, $withTranslationFallback);
     }
@@ -141,16 +146,11 @@ class Translator
      * @param string $languageAlias
      * @throws SourceException
      */
-    public function saveTranslate(
-        $originalLanguageAlias,
-        $translationLanguageAlias,
-        $original,
-        $translate
-    )
+    public function saveTranslate($original, $translate, $languageAlias = null)
     {
-        $source = $this->getSource($originalLanguageAlias, $translationLanguageAlias);
-        $source->saveTranslate(
-            $translationLanguageAlias,
+        $languageAlias = $languageAlias ?: $this->languageAlias;
+        $this->getSource()->saveTranslate(
+            $languageAlias,
             $original,
             $translate
         );
@@ -160,12 +160,8 @@ class Translator
      * Delete original and all translated phrases
      * @param $original
      */
-    public function delete(
-        $originalLanguageAlias,
-        $original,
-        $translationLanguageAlias = null
-    )
+    public function delete($original)
     {
-        $this->getSource($originalLanguageAlias, $translationLanguageAlias)->delete($original);
+        $this->getSource()->delete($original);
     }
 }

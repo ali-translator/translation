@@ -95,11 +95,11 @@ class CsvFileSource extends FileSourceAbstract
     {
         $this->preloadTranslates($languageAliasAlias);
 
-        if (isset($this->allTranslates[$languageAliasAlias][$phrase])) {
+        if (!empty($this->allTranslates[$languageAliasAlias][$phrase])) {
             return $this->allTranslates[$languageAliasAlias][$phrase];
         }
 
-        return '';
+        return null;
     }
 
     protected function preloadTranslates($languageAlias, $forceLoading = false)

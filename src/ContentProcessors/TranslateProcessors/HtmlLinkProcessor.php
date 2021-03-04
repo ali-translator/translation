@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 
 /**
  * You may use this processor if you want to store information about language in URL.
@@ -74,10 +74,10 @@ class HtmlLinkProcessor implements TranslateProcessors
     /**
      * @param string $content
      * @param string $cleanContent
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      * @return string
      */
-    public function process($content, $cleanContent, TranslatorInterface $translator)
+    public function process($content, $cleanContent, PlainTranslatorInterface $translator)
     {
         if ($translator->isCurrentLanguageOriginal()) {
             $content = $this->removeExceptionMark($content);
@@ -119,10 +119,10 @@ class HtmlLinkProcessor implements TranslateProcessors
      * Get localized URL (only URL starts from /, //, https://, http://)
      *
      * @param string $url
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      * @return string
      */
-    public function getLocalizedUrl($url, TranslatorInterface $translator)
+    public function getLocalizedUrl($url, PlainTranslatorInterface $translator)
     {
         $languageAlias = $translator->getLanguageAlias();
 

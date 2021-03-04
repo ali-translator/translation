@@ -3,7 +3,7 @@
 namespace ALI\Translation\Translate\MissingTranslateCallbacks;
 
 use ALI\Translation\Translate\PhrasePackets\OriginalPhraseCollection;
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 
 /**
  * Class
@@ -25,7 +25,7 @@ class CollectorMissingTranslatesCallback
 
     /**
      * @param string $searchPhrase
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      */
     public function __invoke($searchPhrase, $translator)
     {

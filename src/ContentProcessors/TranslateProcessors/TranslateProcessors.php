@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 
 /**
  * Interface TranslateProcessors
@@ -12,8 +12,8 @@ interface TranslateProcessors
     /**
      * @param string $content
      * @param string $cleanContent
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      * @return string
      */
-    public function process($content, $cleanContent, TranslatorInterface $translator);
+    public function process($content, $cleanContent, PlainTranslatorInterface $translator);
 }

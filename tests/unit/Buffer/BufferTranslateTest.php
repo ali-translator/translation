@@ -13,8 +13,8 @@ use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Languages\Language;
 use ALI\Translation\Translate\Sources\Exceptions\SourceException;
 use ALI\Translation\Translate\Sources\SourceInterface;
-use ALI\Translation\Translate\Translators\Translator;
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\PlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,7 +31,7 @@ class BufferTranslateTest extends TestCase
 
         $sourceFactory = new SourceFactory();
         foreach ($sourceFactory->iterateAllSources($originalLanguage->getAlias()) as $source) {
-            $translator = new Translator($currentLanguage->getAlias(), $source);
+            $translator = new PlainTranslator($currentLanguage->getAlias(), $source);
 
             $this->checkTranslateBufferWithoutTranslatedPhrase($translator);
 
@@ -44,9 +44,9 @@ class BufferTranslateTest extends TestCase
     }
 
     /**
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      */
-    private function checkTranslateBufferWithoutTranslatedPhrase(TranslatorInterface $translator)
+    private function checkTranslateBufferWithoutTranslatedPhrase(PlainTranslatorInterface $translator)
     {
         $bufferCatcher = new BufferCatcher();
         $html = '<div class="test">' . $bufferCatcher->add('Hello') . '</div>';
@@ -62,10 +62,10 @@ class BufferTranslateTest extends TestCase
     /**
      * @param SourceInterface $source
      * @param Language $languageForTranslate
-     * @param Translator $translator
+     * @param PlainTranslator $translator
      * @throws SourceException
      */
-    private function checkTranslateBuffer(SourceInterface $source, Language $languageForTranslate, Translator $translator)
+    private function checkTranslateBuffer(SourceInterface $source, Language $languageForTranslate, PlainTranslator $translator)
     {
         $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 
@@ -85,10 +85,10 @@ class BufferTranslateTest extends TestCase
     /**
      * @param SourceInterface $source
      * @param Language $languageForTranslate
-     * @param Translator $translator
+     * @param PlainTranslator $translator
      * @throws SourceException
      */
-    private function checkTranslateBuffersWithProcessors(SourceInterface $source, Language $languageForTranslate, TranslatorInterface $translator)
+    private function checkTranslateBuffersWithProcessors(SourceInterface $source, Language $languageForTranslate, PlainTranslatorInterface $translator)
     {
         $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 
@@ -122,10 +122,10 @@ class BufferTranslateTest extends TestCase
     /**
      * @param SourceInterface $source
      * @param Language $languageForTranslate
-     * @param Translator $translator
+     * @param PlainTranslator $translator
      * @throws SourceException
      */
-    private function checkTranslateBuffersWithProcessorsByOneRequest(SourceInterface $source, Language $languageForTranslate, Translator $translator)
+    private function checkTranslateBuffersWithProcessorsByOneRequest(SourceInterface $source, Language $languageForTranslate, PlainTranslator $translator)
     {
         $source->saveTranslate($languageForTranslate->getAlias(), 'Hello', 'Привіт');
 

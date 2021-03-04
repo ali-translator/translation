@@ -9,7 +9,7 @@ use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\DirectoryNotFound
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileNotWritableException;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileReadPermissionsException;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
-use ALI\Translation\Translate\Translators\Translator;
+use ALI\Translation\Translate\Translators\PlainTranslator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,7 +28,7 @@ class CollectorTranslateCallbackTest extends TestCase
         $originalLanguage = (new LanguageFactory())->createOriginalLanguage();
         foreach ((new SourceFactory())->iterateAllSources($originalLanguage->getAlias()) as $source) {
             $currentLanguage = (new LanguageFactory())->createCurrentLanguage();
-            $translator = new Translator($currentLanguage->getAlias(), $source);
+            $translator = new PlainTranslator($currentLanguage->getAlias(), $source);
 
             $callBack = new CollectorMissingTranslatesCallback();
 

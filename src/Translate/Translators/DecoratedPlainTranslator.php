@@ -9,10 +9,10 @@ use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
 /**
  * Decorate original and translated phrases in conjunction with `Translator` class
  */
-class DecoratedTranslator implements TranslatorInterface
+class DecoratedPlainTranslator implements PlainTranslatorInterface
 {
     /**
-     * @var TranslatorInterface
+     * @var PlainTranslatorInterface
      */
     protected $translator;
 
@@ -27,12 +27,12 @@ class DecoratedTranslator implements TranslatorInterface
     protected $translateDecoratorManager;
 
     /**
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      * @param OriginalPhraseDecoratorManager $originalDecoratorManager
      * @param TranslatePhraseDecoratorManager $translateDecoratorManager
      */
     public function __construct(
-        TranslatorInterface $translator,
+        PlainTranslatorInterface $translator,
         OriginalPhraseDecoratorManager $originalDecoratorManager = null,
         TranslatePhraseDecoratorManager $translateDecoratorManager = null
     )
@@ -132,7 +132,7 @@ class DecoratedTranslator implements TranslatorInterface
     }
 
     /**
-     * @return TranslatorInterface
+     * @return PlainTranslatorInterface
      */
     public function getTranslator()
     {

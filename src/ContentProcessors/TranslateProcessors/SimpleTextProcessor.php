@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 
 /**
  * SimpleTextProcessor
@@ -31,10 +31,10 @@ class SimpleTextProcessor implements TranslateProcessors
     /**
      * @param string $content
      * @param string $cleanContent
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      * @return string|void
      */
-    public function process($content, $cleanContent, TranslatorInterface $translator)
+    public function process($content, $cleanContent, PlainTranslatorInterface $translator)
     {
         if ($this->stopCharacters) {
             foreach ($this->stopCharacters as $stopCharacter) {

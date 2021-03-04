@@ -8,7 +8,7 @@ use ALI\Translation\Translate\Sources\SourceInterface;
 /**
  * TranslatorInterface
  */
-interface TranslatorInterface
+interface PlainTranslatorInterface
 {
     /**
      * @param array $phrases

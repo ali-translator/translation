@@ -19,9 +19,9 @@ use ALI\Translation\Translate\Sources\CsvFileSource;
 use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
 use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
 use ALI\Translation\Translate\Sources\MySqlSource;
-use ALI\Translation\Translate\Translators\DecoratedTranslator;
-use ALI\Translation\Translate\Translators\Translator;
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\DecoratedPlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 use PDO;
 
 /**
@@ -93,7 +93,7 @@ class ALIAbcFactory
      * @param PDO $connection
      * @param $originalLanguageAlias
      * @param $currentLanguageAlias
-     * @return TranslatorInterface
+     * @return PlainTranslatorInterface
      */
     private function generateMysqlTranslator(PDO $connection, $originalLanguageAlias, $currentLanguageAlias)
     {
@@ -103,19 +103,19 @@ class ALIAbcFactory
             $sourceInstaller->install();
         }
 
-        $baseTranslator = new Translator($currentLanguageAlias, $source);
+        $baseTranslator = new PlainTranslator($currentLanguageAlias, $source);
 
         return $decoratedTranslator = $this->generateBaseDecoratedTranslator($baseTranslator);
     }
 
     /**
-     * @param string|null $httHost
+     * @param string|null $httpHost
      * @return ContentProcessorsManager
      */
-    private function generateBaseHtmlProcessorManager($httHost = null)
+    private function generateBaseHtmlProcessorManager($httpHost = null)
     {
-        if (is_null($httHost)) {
-            $httHost = $_SERVER['HTTP_HOST'];
+        if (is_null($httpHost)) {
+            $httpHost = $_SERVER['HTTP_HOST'];
         }
 
         $contentProcessorsManager = new ContentProcessorsManager();
@@ -127,7 +127,7 @@ class ALIAbcFactory
         $contentProcessorsManager->addTranslateProcessor(new HtmlTagProcessor());
         $contentProcessorsManager->addTranslateProcessor(new HtmlAttributesProcessor());
         $contentProcessorsManager->addTranslateProcessor(new SimpleTextProcessor());
-        $contentProcessorsManager->addTranslateProcessor(new HtmlLinkProcessor($httHost));
+        $contentProcessorsManager->addTranslateProcessor(new HtmlLinkProcessor($httpHost));
 
         return $contentProcessorsManager;
     }
@@ -136,7 +136,7 @@ class ALIAbcFactory
      * @param $translationDirectoryPath
      * @param $originalLanguageAlias
      * @param $currentLanguageAlias
-     * @return TranslatorInterface
+     * @return PlainTranslatorInterface
      * @throws UnsupportedLanguageAliasException
      */
     private function generateCsvTranslator($translationDirectoryPath, $originalLanguageAlias, $currentLanguageAlias)
@@ -147,16 +147,16 @@ class ALIAbcFactory
             touch($fileCsvPath);
         }
 
-        $baseTranslator = new Translator($currentLanguageAlias, $source);
+        $baseTranslator = new PlainTranslator($currentLanguageAlias, $source);
 
         return $decoratedTranslator = $this->generateBaseDecoratedTranslator($baseTranslator);
     }
 
     /**
-     * @param TranslatorInterface $translator
-     * @return TranslatorInterface
+     * @param PlainTranslatorInterface $translator
+     * @return PlainTranslatorInterface
      */
-    private function generateBaseDecoratedTranslator(TranslatorInterface $translator)
+    private function generateBaseDecoratedTranslator(PlainTranslatorInterface $translator)
     {
         $originalDecoratorManger = new OriginalPhraseDecoratorManager([
             new ReplaceNumbersOriginalDecorator(),
@@ -165,6 +165,6 @@ class ALIAbcFactory
             new ReplaceNumbersTranslateDecorator(),
         ]);
 
-        return new DecoratedTranslator($translator, $originalDecoratorManger, $translateDecoratorManager);
+        return new DecoratedPlainTranslator($translator, $originalDecoratorManger, $translateDecoratorManager);
     }
 }

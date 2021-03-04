@@ -7,8 +7,8 @@ use ALI\Translation\ContentProcessors\ContentProcessorsManager;
 use ALI\Translation\Translate\PhrasePackets\OriginalPhraseCollection;
 use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
 use ALI\Translation\Translate\Sources\TemporarySourceInterface;
-use ALI\Translation\Translate\Translators\Translator;
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\PlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 
 /**
  * Class BufferTranslate
@@ -20,10 +20,10 @@ class BufferTranslate
      * Translates all buffer contents, and replace their in parent content
      *
      * @param BufferContent $bufferContent
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      * @return string
      */
-    public function translateChildContentCollection(BufferContent $bufferContent, TranslatorInterface $translator)
+    public function translateChildContentCollection(BufferContent $bufferContent, PlainTranslatorInterface $translator)
     {
         if (!$bufferContent->getChildContentCollection()) {
             return $bufferContent->getContentString();
@@ -58,13 +58,13 @@ class BufferTranslate
      * Replace content by buffers translation. Which pieces buffer content will be translated detecting processorsManager.
      * Method makes N requests to translator source, where N = (buffers count * active processors)
      * if for your source are sensitive for request count - use method "translateContentByOneRequest"
+     * @param BufferContent $bufferContent
+     * @param PlainTranslatorInterface $translator
+     * @return string
      * @see translateBuffersWithProcessorsByOneRequest
      *
-     * @param BufferContent $bufferContent
-     * @param TranslatorInterface $translator
-     * @return string
      */
-    public function translateBuffersWithProcessors(BufferContent $bufferContent, TranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
+    public function translateBuffersWithProcessors(BufferContent $bufferContent, PlainTranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
     {
         $buffer = $bufferContent->getChildContentCollection();
         if (!$buffer) {
@@ -101,23 +101,23 @@ class BufferTranslate
 
     /**
      * Optimization for method "translateBuffersWithProcessors"
-     * @see translateBuffersWithProcessors     *
+     * @param BufferContent $bufferContent
+     * @param PlainTranslatorInterface $translator
+     * @return string
+     *@see translateBuffersWithProcessors     *
      *
      * If you has many buffers, and source sensitive for request count,
      * this method may decrease request numbers to one.
      * But this method create more php actions with content replacing
      *
-     * @param BufferContent $bufferContent
-     * @param TranslatorInterface $translator
-     * @return string
      */
-    public function translateBuffersWithProcessorsByOneRequest(BufferContent $bufferContent, TranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
+    public function translateBuffersWithProcessorsByOneRequest(BufferContent $bufferContent, PlainTranslatorInterface $translator, ContentProcessorsManager $contentProcessorsManager)
     {
         // Init additional objects
         $bufferLayer = new BufferContentCollection(new StaticKeyGenerator('#ali-buffer-layer-content_', '#'));
 
         $temporarySource = new TemporarySourceInterface($translator->getSource()->getOriginalLanguageAlias(), $bufferLayer);
-        $bufferLayerTranslator = new Translator($translator->getLanguageAlias(), $temporarySource);
+        $bufferLayerTranslator = new PlainTranslator($translator->getLanguageAlias(), $temporarySource);
 
         // Create additional buffering layer
         $layerContent = $this->translateBuffersWithProcessors($bufferContent, $bufferLayerTranslator, $contentProcessorsManager);

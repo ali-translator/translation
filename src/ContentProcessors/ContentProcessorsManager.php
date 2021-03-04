@@ -4,7 +4,7 @@ namespace ALI\Translation\ContentProcessors;
 
 use ALI\Translation\ContentProcessors\PreTranslateProcessors\PreProcessorInterface;
 use ALI\Translation\ContentProcessors\TranslateProcessors\TranslateProcessors;
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 
 /**
  * Class
@@ -49,10 +49,10 @@ class ContentProcessorsManager
 
     /**
      * @param string $content
-     * @param TranslatorInterface $translate
+     * @param PlainTranslatorInterface $translate
      * @return string
      */
-    public function executeProcesses($content, TranslatorInterface $translate)
+    public function executeProcesses($content, PlainTranslatorInterface $translate)
     {
         $cleanBuffer = $this->executePreProcesses($content);
         $content = $this->executeTranslateProcesses($content, $cleanBuffer, $translate);
@@ -77,10 +77,10 @@ class ContentProcessorsManager
     /**
      * @param string $content
      * @param string $cleanBuffer
-     * @param TranslatorInterface $translator
+     * @param PlainTranslatorInterface $translator
      * @return string
      */
-    public function executeTranslateProcesses($content, $cleanBuffer, TranslatorInterface $translator)
+    public function executeTranslateProcesses($content, $cleanBuffer, PlainTranslatorInterface $translator)
     {
         foreach ($this->translateProcessors as $translateProcessor) {
             $content = $translateProcessor->process($content, $cleanBuffer, $translator);

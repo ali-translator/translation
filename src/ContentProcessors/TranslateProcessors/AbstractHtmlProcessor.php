@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
-use ALI\Translation\Translate\Translators\TranslatorInterface;
+use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 
 /**
  * Class AbstractHtmlProcessor
@@ -13,10 +13,10 @@ abstract class AbstractHtmlProcessor implements TranslateProcessors
     /**
      * @param string $content
      * @param string $cleanContent
-     * @param TranslatorInterface $translate
+     * @param PlainTranslatorInterface $translate
      * @return string
      */
-    public function process($content, $cleanContent, TranslatorInterface $translate)
+    public function process($content, $cleanContent, PlainTranslatorInterface $translate)
     {
         if ($translate->isCurrentLanguageOriginal()) {
             return $content;
