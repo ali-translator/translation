@@ -3,7 +3,7 @@
 namespace ALI\Translation\Translate\Translators;
 
 use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
-use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Source\SourceInterface;
 
 /**
  * TranslatorInterface
@@ -26,9 +26,9 @@ interface PlainTranslatorInterface
     /**
      * @param string $original
      * @param string $translate
-     * @param null $languageAlias
+     * @param null $translationLanguageAlias
      */
-    public function saveTranslate($original, $translate, $languageAlias = null);
+    public function saveTranslate($original, $translate, $translationLanguageAlias = null);
 
     /**
      * Delete original and all translated phrases
@@ -45,7 +45,7 @@ interface PlainTranslatorInterface
     /**
      * @return string
      */
-    public function getLanguageAlias();
+    public function getTranslationLanguageAlias();
 
     /**
      * @return SourceInterface

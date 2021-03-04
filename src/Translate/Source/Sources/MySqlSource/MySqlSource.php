@@ -1,13 +1,14 @@
 <?php
 
-namespace ALI\Translation\Translate\Sources;
+namespace ALI\Translation\Translate\Source\Sources\MySqlSource;
 
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
-use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
-use ALI\Translation\Translate\Sources\Installers\SourceInstallerInterface;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\Installers\MySqlSourceInstaller;
+use ALI\Translation\Translate\Source\Installers\SourceInstallerInterface;
+use ALI\Translation\Translate\Source\SourceInterface;
 use PDO;
 use ALI\Translation\Languages\LanguageInterface;
-use ALI\Translation\Translate\Sources\Exceptions\MySqlSource\LanguageNotExistsException;
+use ALI\Translation\Translate\Source\Exceptions\MySqlSource\LanguageNotExistsException;
 
 /**
  * Class MySqlSource

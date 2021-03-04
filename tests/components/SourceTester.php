@@ -3,8 +3,8 @@
 namespace ALI\Translation\Tests\components;
 
 use ALI\Translation\Languages\Language;
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
-use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\SourceInterface;
 use PHPUnit\Framework\TestCase;
 
 /**

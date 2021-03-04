@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Translate\Sources\Exceptions;
+namespace ALI\Translation\Translate\Source\Exceptions;
 
 use ALI\Translation\Exceptions\ALIException;
 

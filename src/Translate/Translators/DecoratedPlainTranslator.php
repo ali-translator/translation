@@ -82,12 +82,12 @@ class DecoratedPlainTranslator implements PlainTranslatorInterface
     /**
      * @param string $original
      * @param string $translate
-     * @param null $languageAlias
+     * @param null $translationLanguageAlias
      */
-    public function saveTranslate($original, $translate, $languageAlias = null)
+    public function saveTranslate($original, $translate, $translationLanguageAlias = null)
     {
         $original = $this->originalDecoratorManager->decorate($original);
-        $this->translator->saveTranslate($original, $translate, $languageAlias);
+        $this->translator->saveTranslate($original, $translate, $translationLanguageAlias);
     }
 
     /**
@@ -110,9 +110,9 @@ class DecoratedPlainTranslator implements PlainTranslatorInterface
     /**
      * @inheritDoc
      */
-    public function getLanguageAlias()
+    public function getTranslationLanguageAlias()
     {
-        return $this->translator->getLanguageAlias();
+        return $this->translator->getTranslationLanguageAlias();
     }
 
     /**

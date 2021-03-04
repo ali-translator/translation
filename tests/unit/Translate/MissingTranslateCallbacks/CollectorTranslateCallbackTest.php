@@ -5,11 +5,12 @@ namespace ALI\Translation\Tests\unit\Translate\MissingTranslateCallbacks;
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Translate\MissingTranslateCallbacks\CollectorMissingTranslatesCallback;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\DirectoryNotFoundException;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileNotWritableException;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileReadPermissionsException;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\DirectoryNotFoundException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\FileNotWritableException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\FileReadPermissionsException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
 use ALI\Translation\Translate\Translators\PlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,7 +29,7 @@ class CollectorTranslateCallbackTest extends TestCase
         $originalLanguage = (new LanguageFactory())->createOriginalLanguage();
         foreach ((new SourceFactory())->iterateAllSources($originalLanguage->getAlias()) as $source) {
             $currentLanguage = (new LanguageFactory())->createCurrentLanguage();
-            $translator = new PlainTranslator($currentLanguage->getAlias(), $source);
+            $translator = (new PlainTranslatorFactory())->createPlainTranslator($source, $currentLanguage->getAlias());
 
             $callBack = new CollectorMissingTranslatesCallback();
 

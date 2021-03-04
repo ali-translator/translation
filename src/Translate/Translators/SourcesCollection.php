@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\Translate\Translators;
 
-use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Source\SourceInterface;
 
 /**
  * Class

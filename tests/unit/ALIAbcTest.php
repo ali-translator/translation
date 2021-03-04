@@ -5,8 +5,8 @@ namespace ALI\Translation\Tests\unit;
 use ALI\Translation\ALIAbc;
 use ALI\Translation\Helpers\QuickStart\ALIAbcFactory;
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -3,9 +3,8 @@
 namespace ALI\Translation\Translate\Translators;
 
 use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
-use ALI\Translation\Translate\Sources\SourceInterface;
-use function is_callable;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\SourceInterface;
 
 /**
  * PlainTranslator
@@ -17,31 +16,34 @@ class PlainTranslator implements PlainTranslatorInterface
     /**
      * @var string
      */
-    protected $languageAlias;
+    protected $translationLanguageAlias;
 
     /**
-     * @var SourceInterface
+     * @var string
      */
-    protected $source;
+    protected $originalLanguageAlias;
 
     /**
-     * @var callable[]
+     * @var Translator
      */
-    protected $missingTranslationCallbacks = [];
+    protected $translator;
 
     /**
      * Translate constructor
      *
-     * @param $languageAlias
-     * @param SourceInterface $source
+     * @param string $translationLanguageAlias
+     * @param string $originalLanguageAlias
+     * @param Translator $translator
      */
     public function __construct(
-        $languageAlias,
-        SourceInterface $source
+        $translationLanguageAlias,
+        $originalLanguageAlias,
+        Translator $translator
     )
     {
-        $this->languageAlias = $languageAlias;
-        $this->source = $source;
+        $this->translationLanguageAlias = $translationLanguageAlias;
+        $this->originalLanguageAlias = $originalLanguageAlias;
+        $this->translator = $translator;
     }
 
     /**
@@ -49,15 +51,15 @@ class PlainTranslator implements PlainTranslatorInterface
      */
     public function isCurrentLanguageOriginal()
     {
-        return $this->languageAlias === $this->source->getOriginalLanguageAlias();
+        return $this->translationLanguageAlias === $this->originalLanguageAlias;
     }
 
     /**
      * @return string
      */
-    public function getLanguageAlias()
+    public function getTranslationLanguageAlias()
     {
-        return $this->languageAlias;
+        return $this->translationLanguageAlias;
     }
 
     /**
@@ -65,7 +67,7 @@ class PlainTranslator implements PlainTranslatorInterface
      */
     public function getSource()
     {
-        return $this->source;
+        return $this->translator->getSource($this->originalLanguageAlias, $this->translationLanguageAlias);
     }
 
     /**
@@ -73,7 +75,7 @@ class PlainTranslator implements PlainTranslatorInterface
      */
     public function getMissingTranslationCallbacks()
     {
-        return $this->missingTranslationCallbacks;
+        return $this->translator->getMissingTranslationCallbacks();
     }
 
     /**
@@ -81,7 +83,7 @@ class PlainTranslator implements PlainTranslatorInterface
      */
     public function addMissingTranslationCallback(callable $missingTranslationCallback)
     {
-        $this->missingTranslationCallbacks[] = $missingTranslationCallback;
+        $this->translator->addMissingTranslationCallback($missingTranslationCallback);
     }
 
     /**
@@ -90,40 +92,7 @@ class PlainTranslator implements PlainTranslatorInterface
      */
     public function translateAll($phrases)
     {
-        $translatePhrasePacket = new TranslatePhraseCollection();
-
-        if ($this->isCurrentLanguageOriginal()) {
-            foreach ($phrases as $phrase) {
-                $translatePhrasePacket->addTranslate($phrase, null);
-            }
-
-            return $translatePhrasePacket;
-        }
-
-        $searchPhrases = array_combine($phrases, $phrases);
-
-        $translatesFromSource = $this->getSource()->getTranslates(
-            $searchPhrases,
-            $this->getLanguageAlias()
-        );
-
-        foreach ($searchPhrases as $originalPhrase => $searchPhrase) {
-            $translate = isset($translatesFromSource[$searchPhrase]) ? $translatesFromSource[$searchPhrase] : null;
-            if (!$translate) {
-                foreach ($this->getMissingTranslationCallbacks() as $missingTranslationCallbacks) {
-                    if (is_callable($missingTranslationCallbacks)) {
-                        $translate = call_user_func($missingTranslationCallbacks, $searchPhrase, $this) ?: null;
-                        if ($translate) {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            $translatePhrasePacket->addTranslate($originalPhrase, $translate);
-        }
-
-        return $translatePhrasePacket;
+        return $this->translator->translateAll($this->originalLanguageAlias, $this->translationLanguageAlias, $phrases);
     }
 
     /**
@@ -135,25 +104,20 @@ class PlainTranslator implements PlainTranslatorInterface
      */
     public function translate($phrase, $withTranslationFallback = false)
     {
-        $translatePhraseCollection = $this->translateAll([$phrase]);
-
-        return $translatePhraseCollection->getTranslate($phrase, $withTranslationFallback);
+        return $this->translator->translate($this->originalLanguageAlias, $this->translationLanguageAlias, $phrase, $withTranslationFallback);
     }
 
     /**
      * @param $original
      * @param $translate
-     * @param string $languageAlias
+     * @param string $translationLanguageAlias
      * @throws SourceException
      */
-    public function saveTranslate($original, $translate, $languageAlias = null)
+    public function saveTranslate($original, $translate, $translationLanguageAlias = null)
     {
-        $languageAlias = $languageAlias ?: $this->languageAlias;
-        $this->getSource()->saveTranslate(
-            $languageAlias,
-            $original,
-            $translate
-        );
+        $translationLanguageAlias = $translationLanguageAlias ?: $this->translationLanguageAlias;
+
+        $this->translator->saveTranslate($this->originalLanguageAlias, $translationLanguageAlias, $original, $translate);
     }
 
     /**
@@ -162,6 +126,6 @@ class PlainTranslator implements PlainTranslatorInterface
      */
     public function delete($original)
     {
-        $this->getSource()->delete($original);
+        $this->translator->delete($this->originalLanguageAlias, $original, $this->translationLanguageAlias);
     }
 }

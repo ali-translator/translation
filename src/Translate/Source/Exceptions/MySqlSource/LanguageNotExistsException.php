@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Translate\Sources\Exceptions\MySqlSource;
+namespace ALI\Translation\Translate\Source\Exceptions\MySqlSource;
 
 /**
  * LanguageNotExistsException

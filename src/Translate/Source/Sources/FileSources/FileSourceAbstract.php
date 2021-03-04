@@ -1,9 +1,10 @@
 <?php
 
-namespace ALI\Translation\Translate\Sources;
+namespace ALI\Translation\Translate\Source\Sources\FileSources;
 
-use ALI\Translation\Translate\Sources\Installers\FileSourceInstaller;
-use ALI\Translation\Translate\Sources\Installers\SourceInstallerInterface;
+use ALI\Translation\Translate\Source\Installers\FileSourceInstaller;
+use ALI\Translation\Translate\Source\Installers\SourceInstallerInterface;
+use ALI\Translation\Translate\Source\SourceInterface;
 
 /**
  * FileSourceAbstract

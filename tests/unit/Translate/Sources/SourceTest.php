@@ -6,7 +6,7 @@ use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Tests\components\SourceTester;
 use ALI\Translation\Languages\Language;
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
 use PHPUnit\Framework\TestCase;
 
 /**

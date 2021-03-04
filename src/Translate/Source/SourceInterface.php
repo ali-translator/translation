@@ -1,9 +1,9 @@
 <?php
 
-namespace ALI\Translation\Translate\Sources;
+namespace ALI\Translation\Translate\Source;
 
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
-use ALI\Translation\Translate\Sources\Installers\SourceInstallerInterface;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\Installers\SourceInstallerInterface;
 
 /**
  * SourceInterface Interface

@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Translate\Sources\Exceptions\CsvFileSource;
+namespace ALI\Translation\Translate\Source\Exceptions\CsvFileSource;
 
 /**
  * UnsupportedLanguageAliasException

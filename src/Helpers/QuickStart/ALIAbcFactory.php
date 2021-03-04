@@ -15,12 +15,13 @@ use ALI\Translation\Translate\PhraseDecorators\OriginalDecorators\ReplaceNumbers
 use ALI\Translation\Translate\PhraseDecorators\OriginalPhraseDecoratorManager;
 use ALI\Translation\Translate\PhraseDecorators\TranslateDecorators\ReplaceNumbersTranslateDecorator;
 use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
-use ALI\Translation\Translate\Sources\CsvFileSource;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
-use ALI\Translation\Translate\Sources\Installers\MySqlSourceInstaller;
-use ALI\Translation\Translate\Sources\MySqlSource;
+use ALI\Translation\Translate\Source\Sources\FileSources\CsvSource\CsvFileSource;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
+use ALI\Translation\Translate\Source\Installers\MySqlSourceInstaller;
+use ALI\Translation\Translate\Source\Sources\MySqlSource\MySqlSource;
 use ALI\Translation\Translate\Translators\DecoratedPlainTranslator;
 use ALI\Translation\Translate\Translators\PlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
 use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 use PDO;
 
@@ -103,7 +104,7 @@ class ALIAbcFactory
             $sourceInstaller->install();
         }
 
-        $baseTranslator = new PlainTranslator($currentLanguageAlias, $source);
+        $baseTranslator = (new PlainTranslatorFactory())->createPlainTranslator($source, $currentLanguageAlias);
 
         return $decoratedTranslator = $this->generateBaseDecoratedTranslator($baseTranslator);
     }
@@ -147,7 +148,7 @@ class ALIAbcFactory
             touch($fileCsvPath);
         }
 
-        $baseTranslator = new PlainTranslator($currentLanguageAlias, $source);
+        $baseTranslator = (new PlainTranslatorFactory())->createPlainTranslator($source, $currentLanguageAlias);
 
         return $decoratedTranslator = $this->generateBaseDecoratedTranslator($baseTranslator);
     }

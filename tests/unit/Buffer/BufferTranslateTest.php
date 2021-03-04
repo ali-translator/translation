@@ -11,9 +11,10 @@ use ALI\Translation\ContentProcessors\TranslateProcessors\SimpleTextProcessor;
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Languages\Language;
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
-use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\SourceInterface;
 use ALI\Translation\Translate\Translators\PlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
 use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +32,7 @@ class BufferTranslateTest extends TestCase
 
         $sourceFactory = new SourceFactory();
         foreach ($sourceFactory->iterateAllSources($originalLanguage->getAlias()) as $source) {
-            $translator = new PlainTranslator($currentLanguage->getAlias(), $source);
+            $translator = (new PlainTranslatorFactory())->createPlainTranslator($source, $currentLanguage->getAlias());
 
             $this->checkTranslateBufferWithoutTranslatedPhrase($translator);
 

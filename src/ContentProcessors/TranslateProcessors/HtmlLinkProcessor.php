@@ -124,7 +124,7 @@ class HtmlLinkProcessor implements TranslateProcessors
      */
     public function getLocalizedUrl($url, PlainTranslatorInterface $translator)
     {
-        $languageAlias = $translator->getLanguageAlias();
+        $languageAlias = $translator->getTranslationLanguageAlias();
 
         if ($translator->isCurrentLanguageOriginal()) {
             return $url;

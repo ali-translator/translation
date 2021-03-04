@@ -3,8 +3,8 @@
 namespace ALI\Translation\Translate\Translators;
 
 use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
-use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\SourceInterface;
 
 /**
  * Translator

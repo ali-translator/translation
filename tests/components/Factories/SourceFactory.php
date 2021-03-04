@@ -2,9 +2,9 @@
 
 namespace ALI\Translation\Tests\components\Factories;
 
-use ALI\Translation\Translate\Sources\CsvFileSource;
-use ALI\Translation\Translate\Sources\MySqlSource;
-use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Source\Sources\FileSources\CsvSource\CsvFileSource;
+use ALI\Translation\Translate\Source\Sources\MySqlSource\MySqlSource;
+use ALI\Translation\Translate\Source\SourceInterface;
 use PDO;
 
 /**

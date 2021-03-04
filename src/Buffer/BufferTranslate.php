@@ -6,9 +6,12 @@ use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use ALI\Translation\ContentProcessors\ContentProcessorsManager;
 use ALI\Translation\Translate\PhrasePackets\OriginalPhraseCollection;
 use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
-use ALI\Translation\Translate\Sources\TemporarySourceInterface;
+use ALI\Translation\Translate\Source\TemporarySourceInterface;
 use ALI\Translation\Translate\Translators\PlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
 use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
+use ALI\Translation\Translate\Translators\SourcesCollection;
+use ALI\Translation\Translate\Translators\Translator;
 
 /**
  * Class BufferTranslate
@@ -117,7 +120,7 @@ class BufferTranslate
         $bufferLayer = new BufferContentCollection(new StaticKeyGenerator('#ali-buffer-layer-content_', '#'));
 
         $temporarySource = new TemporarySourceInterface($translator->getSource()->getOriginalLanguageAlias(), $bufferLayer);
-        $bufferLayerTranslator = new PlainTranslator($translator->getLanguageAlias(), $temporarySource);
+        $bufferLayerTranslator = (new PlainTranslatorFactory())->createPlainTranslator($temporarySource, $translator->getTranslationLanguageAlias());
 
         // Create additional buffering layer
         $layerContent = $this->translateBuffersWithProcessors($bufferContent, $bufferLayerTranslator, $contentProcessorsManager);

@@ -4,10 +4,11 @@ namespace ALI\Translation\Tests\unit\Translate;
 
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
-use ALI\Translation\Translate\Sources\CsvFileSource;
-use ALI\Translation\Translate\Sources\Exceptions\SourceException;
-use ALI\Translation\Translate\Sources\SourceInterface;
+use ALI\Translation\Translate\Source\Sources\FileSources\CsvSource\CsvFileSource;
+use ALI\Translation\Translate\Source\Exceptions\SourceException;
+use ALI\Translation\Translate\Source\SourceInterface;
 use ALI\Translation\Translate\Translators\PlainTranslator;
+use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -37,10 +38,7 @@ class PlainTranslatorTest extends TestCase
      */
     private function checkTranslationWithoutFallback(SourceInterface $source, $originalPhrase, $translatedPhrase)
     {
-        $translator = new PlainTranslator(
-            LanguageFactory::CURRENT_LANGUAGE_ALIAS,
-            $source
-        );
+        $translator = (new PlainTranslatorFactory())->createPlainTranslator($source, LanguageFactory::CURRENT_LANGUAGE_ALIAS);
 
         $this->assertEquals($translator->translate($originalPhrase), '');
         $translator->saveTranslate($originalPhrase, $translatedPhrase);
@@ -56,10 +54,7 @@ class PlainTranslatorTest extends TestCase
      */
     private function checkTranslationFallback(SourceInterface $source, $originalPhrase, $translatedPhrase)
     {
-        $translator = new PlainTranslator(
-            LanguageFactory::CURRENT_LANGUAGE_ALIAS,
-            $source
-        );
+        $translator = (new PlainTranslatorFactory())->createPlainTranslator($source, LanguageFactory::CURRENT_LANGUAGE_ALIAS,);
 
         $this->assertEquals($originalPhrase, $translator->translate($originalPhrase, true));
         $translator->saveTranslate($originalPhrase, $translatedPhrase);

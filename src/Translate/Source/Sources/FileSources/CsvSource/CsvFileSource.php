@@ -1,11 +1,12 @@
 <?php
 
-namespace ALI\Translation\Translate\Sources;
+namespace ALI\Translation\Translate\Source\Sources\FileSources\CsvSource;
 
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\DirectoryNotFoundException;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileNotWritableException;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\FileReadPermissionsException;
-use ALI\Translation\Translate\Sources\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\DirectoryNotFoundException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\FileNotWritableException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\FileReadPermissionsException;
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
+use ALI\Translation\Translate\Source\Sources\FileSources\FileSourceAbstract;
 
 /**
  * Source for simple translation storage. Directory with text files.

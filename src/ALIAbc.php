@@ -149,11 +149,11 @@ class ALIAbc
     /**
      * @param string $original
      * @param string $translate
-     * @throws Translate\Sources\Exceptions\SourceException
+     * @throws Translate\Source\Exceptions\SourceException
      */
     public function saveTranslate($original, $translate)
     {
-        $currentLanguageAlias = $this->translator->getLanguageAlias();
+        $currentLanguageAlias = $this->translator->getTranslationLanguageAlias();
         $this->translator->getSource()->saveTranslate($currentLanguageAlias, $original, $translate);
     }
 
@@ -227,7 +227,7 @@ class ALIAbc
      */
     public function getCurrentLanguageAlias()
     {
-        return $this->translator->getLanguageAlias();
+        return $this->translator->getTranslationLanguageAlias();
     }
 
     /**

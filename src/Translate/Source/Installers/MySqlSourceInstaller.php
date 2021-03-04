@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Translate\Sources\Installers;
+namespace ALI\Translation\Translate\Source\Installers;
 
 use PDO;
 

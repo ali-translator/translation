@@ -4,8 +4,8 @@ namespace ALI\Translation\Tests\unit\Translate\Translators;
 
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
-use ALI\Translation\Translate\Sources\CsvFileSource;
-use ALI\Translation\Translate\Sources\MySqlSource;
+use ALI\Translation\Translate\Source\Sources\FileSources\CsvSource\CsvFileSource;
+use ALI\Translation\Translate\Source\Sources\MySqlSource\MySqlSource;
 use ALI\Translation\Translate\Translators\SourcesCollection;
 use PHPUnit\Framework\TestCase;
 
