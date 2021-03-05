@@ -1,8 +1,10 @@
 <?php
 
-namespace ALI\Translation\Translate\Translators;
+namespace ALI\Translation\Translate\PlainTranslator;
 
 use ALI\Translation\Translate\Source\SourceInterface;
+use ALI\Translation\Translate\Source\SourcesCollection;
+use ALI\Translation\Translate\Translator;
 
 class PlainTranslatorFactory
 {

@@ -2,7 +2,7 @@
 
 namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
-use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorInterface;
 
 /**
  * You may use this processor if you want to store information about language in URL.

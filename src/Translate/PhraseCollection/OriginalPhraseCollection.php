@@ -1,6 +1,6 @@
 <?php
 
-namespace ALI\Translation\Translate\PhrasePackets;
+namespace ALI\Translation\Translate\PhraseCollection;
 
 use ArrayIterator;
 use IteratorAggregate;

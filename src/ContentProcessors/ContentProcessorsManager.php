@@ -4,7 +4,7 @@ namespace ALI\Translation\ContentProcessors;
 
 use ALI\Translation\ContentProcessors\PreTranslateProcessors\PreProcessorInterface;
 use ALI\Translation\ContentProcessors\TranslateProcessors\TranslateProcessors;
-use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorInterface;
 
 /**
  * Class

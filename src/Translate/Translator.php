@@ -1,10 +1,11 @@
 <?php
 
-namespace ALI\Translation\Translate\Translators;
+namespace ALI\Translation\Translate;
 
-use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
+use ALI\Translation\Translate\PhraseCollection\TranslatePhraseCollection;
 use ALI\Translation\Translate\Source\Exceptions\SourceException;
 use ALI\Translation\Translate\Source\SourceInterface;
+use ALI\Translation\Translate\Source\SourcesCollection;
 
 /**
  * Translator

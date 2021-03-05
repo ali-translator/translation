@@ -1,8 +1,8 @@
 <?php
 
-namespace ALI\Translation\Translate\Translators;
+namespace ALI\Translation\Translate\PlainTranslator;
 
-use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
+use ALI\Translation\Translate\PhraseCollection\TranslatePhraseCollection;
 use ALI\Translation\Translate\Source\SourceInterface;
 
 /**

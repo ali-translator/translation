@@ -121,11 +121,11 @@ class ALIAbcTest extends TestCase
     private function checkSaveMissingOriginals(ALIAbc $aliAbc)
     {
         $missingPhrase = 'Some missing phrase';
-        $this->assertEquals([], $aliAbc->getTranslator()->getSource()->getExistOriginals([$missingPhrase]));
+        $this->assertEquals([], $aliAbc->getPlainTranslator()->getSource()->getExistOriginals([$missingPhrase]));
         $aliAbc->translate($missingPhrase);
         $aliAbc->saveMissedOriginals();
-        $this->assertEquals([$missingPhrase], $aliAbc->getTranslator()->getSource()->getExistOriginals([$missingPhrase]));
-        $aliAbc->getTranslator()->getSource()->delete($missingPhrase);
-        $this->assertEquals([], $aliAbc->getTranslator()->getSource()->getExistOriginals([$missingPhrase]));
+        $this->assertEquals([$missingPhrase], $aliAbc->getPlainTranslator()->getSource()->getExistOriginals([$missingPhrase]));
+        $aliAbc->getPlainTranslator()->getSource()->delete($missingPhrase);
+        $this->assertEquals([], $aliAbc->getPlainTranslator()->getSource()->getExistOriginals([$missingPhrase]));
     }
 }

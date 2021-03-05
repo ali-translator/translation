@@ -19,10 +19,10 @@ use ALI\Translation\Translate\Source\Sources\FileSources\CsvSource\CsvFileSource
 use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
 use ALI\Translation\Translate\Source\Installers\MySqlSourceInstaller;
 use ALI\Translation\Translate\Source\Sources\MySqlSource\MySqlSource;
-use ALI\Translation\Translate\Translators\DecoratedPlainTranslator;
-use ALI\Translation\Translate\Translators\PlainTranslator;
-use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
-use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
+use ALI\Translation\Translate\PlainTranslator\DecoratedPlainTranslator;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslator;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorFactory;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorInterface;
 use PDO;
 
 /**

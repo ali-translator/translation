@@ -1,8 +1,6 @@
 <?php
 
-namespace ALI\Translation\Translate\Translators;
-
-use ALI\Translation\Translate\Source\SourceInterface;
+namespace ALI\Translation\Translate\Source;
 
 /**
  * Class

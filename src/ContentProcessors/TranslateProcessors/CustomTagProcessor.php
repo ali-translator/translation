@@ -3,7 +3,7 @@
 namespace ALI\Translation\ContentProcessors\TranslateProcessors;
 
 use ALI\Translation\Exceptions\ALIException;
-use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorInterface;
 use function preg_quote;
 use function preg_replace;
 

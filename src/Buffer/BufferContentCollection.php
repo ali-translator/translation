@@ -8,6 +8,9 @@ use IteratorAggregate;
 use IteratorIterator;
 use Traversable;
 
+/**
+ * Class
+ */
 class BufferContentCollection implements IteratorAggregate
 {
     /**

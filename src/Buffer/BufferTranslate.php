@@ -4,18 +4,14 @@ namespace ALI\Translation\Buffer;
 
 use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use ALI\Translation\ContentProcessors\ContentProcessorsManager;
-use ALI\Translation\Translate\PhrasePackets\OriginalPhraseCollection;
-use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
+use ALI\Translation\Translate\PhraseCollection\OriginalPhraseCollection;
+use ALI\Translation\Translate\PhraseCollection\TranslatePhraseCollection;
 use ALI\Translation\Translate\Source\TemporarySourceInterface;
-use ALI\Translation\Translate\Translators\PlainTranslator;
-use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
-use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
-use ALI\Translation\Translate\Translators\SourcesCollection;
-use ALI\Translation\Translate\Translators\Translator;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorFactory;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorInterface;
 
 /**
  * Class BufferTranslate
- * @package ALI
  */
 class BufferTranslate
 {

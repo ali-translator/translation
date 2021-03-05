@@ -13,9 +13,9 @@ use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Languages\Language;
 use ALI\Translation\Translate\Source\Exceptions\SourceException;
 use ALI\Translation\Translate\Source\SourceInterface;
-use ALI\Translation\Translate\Translators\PlainTranslator;
-use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
-use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslator;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorFactory;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorInterface;
 use PHPUnit\Framework\TestCase;
 
 /**

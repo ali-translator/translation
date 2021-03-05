@@ -2,8 +2,8 @@
 
 namespace ALI\Translation\Translate\MissingTranslateCallbacks;
 
-use ALI\Translation\Translate\PhrasePackets\OriginalPhraseCollection;
-use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
+use ALI\Translation\Translate\PhraseCollection\OriginalPhraseCollection;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorInterface;
 
 /**
  * Class

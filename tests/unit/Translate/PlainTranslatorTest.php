@@ -4,11 +4,9 @@ namespace ALI\Translation\Tests\unit\Translate;
 
 use ALI\Translation\Tests\components\Factories\LanguageFactory;
 use ALI\Translation\Tests\components\Factories\SourceFactory;
-use ALI\Translation\Translate\Source\Sources\FileSources\CsvSource\CsvFileSource;
 use ALI\Translation\Translate\Source\Exceptions\SourceException;
 use ALI\Translation\Translate\Source\SourceInterface;
-use ALI\Translation\Translate\Translators\PlainTranslator;
-use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorFactory;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -9,8 +9,8 @@ use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\DirectoryNotFoundE
 use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\FileNotWritableException;
 use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\FileReadPermissionsException;
 use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
-use ALI\Translation\Translate\Translators\PlainTranslator;
-use ALI\Translation\Translate\Translators\PlainTranslatorFactory;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslator;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorFactory;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -1,10 +1,10 @@
 <?php
 
-namespace ALI\Translation\Translate\Translators;
+namespace ALI\Translation\Translate\PlainTranslator;
 
 use ALI\Translation\Translate\PhraseDecorators\OriginalPhraseDecoratorManager;
 use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
-use ALI\Translation\Translate\PhrasePackets\TranslatePhraseCollection;
+use ALI\Translation\Translate\PhraseCollection\TranslatePhraseCollection;
 
 /**
  * Decorate original and translated phrases in conjunction with `Translator` class

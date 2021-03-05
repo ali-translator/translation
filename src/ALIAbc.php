@@ -10,12 +10,11 @@ use ALI\Translation\Buffer\KeyGenerators\KeyGenerator;
 use ALI\Translation\Buffer\KeyGenerators\StaticKeyGenerator;
 use ALI\Translation\Exceptions\TranslateNotDefinedException;
 use ALI\Translation\ContentProcessors\ContentProcessorsManager;
-use ALI\Translation\Languages\LanguageRepositoryInterface;
 use ALI\Translation\Translate\MissingTranslateCallbacks\CollectorMissingTranslatesCallback;
 use ALI\Translation\Translate\PhraseDecorators\TranslateDecorators\HtmlEncodeTranslateDecorator;
 use ALI\Translation\Translate\PhraseDecorators\TranslatePhraseDecoratorManager;
-use ALI\Translation\Translate\Translators\DecoratedPlainTranslator;
-use ALI\Translation\Translate\Translators\PlainTranslatorInterface;
+use ALI\Translation\Translate\PlainTranslator\DecoratedPlainTranslator;
+use ALI\Translation\Translate\PlainTranslator\PlainTranslatorInterface;
 
 /**
  * Class
@@ -53,12 +52,7 @@ class ALIAbc
     protected $collectorTranslateCallback;
 
     /**
-     * @var LanguageRepositoryInterface
-     */
-    protected $languageRepository;
-
-    /**
-     * @param PlainTranslatorInterface                     $translator
+     * @param PlainTranslatorInterface                $plainTranslator
      * @param ContentProcessorsManager|null           $contentProcessorsManager
      * @param CollectorMissingTranslatesCallback|null $collectorTranslateCallback
      * @param BufferCatcher|null                      $bufferCatcher
@@ -67,7 +61,7 @@ class ALIAbc
      * @param bool                                    $htmlEncodeBufferTranslate
      */
     public function __construct(
-        PlainTranslatorInterface $translator,
+        PlainTranslatorInterface $plainTranslator,
         ContentProcessorsManager $contentProcessorsManager = null,
         CollectorMissingTranslatesCallback $collectorTranslateCallback = null,
         BufferCatcher $bufferCatcher = null,
@@ -76,7 +70,7 @@ class ALIAbc
         $htmlEncodeBufferTranslate = true
     )
     {
-        $this->translator = $translator;
+        $this->translator = $plainTranslator;
         $this->collectorTranslateCallback = $collectorTranslateCallback ?: new CollectorMissingTranslatesCallback();
         $this->translator->addMissingTranslationCallback($this->collectorTranslateCallback);
 
@@ -139,7 +133,7 @@ class ALIAbc
 
     /**
      * @param array $originalPhrases
-     * @return Translate\PhrasePackets\TranslatePhraseCollection
+     * @return Translate\PhraseCollection\TranslatePhraseCollection
      */
     public function translateAll($originalPhrases)
     {
@@ -241,7 +235,7 @@ class ALIAbc
     /**
      * @return PlainTranslatorInterface
      */
-    public function getTranslator()
+    public function getPlainTranslator()
     {
         return $this->translator;
     }
@@ -284,24 +278,5 @@ class ALIAbc
         }
 
         return new BufferContent($phrase, $bufferContentCollection);
-    }
-
-    /**
-     * @return LanguageRepositoryInterface
-     */
-    public function getLanguageRepository()
-    {
-        return $this->languageRepository;
-    }
-
-    /**
-     * @param LanguageRepositoryInterface $languageRepository
-     * @return $this
-     */
-    public function setLanguageRepository(LanguageRepositoryInterface $languageRepository)
-    {
-        $this->languageRepository = $languageRepository;
-
-        return $this;
     }
 }

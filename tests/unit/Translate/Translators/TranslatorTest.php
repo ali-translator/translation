@@ -3,8 +3,8 @@
 use ALI\Translation\Tests\components\Factories\SourceFactory;
 use ALI\Translation\Translate\Source\Sources\FileSources\CsvSource\CsvFileSource;
 use ALI\Translation\Translate\Source\Sources\MySqlSource\MySqlSource;
-use ALI\Translation\Translate\Translators\SourcesCollection;
-use ALI\Translation\Translate\Translators\Translator;
+use ALI\Translation\Translate\Source\SourcesCollection;
+use ALI\Translation\Translate\Translator;
 use PHPUnit\Framework\TestCase;
 
 /**

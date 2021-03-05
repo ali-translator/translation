@@ -25,6 +25,7 @@ class BufferContent
      */
     protected $options = [
         self::OPTION_FORMAT => 'string',
+        // TODO change to "false"?
         self::OPTION_WITH_CONTENT_TRANSLATION => true,
     ];
 
