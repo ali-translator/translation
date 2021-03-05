@@ -2,29 +2,25 @@
 
 namespace ALI\Translation\Translate\Source\Installers;
 
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
+use ALI\Translation\Translate\Source\Sources\FileSources\FileSourceAbstract;
+
 /**
  * Class
  */
 class FileSourceInstaller implements SourceInstallerInterface
 {
     /**
-     * @var string
+     * @var FileSourceAbstract
      */
-    protected $directoryPath;
+    protected $fileSource;
 
     /**
-     * @var string
+     * @param FileSourceAbstract $fileSource
      */
-    protected $fileExtension;
-
-    /**
-     * @param string $directoryPath
-     * @param string $fileExtension
-     */
-    public function __construct($directoryPath, $fileExtension)
+    public function __construct(FileSourceAbstract $fileSource)
     {
-        $this->directoryPath = $directoryPath;
-        $this->fileExtension = $fileExtension;
+        $this->fileSource = $fileSource;
     }
 
     /**
@@ -32,7 +28,7 @@ class FileSourceInstaller implements SourceInstallerInterface
      */
     public function isInstalled()
     {
-        $iterator = $this->getFilesIterator();
+        $iterator = $this->fileSource->getGlobIterator();
 
         return $iterator->valid();
     }
@@ -42,8 +38,12 @@ class FileSourceInstaller implements SourceInstallerInterface
      */
     public function install()
     {
-        if (!file_exists($this->directoryPath)) {
-            mkdir($this->directoryPath);
+        if (!file_exists($this->fileSource->getDirectoryPath())) {
+            mkdir($this->fileSource->getDirectoryPath(), 0777, true);
+        }
+        $originalFilePath = $this->getOriginalFilePath();
+        if (!file_exists($originalFilePath)) {
+            touch($originalFilePath);
         }
     }
 
@@ -52,7 +52,7 @@ class FileSourceInstaller implements SourceInstallerInterface
      */
     public function destroy()
     {
-        $iterator = $this->getFilesIterator();
+        $iterator = $this->fileSource->getGlobIterator();
         while ($iterator->valid()) {
             unlink($iterator->current()->getPathname());
             $iterator->next();
@@ -60,10 +60,11 @@ class FileSourceInstaller implements SourceInstallerInterface
     }
 
     /**
-     * @return \GlobIterator
+     * @return string
+     * @throws UnsupportedLanguageAliasException
      */
-    protected function getFilesIterator()
+    public function getOriginalFilePath()
     {
-        return new \GlobIterator($this->directoryPath . DIRECTORY_SEPARATOR . '*.' . $this->fileExtension);
+        return $this->fileSource->getLanguageFilePath($this->fileSource->getOriginalLanguageAlias());
     }
 }

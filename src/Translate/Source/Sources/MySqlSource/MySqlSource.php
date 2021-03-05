@@ -108,11 +108,12 @@ class MySqlSource implements SourceInterface
             'SELECT o.`id`, o.`content_index`, o.`content` as `original`, t.`content` as `translate`
                 FROM `' . $this->originalTableName . '` AS `o`
                 FORCE INDEX(indexContentIndex)
-                LEFT JOIN `' . $this->translateTableName . '` AS `t` ON (`o`.`id`=`t`.`original_id` AND `t`.`language_alias`=:languageAlias)
+                LEFT JOIN `' . $this->translateTableName . '` AS `t` ON (`o`.`id`=`t`.`original_id` AND `t`.`language_alias`=:translationLanguageAlias)
             WHERE ' . implode(' OR ', $whereQuery) . '
             LIMIT ' . count($phrases)
         );
-        $dataQuery->bindValue('languageAlias', $languageAlias, PDO::PARAM_STR);
+        $dataQuery->bindValue('translationLanguageAlias', $languageAlias, PDO::PARAM_STR);
+        $dataQuery->bindParam('originalLanguageAlias', $this->originalLanguageAlias, PDO::PARAM_STR);
 
         $this->bindParams($valuesForWhereBinding, $dataQuery);
 
@@ -145,6 +146,7 @@ class MySqlSource implements SourceInterface
         return [
             'contentIndex' => $contentIndex,
             'content' => $phrase,
+            'originalLanguageAlias' => $this->originalLanguageAlias,
         ];
     }
 
@@ -171,7 +173,7 @@ class MySqlSource implements SourceInterface
     public function getOriginalId($original)
     {
         $statement = $this->pdo->prepare('
-                SELECT id FROM `' . $this->originalTableName . '` WHERE content_index=:contentIndex AND content=:content
+                SELECT id FROM `' . $this->originalTableName . '` WHERE content_index=:contentIndex AND content=:content AND language_alias=:originalLanguageAlias
             ');
         $queryParams = $this->createOriginalQueryParams($original);
         foreach ($queryParams as $queryKey => $queryParam) {
@@ -190,7 +192,7 @@ class MySqlSource implements SourceInterface
     public function insertOriginal($original)
     {
         $statement = $this->pdo->prepare(
-            'INSERT INTO `' . $this->originalTableName . '` (`content_index`, `content`) VALUES (:contentIndex, :content)'
+            'INSERT INTO `' . $this->originalTableName . '` (`content_index`, `content`, `language_alias`) VALUES (:contentIndex, :content, :originalLanguageAlias)'
         );
 
         $queryParams = $this->createOriginalQueryParams($original);
@@ -213,12 +215,12 @@ class MySqlSource implements SourceInterface
     {
         $updatePdo = $this->pdo->prepare('
                 INSERT INTO `' . $this->translateTableName . '` (`original_id`, `language_alias`, `content`)
-                VALUES (:id, :languageAlias, :content)
+                VALUES (:id, :translationLanguageAlias, :content)
                 ON DUPLICATE KEY UPDATE `content`=:content
             ');
         $updatePdo->bindParam(':content', $translate, PDO::PARAM_STR);
         $updatePdo->bindParam(':id', $originalId, PDO::PARAM_INT);
-        $updatePdo->bindParam(':languageAlias', $languageAlias, PDO::PARAM_STR);
+        $updatePdo->bindParam(':translationLanguageAlias', $languageAlias, PDO::PARAM_STR);
         $updatePdo->execute();
     }
 
@@ -229,7 +231,7 @@ class MySqlSource implements SourceInterface
     public function delete($original)
     {
         $statement = $this->pdo->prepare('
-                DELETE FROM `' . $this->originalTableName . '` WHERE content_index=:contentIndex AND content=:content
+                DELETE FROM `' . $this->originalTableName . '` WHERE content_index=:contentIndex AND content=:content AND language_alias=:originalLanguageAlias
             ');
         $queryParams = $this->createOriginalQueryParams($original);
         foreach ($queryParams as $queryKey => $queryParam) {
@@ -255,10 +257,11 @@ class MySqlSource implements SourceInterface
 
         $statement = $this->pdo->prepare(
             'INSERT INTO `' . $this->originalTableName . '`
-                        (`content_index`, `content`)
+                        (`content_index`, `content`,`language_alias`)
                             VALUES ' . implode(',', $valuesQuery) . '
                             '
         );
+        $statement->bindParam('originalLanguageAlias', $this->originalLanguageAlias, PDO::PARAM_STR);
 
         $this->bindParams($valuesForWhereBinding, $statement);
 
@@ -283,6 +286,7 @@ class MySqlSource implements SourceInterface
                 FORCE INDEX(indexContentIndex)
             WHERE ' . implode(' OR ', $whereQuery)
         );
+        $dataQuery->bindParam('originalLanguageAlias', $this->originalLanguageAlias, PDO::PARAM_STR);
         $this->bindParams($valuesForWhereBinding, $dataQuery);
 
         $dataQuery->execute();
@@ -317,10 +321,10 @@ class MySqlSource implements SourceInterface
             ];
             switch ($type) {
                 case 'select':
-                    $queryParts[$keyForBinding] = '(o.`content_index`=:' . $contentIndexKey . ' AND BINARY o.`content`=:' . $contentKey . ')';
+                    $queryParts[$keyForBinding] = '(o.`content_index`=:' . $contentIndexKey . ' AND BINARY o.`content`=:' . $contentKey . ' AND o.`language_alias`=:originalLanguageAlias)';
                     break;
                 case 'insert':
-                    $queryParts[$keyForBinding] = '(:' . $contentIndexKey . ', :' . $contentKey . ')';
+                    $queryParts[$keyForBinding] = '(:' . $contentIndexKey . ', :' . $contentKey . ', :originalLanguageAlias)';
                     break;
                 default:
                     throw new \Exception('Invalid type');

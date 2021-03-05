@@ -2,6 +2,7 @@
 
 namespace ALI\Translation\Translate\Source\Sources\FileSources;
 
+use ALI\Translation\Translate\Source\Exceptions\CsvFileSource\UnsupportedLanguageAliasException;
 use ALI\Translation\Translate\Source\Exceptions\SourceException;
 use ALI\Translation\Translate\Source\Installers\FileSourceInstaller;
 use ALI\Translation\Translate\Source\Installers\SourceInstallerInterface;
@@ -15,7 +16,33 @@ abstract class FileSourceAbstract implements SourceInterface
     /**
      * @var string
      */
+    protected $directoryPath;
+
+    /**
+     * @var string
+     */
+    protected $originalLanguageAlias;
+
+    /**
+     * @var string
+     */
     protected $filesExtension;
+
+    /**
+     * @return string
+     */
+    public function getOriginalLanguageAlias()
+    {
+        return $this->originalLanguageAlias;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDirectoryPath()
+    {
+        return $this->directoryPath;
+    }
 
     /**
      * @param array $phrases
@@ -58,6 +85,23 @@ abstract class FileSourceAbstract implements SourceInterface
         return $translateAliases;
     }
 
+    /**
+     * @param $languageAlias
+     * @return string
+     * @throws UnsupportedLanguageAliasException
+     */
+    public function getLanguageFilePath($languageAlias)
+    {
+        if (preg_match('#[^\w_\-]#uis', $languageAlias)) {
+            throw new UnsupportedLanguageAliasException('Unsupported language alias');
+        }
+
+        return $this->getDirectoryPath() . DIRECTORY_SEPARATOR . $this->originalLanguageAlias . '_' . $languageAlias . '.' . $this->filesExtension;
+    }
+
+    /**
+     * @return \GlobIterator
+     */
     public function getGlobIterator()
     {
         return new \GlobIterator($this->directoryPath . DIRECTORY_SEPARATOR . $this->getOriginalLanguageAlias() . '*.' . $this->filesExtension);
@@ -68,6 +112,6 @@ abstract class FileSourceAbstract implements SourceInterface
      */
     public function generateInstaller()
     {
-        return new FileSourceInstaller($this->directoryPath, $this->filesExtension);
+        return new FileSourceInstaller($this);
     }
 }

@@ -19,16 +19,6 @@ use ALI\Translation\Translate\Source\Sources\FileSources\FileSourceAbstract;
 class CsvFileSource extends FileSourceAbstract
 {
     /**
-     * @var string
-     */
-    protected $directoryPath;
-
-    /**
-     * @var string
-     */
-    private $originalLanguageAlias;
-
-    /**
      * CSV delimiter - only one symbol
      * @var string
      */
@@ -52,36 +42,6 @@ class CsvFileSource extends FileSourceAbstract
         $this->originalLanguageAlias = $originalLanguageAlias;
         $this->delimiter = $delimiter;
         $this->filesExtension = $filesExtension;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOriginalLanguageAlias()
-    {
-        return $this->originalLanguageAlias;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDirectoryPath()
-    {
-        return $this->directoryPath;
-    }
-
-    /**
-     * @param $languageAlias
-     * @return string
-     * @throws UnsupportedLanguageAliasException
-     */
-    public function getLanguageFilePath($languageAlias)
-    {
-        if (preg_match('#[^\w_\-]#uis', $languageAlias)) {
-            throw new UnsupportedLanguageAliasException('Unsupported language alias');
-        }
-
-        return $this->getDirectoryPath() . DIRECTORY_SEPARATOR . $this->originalLanguageAlias . '_' . $languageAlias . '.' . $this->filesExtension;
     }
 
     /**
